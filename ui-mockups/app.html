@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBF5E6">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171717">
+<link rel="icon" href="../logo/LogoLight.svg">
+<title>Castellan — app mockup</title>
+<link rel="stylesheet" href="mockup.css">
+<link rel="stylesheet" href="styles/app-layout.css">
+<link rel="stylesheet" href="styles/left-rail.css">
+<link rel="stylesheet" href="styles/views.css">
+<link rel="stylesheet" href="styles/right-rail.css">
+<link rel="stylesheet" href="styles/dashboard.css">
+<link rel="stylesheet" href="styles/temp.css">
+<link rel="stylesheet" href="styles/composer.css">
+<link rel="stylesheet" href="styles/pickers.css">
+<link rel="stylesheet" href="styles/archive.css">
+<link rel="stylesheet" href="styles/responsive.css">
+<script>
+(function () {
+  var d = document.documentElement;
+  var embedded = false;
+  try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+  d.classList.add(embedded ? "embedded" : "standalone");
+  if (!embedded) {
+    var saved = null;
+    try { saved = localStorage.getItem("castellan.theme"); } catch (e) {}
+    if (saved === "dark" || saved === "light") d.dataset.theme = saved;
+    else if (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) d.dataset.theme = "dark";
+  }
+  addEventListener("message", function (e) {
+    if (!e.data || e.data.type !== "mock-theme") return;
+    d.dataset.theme = e.data.theme === "dark" ? "dark" : "light";
+  });
+  function askTheme() { try { window.parent.postMessage({ type: "mock-theme-request" }, "*"); } catch (e) {} }
+  askTheme();
+  addEventListener("load", askTheme);
+})();
+</script>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+  <div class="shellmock" id="shellmock">
+    <aside class="sm-side" aria-label="Workspaces and sessions">
+          <div class="sm-side-top">
+            <div class="sm-brand">
+              <span class="brand-mark" aria-hidden="true">
+                <img class="brand-light" src="../logo/LogoLight.svg" alt="">
+                <img class="brand-dark" src="../logo/LogoDark.svg" alt="">
+              </span>
+              <span class="brand-name">Castellan</span>
+            </div>
+            <button class="sm-navbtn sm-theme-btn" id="sm-theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Switch to dark theme">☾</button>
+            <button class="sm-navbtn" id="sm-nav-toggle" type="button" aria-label="Collapse workspaces rail" aria-pressed="false" title="Collapse workspaces">«</button>
+          </div>
+          <div class="sm-side-stub">
+            <button class="sm-stub-logo" id="sm-nav-expand" type="button" aria-label="Expand Castellan rail" title="Expand Castellan rail">
+              <img class="stub-logo-light" src="../logo/LogoLight.svg" alt="">
+              <img class="stub-logo-dark" src="../logo/LogoDark.svg" alt="">
+            </button>
+          </div>
+
+          <div class="sm-newrow">
+            <button class="sm-new primary" type="button" data-sm-view="new"><span>+</span> New task</button>
+            <button class="sm-new" type="button" data-sm-view="temp-new"><span class="spark">✦</span> Temporary chat</button>
+          </div>
+
+          <div class="sm-sec">
+            <div class="sm-h"><span>Working</span><button class="sm-h-link" type="button" data-sm-view="working">View all</button></div>
+            <div class="sm-row" data-rail-key="auth">
+              <button class="sm-item on" type="button" data-sm-view="auth">
+                <span class="sm-dot wait"></span>
+                <span class="sm-t"><b>Implement authentication</b><small>acme-web · needs you · 4m</small></span>
+                <span class="sm-badge">1</span>
+              </button>
+              <button class="sm-row-archive" type="button" data-archive-confirm="auth" title="Archive task" aria-label="Archive task">⇩</button>
+            </div>
+            <div class="sm-row" data-rail-key="rate">
+              <button class="sm-item" type="button" data-sm-view="rate">
+                <span class="sm-dot" style="background:var(--faint)"></span>
+                <span class="sm-t"><b>Rate-limit the public API</b><small>api-core · done · unread</small></span>
+                <span class="sm-unread" title="1 unread message"></span>
+              </button>
+              <button class="sm-row-archive" type="button" data-archive-confirm="rate" title="Archive task" aria-label="Archive task">⇩</button>
+            </div>
+          </div>
+
+          <div class="sm-sec sm-ws-sec" id="sm-ws-sec">
+            <button class="sm-sec-toggle" id="sm-ws-toggle" type="button" aria-expanded="true" aria-controls="sm-ws-list" title="Collapse workspaces">
+              <span>Workspaces</span><span class="chev" aria-hidden="true">▾</span>
+            </button>
+            <div class="sm-ws-list" id="sm-ws-list">
+            <button class="sm-ws on" type="button" data-sm-view="dashboard" data-sm-ws="acme-web"><span class="ic">◇</span> acme-web <span class="meta">1 task</span></button>
+            <div class="sm-kids">
+              <div class="sm-task-row" data-rail-key="auth">
+                <button class="sm-task on" type="button" data-sm-view="auth"><span class="sm-dot wait"></span> auth-flow <span class="sm-badge">1</span></button>
+                <button class="sm-row-archive" type="button" data-archive-confirm="auth" title="Archive task" aria-label="Archive task">⇩</button>
+              </div>
+            </div>
+            <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="api-core"><span class="ic">◇</span> api-core <span class="meta">unread</span></button>
+            <div class="sm-kids">
+              <div class="sm-task-row" data-rail-key="rate">
+                <button class="sm-task" type="button" data-sm-view="rate"><span class="sm-unread" style="margin:0"></span> rate-limit</button>
+                <button class="sm-row-archive" type="button" data-archive-confirm="rate" title="Archive task" aria-label="Archive task">⇩</button>
+              </div>
+            </div>
+            <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="shop"><span class="ic">◇</span> shop <span class="meta">idle</span></button>
+            <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="docs"><span class="ic">◇</span> docs <span class="meta">idle</span></button>
+            </div>
+          </div>
+
+          <div class="sm-sec">
+            <div class="sm-h"><span>Temporary</span></div>
+            <div class="sm-row" data-rail-key="temp">
+              <button class="sm-item" type="button" data-sm-view="temp">
+                <span class="sm-dot" style="background:var(--blue)"></span>
+                <span class="sm-t"><b>Explain this stack trace</b><small>2m · no workspace</small></span>
+              </button>
+              <button class="sm-row-archive" type="button" data-archive-confirm="temp" title="Archive chat" aria-label="Archive chat">⇩</button>
+            </div>
+          </div>
+
+          <button class="sm-archive-link" type="button" data-sm-view="archived">
+            <span class="ic">⇩</span>
+            <span>Archive</span>
+            <span class="count" id="sm-archive-count">0</span>
+          </button>
+
+          <div class="sm-foot"><span class="av">M</span> Manuel <span class="live-dot">runner online</span></div>
+        </aside>
+
+
+    <div class="sm-main" id="sm-main">
+      <div class="sm-resize sm-resize-left" id="sm-resize-left" role="separator" aria-orientation="vertical" aria-label="Resize workspaces rail" title="Drag to resize"></div>
+
+      <div class="sm-views" id="sm-views">
+        <!-- current task -->
+            <div class="sm-view" data-sm-view="auth">
+              <div class="sm-head">
+                <div class="sm-crumb">acme-web <span>/</span> task/auth-flow <span class="crumb-sub">thr_8f2a</span></div>
+                <div class="sm-head-r">
+                  <span class="pill wait">Approval</span>
+                  <button class="mbtn" type="button">Changes +64 −2</button>
+                  <button class="mbtn" type="button">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Add email + password auth with Postgres sessions. Keep it boring.</div>
+                <div class="sm-msg agent"><span class="who">Codex · turn 3</span> Plan: route handler, password helper, login form, one migration for <code>sessions</code>.
+                  <div class="sm-plan"><span class="done">✓ read repo</span><span class="done">✓ routes</span><span class="run">● login form</span><span>○ tests</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">✓</span><span class="tt">Read 18 files</span><span class="tm">4s · 18 files</span></div>
+                  <div class="sm-tool-b">package.json, app/layout.tsx, lib/db.ts, components/…</div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">±</span><span class="tt">app/api/auth/route.ts</span><span class="tm">+64 −2</span></div>
+                  <pre class="sm-diff"><span class="c">@@ -1,4 +1,9 @@</span><span class="a">+ import { NextResponse } from "next/server";</span><span class="a">+ import { z } from "zod";</span><span class="d">- export async function GET() {</span><span class="a">+ export async function POST(req: Request) {</span></pre>
+                  <div class="sm-tool-f"><span>View diff</span><span>Open file</span><span>Open in VS Code ↗</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">◧</span><span class="tt">components/LoginForm.tsx</span><span class="tm">modified</span></div>
+                  <pre class="sm-code"><span class="cm">"use client";</span>
+<span class="kw">export function</span> LoginForm() {
+  <span class="kw">const</span> [error, setError] = useState(<span class="kw">null</span>);
+  <span class="cm">// 57 lines · read-only viewer</span>
+}</pre>
+                  <div class="sm-tool-f"><span>Open viewer</span><span>Open in VS Code ↗</span></div>
+                </div>
+                <div class="sm-approve">
+                  <div class="ah">Approval needed · command</div>
+                  Run <code>npm install zod bcryptjs</code> in <code>acme-web</code>?
+                  <div class="ab"><button class="yes" type="button">Allow once</button><button type="button">Allow for task</button><button type="button">Deny</button></div>
+                </div>
+                <div class="sm-note">One agent at a time. One more task is queued for <code>acme-web</code>.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Steer the running turn…</span>
+                  <div class="sm-compose-foot"><span>Code</span><span>·</span><span>ask before run</span><span>·</span><span>$0.42 / $2.00</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>
+
+<!-- finished, unread task -->
+            <div class="sm-view" data-sm-view="rate" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">api-core <span>/</span> task/rate-limit <span class="crumb-sub">thr_a19c</span></div>
+                <div class="sm-head-r">
+                  <span class="pill done">Done</span>
+                  <button class="mbtn" type="button">Changes +18 −0</button>
+                  <button class="mbtn" type="button">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Rate-limit the public API to 60 req/min per IP. Keep the window in memory, no Redis.</div>
+                <div class="sm-msg agent"><span class="who">Codex · turn 1</span> Added middleware with a sliding window. It reads the forwarded IP and returns 429 with a retry header. 12 tests pass.
+                  <div class="sm-plan"><span class="done">✓ read routes</span><span class="done">✓ middleware</span><span class="done">✓ tests</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">±</span><span class="tt">middleware.ts</span><span class="tm">+18 −0</span></div>
+                  <pre class="sm-diff"><span class="c">@@ -0,0 +1,18 @@</span><span class="a">+ const WINDOW_MS = 60_000;</span><span class="a">+ const LIMIT = 60;</span><span class="a">+ const hits = new Map&lt;string, number[]&gt;();</span><span class="a">+ export function middleware(req: Request) {</span></pre>
+                  <div class="sm-tool-f"><span>View diff</span><span>Open file</span></div>
+                </div>
+                <div class="sm-note">This session was unread. Opening it clears the dot; the task stays under <code>api-core</code>.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Ask a follow-up…</span>
+                  <div class="sm-compose-foot"><span>Code</span><span>·</span><span>ask before run</span><span>·</span><span>$0.11 / $2.00</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>
+
+<!-- workspace dashboard -->
+            <div class="sm-view" data-sm-view="dashboard" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Workspace <span>/</span> <span id="wd-crumb">acme-web</span> <span class="crumb-sub" id="wd-branch">main</span></div>
+                <div class="sm-head-r">
+                  <span class="pill" id="wd-state">ready</span>
+                  <button class="mbtn" type="button" id="wd-open-ide">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-dash" id="sm-dash">
+                <div class="sm-dash-hero">
+                  <div class="sm-dash-title">
+                    <span class="sm-dash-mark">◇</span>
+                    <h3 id="wd-name">acme-web</h3>
+                    <span class="sm-chip-soft" id="wd-branch-chip">main</span>
+                  </div>
+                  <p id="wd-desc">Marketing site for Acme. Next.js, Postgres and Stripe checkout.</p>
+                  <div class="sm-dash-tags" id="wd-tags"></div>
+                  <div class="sm-dash-tools">
+                    <span class="sm-custom"><span class="sm-spark">✦</span> Customized by Codex · 8m ago</span>
+                    <button class="sm-linkbtn" type="button" id="wd-edit">Edit layout</button>
+                  </div>
+                </div>
+
+                <div class="sm-dash-grid" id="wd-grid">
+                  <section class="sm-widget sm-widget-wide">
+                    <div class="sm-widget-h"><span>Dev server</span><span class="pill run" id="wd-server-pill">running</span></div>
+                    <div class="sm-server">
+                      <div><b id="wd-server-url">localhost:3000</b><small id="wd-server-meta">npm run dev · PID 4821 · 4h</small></div>
+                      <button class="mbtn" type="button" id="wd-server-btn">Restart</button>
+                    </div>
+                    <div class="sm-widget-foot">
+                      <button class="sm-linkbtn" type="button" data-ctx-open="preview">Open preview →</button>
+                      <button class="sm-linkbtn" type="button" data-ctx-open="terminal">Logs</button>
+                    </div>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Active task</span><span class="pill wait" id="wd-task-pill">needs you</span></div>
+                    <div class="sm-task-big" id="wd-task-title">Implement authentication</div>
+                    <div class="sm-task-meta" id="wd-task-meta">task/auth-flow · 4m</div>
+                    <button class="sm-linkbtn" type="button" id="wd-task-open">Open task →</button>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Recent changes</span><span class="sm-widget-hint">working tree</span></div>
+                    <div class="sm-change-file" id="wd-change-file">app/api/auth/route.ts</div>
+                    <div class="sm-change-nums" id="wd-change-nums">+64 −2</div>
+                    <button class="sm-linkbtn" type="button" data-ctx-open="diff">Open diff →</button>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>About</span><span class="sm-widget-hint">agent-editable</span></div>
+                    <p class="sm-about" id="wd-about">The public site and customer account area. Auth lands here first; billing follows.</p>
+                    <div class="sm-dash-tags" id="wd-about-tags"></div>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Pinned commands</span></div>
+                    <div class="sm-cmdlist">
+                      <button class="sm-cmd" type="button" data-ctx-open="terminal"><span>$</span> npm test</button>
+                      <button class="sm-cmd" type="button" data-ctx-open="preview"><span>◫</span> Open preview</button>
+                      <button class="sm-cmd" type="button" data-ctx-open="explorer"><span>▤</span> Browse files</button>
+                    </div>
+                  </section>
+
+                  <button class="sm-widget sm-widget-add" type="button" id="wd-add-widget"><span>＋</span> Add widget <small>Ask Codex, or add one here</small></button>
+
+                  <section class="sm-widget" id="wd-extra" hidden>
+                    <div class="sm-widget-h"><span>Deployments</span><span class="pill done">healthy</span></div>
+                    <p class="sm-about" id="wd-extra-text">production · acme-web.vercel.app<br><small>last deploy 2h ago</small></p>
+                    <span class="sm-linkbtn">Open dashboard ↗</span>
+                  </section>
+                </div>
+              </div>
+            </div>
+
+<!-- new temporary chat -->
+            <div class="sm-view" data-sm-view="temp-new" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">New temporary chat <span class="sm-ephem">ephemeral</span></div>
+                <div class="sm-head-r">
+                  <button class="sm-linkbtn" type="button" data-sm-view="temp">Open last →</button>
+                  <button class="mbtn" type="button" data-sm-view="auth">Close</button>
+                </div>
+              </div>
+              <div class="sm-temp-intro">
+                <span class="sm-temp-kicker">Temporary · no branch · expires in 7 days</span>
+                <h4>Ask anything. Keep nothing.</h4>
+                <p>No repo or commit is created. Use <b>＋</b> in the composer to attach a workspace, folder or file when the answer needs context. The sandbox stays read-only.</p>
+                <div class="sm-suggest">
+                  <button type="button">Explain this stack trace</button>
+                  <button type="button">Compare two libraries</button>
+                  <button type="button">Draft a regex</button>
+                </div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox" id="sm-temp-new-box">
+                  <span class="ph">Ask anything. Attach context with ＋…</span>
+                  <div class="sm-compose-foot"><span>Temporary</span><span>·</span><span>read-only</span><span>·</span><span>7 days</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>
+
+<!-- existing temporary chat -->
+            <div class="sm-view" data-sm-view="temp" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Temporary chat <span class="sm-ephem">ephemeral</span></div>
+                <div class="sm-head-r">
+                  <button class="mbtn" type="button" data-sm-view="new" data-sm-ws="acme-web">Keep as task</button>
+                  <button class="mbtn" type="button" data-sm-view="auth">Close</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Why does Prisma throw P2002 when I seed with createMany?</div>
+                <div class="sm-msg agent"><span class="who">Codex · scratch</span> P2002 is a unique-constraint violation. With <code>createMany</code> Postgres aborts the whole batch, so one duplicate row fails all of them. Use <code>skipDuplicates</code> or <code>upsert</code>.
+                  <pre class="sm-code"><span class="kw">await</span> db.user.createMany({
+  data: rows,
+  skipDuplicates: <span class="kw">true</span>,
+});</pre>
+                </div>
+                <div class="sm-note temp">No branch, no commit. Read-only sandbox; this chat expires in 7 days — or promote it to a task. Add context with ＋ in the composer.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Ask anything. Nothing is committed…</span>
+                  <div class="sm-compose-foot"><span>Temp</span><span>·</span><span>read-only</span><span>·</span><span>7 days</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>
+
+<!-- working agents -->
+            <div class="sm-view" data-sm-view="working" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Working agents</div>
+                <div class="sm-head-r"><span class="pill wait">1 needs you</span><span class="pill" id="sm-working-unread">1 unread</span></div>
+              </div>
+              <div class="sm-body">
+                <div class="sm-filters"><span class="sm-filter on">All 2</span><span class="sm-filter">Needs you 1</span><span class="sm-filter" id="sm-unread-filter">Unread 1</span></div>
+                <button class="sm-agentcard" type="button" data-sm-view="auth">
+                  <span>
+                    <span class="ac-t"><span class="sm-dot wait"></span> Implement authentication <span class="sm-badge">1</span></span>
+                    <span class="ac-m">acme-web · task/auth-flow · 4m</span>
+                    <span class="ac-last"><span class="sm-dot wait" style="margin:0;flex:none"></span> approval · npm install zod bcryptjs</span>
+                  </span>
+                  <span class="ac-r"><span class="pill wait">Needs you</span><span class="ac-open">Open →</span></span>
+                </button>
+                <button class="sm-agentcard" type="button" data-sm-view="rate">
+                  <span>
+                    <span class="ac-t"><span class="sm-dot" style="background:var(--blue)"></span> Rate-limit the public API</span>
+                    <span class="ac-m">api-core · task/rate-limit · 12m</span>
+                    <span class="ac-last"><span class="sm-unread" style="margin:0"></span> turn/completed · 12 tests passed</span>
+                  </span>
+                  <span class="ac-r"><span class="pill">Unread</span><span class="ac-open">Open →</span></span>
+                </button>
+                <div class="sm-note">A session stays while it runs, and remains if its last message is unread — even after it ends. Once read, it lives under its workspace.</div>
+              </div>
+            </div>
+
+<!-- new task -->
+            <div class="sm-view" data-sm-view="new" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">New task <span class="crumb-sub">one agent at a time</span></div>
+                <div class="sm-head-r"><span class="pill">not started</span></div>
+              </div>
+              <div class="sm-empty">
+                <h4>Start a task in <span id="sm-new-ws">acme-web</span></h4>
+                <p>A branch is created from the workspace's default branch. V1 runs one agent at a time; anything else queues behind it.</p>
+                <div class="sm-wspick">
+                  <button type="button" data-pick="acme-web" class="on">acme-web</button>
+                  <button type="button" data-pick="api-core">api-core</button>
+                  <button type="button" data-pick="shop">shop</button>
+                  <button type="button" data-pick="docs">docs</button>
+                </div>
+                <div class="sm-bigta">Describe the task. The agent will plan, work and stop for approvals…</div>
+                <div class="sm-empty-foot">
+                  <span>Policy: ask</span><span>·</span><span>Budget $2.00</span>
+                  <span style="flex:1"></span>
+                  <button class="mbtn primary" type="button">Start task</button>
+                  <button class="sm-linkbtn" type="button" data-sm-view="temp-new">or start a temporary chat →</button>
+                </div>
+              </div>
+            </div>
+
+<!-- archive -->
+            <div class="sm-view" data-sm-view="archived" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Archive <span class="crumb-sub">old tasks and chats</span></div>
+                <div class="sm-head-r"><button class="sm-linkbtn danger" id="sm-archive-delete-all" type="button" hidden>Delete all</button><span class="pill" id="sm-archive-pill">0 archived</span></div>
+              </div>
+              <div class="sm-archive-wrap">
+                <div class="sm-archive-intro">
+                  <h4>Old work, out of the rail.</h4>
+                  <p>Archiving hides a task or temporary chat from the workspace rail. Restore it here, or delete it permanently.</p>
+                </div>
+                <div class="sm-archive-list" id="sm-archive-list"></div>
+              </div>
+            </div>
+
+
+      </div>
+
+      <aside class="sm-context" id="sm-context" aria-label="Workspace context">
+            <div class="sm-resize sm-resize-right" id="sm-resize-right" role="separator" aria-orientation="vertical" aria-label="Resize context rail" title="Drag to resize"></div>
+            <div class="sm-ctx-head">
+              <div class="sm-ctx-tabbar" id="sm-ctx-tabbar" role="tablist" aria-label="Context tabs"></div>
+              <button class="sm-ctx-plus" id="sm-ctx-plus" type="button" aria-label="Add context tab" aria-expanded="false" title="Add tab">＋</button>
+              <button class="sm-ctx-x" type="button" id="sm-ctx-close" aria-label="Close context panel" title="Close panel">×</button>
+              <div class="sm-ctx-menu" id="sm-ctx-menu" hidden>
+                <button type="button" data-ctx-add="explorer"><span>▤</span> File explorer</button>
+                <button type="button" data-ctx-add="terminal"><span>›_</span> Terminal</button>
+                <button type="button" data-ctx-add="diff"><span>±</span> Diff</button>
+                <button type="button" data-ctx-add="preview"><span>◫</span> Preview</button>
+              </div>
+            </div>
+            <div class="sm-ctx-body">
+              <div class="sm-ctx-empty" id="sm-ctx-empty" hidden>
+                <span>No context tabs open.</span>
+                <button class="sm-linkbtn" type="button" id="sm-ctx-empty-add">Add a tab ＋</button>
+              </div>
+              <div class="sm-ctx-pane" data-ctx-pane="explorer">
+                <div class="sm-exp-loc">
+                  <span class="sm-exp-root" aria-hidden="true">▤</span>
+                  <div class="sm-exp-path" id="sm-exp-path" title="/home/manuel/Downloads/random_projects/codingPlatform">/home/manuel/Downloads/random_projects/codingPlatform</div>
+                  <button class="sm-exp-nav" id="sm-exp-refresh" type="button" aria-label="Refresh file tree" title="Refresh">⟳</button>
+                </div>
+                <div class="sm-exp-list" id="sm-exp-list" role="list"></div>
+                <div class="sm-exp-foot"><span id="sm-exp-count"></span><span>read-only</span></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="file" hidden>
+                <div class="sm-file-head">
+                  <span class="sm-file-ico" id="sm-file-ico">◻</span>
+                  <div class="sm-file-meta"><span class="sm-file-name" id="sm-file-name">LoginForm.tsx</span><small class="sm-file-path" id="sm-file-path">components/LoginForm.tsx</small></div>
+                  <span class="sm-file-kind" id="sm-file-kind">text</span>
+                </div>
+                <div class="sm-file-body" id="sm-file-body"></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="diff" hidden>
+                <div class="sm-ctx-filebar"><span class="sm-ctx-file" id="sm-ctx-diff-file">app/api/auth/route.ts</span><span class="sm-ctx-nums" id="sm-ctx-diff-nums">+64 −2</span></div>
+                <div class="sm-ctx-diff" id="sm-ctx-diff"></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="preview" hidden>
+                <div class="sm-ctx-url"><span class="sm-dot run" id="sm-ctx-url-dot"></span><span id="sm-ctx-url">localhost:3000</span><span class="sm-ctx-open">↗</span></div>
+                <div class="sm-ctx-preview">
+                  <div class="sm-preview-site" id="sm-ctx-preview-site">
+                    <div class="sm-preview-brand">acme<span>.</span></div>
+                    <div class="sm-preview-h">Sign in</div>
+                    <div class="sm-preview-sub">Welcome back to <span id="sm-preview-ws">acme-web</span></div>
+                    <div class="sm-preview-input">you@acme.dev</div>
+                    <div class="sm-preview-input">••••••••</div>
+                    <div class="sm-preview-btn">Sign in</div>
+                    <div class="sm-preview-foot">preview link · opens in a tab</div>
+                  </div>
+                  <div class="sm-ctx-off" id="sm-ctx-preview-off" hidden>
+                    <span>Dev server is stopped.</span>
+                    <button class="mbtn" type="button" id="sm-ctx-preview-start">Start server</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="terminal" hidden>
+                <div class="sm-ctx-filebar"><span class="sm-ctx-file" id="sm-ctx-term-title">acme-web</span><span class="sm-ctx-nums">read-only</span></div>
+                <pre class="sm-ctx-term">$ npm test
+<span class="sm-ctx-dim">&gt; vitest run</span>
+<span class="sm-ctx-ok">✓</span> 12 passed · 0 failed
+<span class="sm-ctx-ok">✓</span> 4.2s
+$ <span class="sm-ctx-cursor">▍</span></pre>
+              </div>
+            </div>
+          </aside>
+
+          <div class="sm-context-stub" id="sm-context-stub" hidden>
+            <button class="sm-ctx-expand" id="sm-ctx-expand" type="button" aria-label="Expand context rail" title="Open context">◧</button>
+          </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+<script src="files.js"></script>
+<script src="models.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

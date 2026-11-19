@@ -1,0 +1,434 @@
+# Product Concept: Unified AI Coding Platform
+
+A self-hosted AI development environment built around OpenAI Codex, with an architecture that allows additional coding agents to be integrated later.
+
+The idea is to build your own alternative to the interfaces of Cursor, Replit or Claude Code, but with one important difference: you own the platform, the project infrastructure and the agent integration layer.
+
+For the first version, you only need Codex. However, the architecture should make it possible to add Claude Code, OpenHands, OpenCode or custom agents without rebuilding the application.
+
+## 1. The core idea
+
+# Your Coding Platform
+
+One workspace. One interface. Multiple AI coding engines.
+
+Vibe Console
+
+[vibeconsole.dev](<https://vibeconsole.dev/?utm_source=chatgpt.com>)
+
+Projects
+
+Manage repositories and workspaces
+
+AI Agents
+
+Execute coding tasks
+
+Workspace
+
+Terminal, files and code
+
+Extensions
+
+Plugins, tools and integrations
+
+Initial coding engine
+
+OpenAI Codex
+
+Future integrations: Claude Code · OpenHands · OpenCode · Custom Agents
+
+The platform should be independent of the underlying coding agent.
+
+This means:
+
+- Projects belong to your platform.
+- Files belong to your workspace infrastructure.
+- Conversations and tasks are managed by your platform.
+- Coding agents are execution providers.
+- Your UI stays the same regardless of the selected agent.
+
+## 2. Main application features
+
+I would divide the application into six main areas.
+
+### A. Dashboard
+
+I Built an AI Coding Agent Fleet Manager — And It Helped Build Itself | by Aliceviola | Mar, 2026 | Medium
+
+[medium.com](<https://medium.com/%40aliceviola/i-built-an-ai-coding-agent-fleet-manager-and-it-helped-build-itself-a47f84c301ed?utm_source=chatgpt.com>)
+
+The central overview of your development environment.
+
+Features:
+
+- All projects and repositories.
+- Recently opened projects.
+- Running and completed tasks.
+- Agent activity overview.
+- Recent Git changes.
+- Resource usage.
+- Quick access to workspaces.
+
+### B. Project Workspace
+
+Athas - A lightweight code editor
+
+[athas.dev](<https://athas.dev/?utm_source=chatgpt.com>)
+
+This is the most important part of the application.
+
+Each project gets its own workspace.
+
+| Area | Function |
+| --- | --- |
+| File Explorer | Browse and manage files |
+| Code Editor | View and edit source code |
+| AI Chat | Communicate with Codex |
+| Terminal | Execute commands |
+| Git Panel | Branches, commits and diffs |
+| Preview | View running applications |
+
+The user should be able to send a task without leaving the workspace.
+
+Example:
+
+> Build a responsive authentication system with login, registration, password reset and a PostgreSQL backend.
+
+Codex receives the task and works directly in the project's workspace.
+
+### C. Agent Management
+
+Ember - AI Agents That Actually Work
+
+[emberai.work](<https://emberai.work/?utm_source=chatgpt.com>)
+
+For V1, this is simple:
+
+- Codex integration.
+- Select model where supported.
+- Create agent sessions.
+- Start and stop tasks.
+- View execution status.
+- Configure permissions.
+- View agent history.
+
+Design this area around a provider interface, not around Codex-specific functionality.
+
+Future providers could include:
+
+- Claude Code
+- OpenHands
+- OpenCode
+- Custom agents
+
+### D. Live Activity
+
+UNTANGLE | Devpost
+
+[devpost.com](<https://devpost.com/software/m-bounty?utm_source=chatgpt.com>)
+
+This is a major differentiator.
+
+You should see what Codex is doing while it works.
+
+For example:
+
+Task execution
+
+Running
+
+## Implement authentication
+
+1. Analyzing repository
+   DoneExamined project structure and dependencies
+2. Creating backend endpoints
+   DoneCreated authentication routes
+3. Implementing frontend
+   RunningWorking on login and registration screens
+4. Running tests
+   Pending
+
+Recent events
+
+Created `auth.ts`
+
+Modified `Login.tsx`
+
+Executed `npm install`
+
+Illustrative activity view.
+
+The activity feed should be driven by actual Codex App Server events, not simulated progress indicators.
+
+### E. Git and Version Control
+
+Orca — Git, Terminal, and AI Coding in One
+
+[tryorca.com](<https://tryorca.com/?utm_source=chatgpt.com>)
+
+Every project should have integrated Git functionality.
+
+Features:
+
+- Connect GitHub repositories.
+- Create branches.
+- View file changes.
+- Inspect diffs.
+- Commit changes.
+- Push and pull.
+- Create pull requests.
+- Revert agent modifications.
+
+I would strongly recommend using Git worktrees for independent concurrent agent tasks.
+
+### F. Extensions and Integrations
+
+AI Code Editor by Creative Daniel on Dribbble
+
+[dribbble.com](<https://dribbble.com/shots/27338117-AI-Code-Editor?utm_source=chatgpt.com>)
+
+This is where your platform can eventually become an ecosystem.
+
+Potential extensions:
+
+- MCP servers.
+- Custom agent tools.
+- GitHub and GitLab.
+- Jira and Linear.
+- Database connections.
+- Browser automation.
+- Deployment integrations.
+- Custom workflows.
+- Project templates.
+
+For V1, you only need a basic extension registry and a way to configure tools.
+
+## 3. Technical architecture
+
+This is the most important architectural decision: separate your application from the coding agent.
+
+Frontend
+
+## Next.js + React
+
+Dashboard · Workspace · Chat · Terminal · Git
+
+Backend / Control Plane
+
+## FastAPI
+
+- Authentication and users
+- Projects and sessions
+- Task management
+- Agent routing
+- Permissions
+- WebSocket event streaming
+
+Agent Abstraction Layer
+
+Critical for extensibility- Agent interface
+- Provider adapters
+- Event normalization
+- Capability management
+  Codex Adapter
+  V1 implementation
+  Claude
+  Later
+  OpenHands
+  Later
+  OpenCode
+  Later
+
+Runtime Infrastructure
+
+Docker · Workspace Manager · Git · Terminal · Persistent Storage
+
+Data Infrastructure
+
+PostgreSQL · Redis · Object Storage
+
+### Recommended technology stack
+
+| Component | Technology |
+| --- | --- |
+| Frontend | Next.js |
+| UI components | Tailwind + shadcn/ui |
+| Backend | Python FastAPI |
+| Agent integration | Codex App Server |
+| Database | PostgreSQL |
+| Realtime | WebSockets |
+| Background jobs | Redis + worker |
+| Runtime | Docker |
+| Code storage | Git repositories |
+| Authentication | Auth.js or custom backend auth |
+
+One important detail: Codex App Server should be the primary integration target rather than simply wrapping a terminal command. It provides structured communication, thread management, approvals and streaming events.
+
+Documentation: [OpenAI Codex App Server](<https://developers.openai.com/codex/app-server?utm_source=chatgpt.com>).
+
+## 4. How the Codex integration works
+
+The initial user journey:
+
+1. Create a project
+   User creates a project or connects a GitHub repository.
+2. Create a workspace
+   Your backend prepares a persistent project directory and Git working environment.
+3. Start Codex
+   The Codex adapter starts or connects to an App Server session with the correct workspace and permissions.
+4. Send a task
+   Your frontend sends a message through your backend to Codex.
+5. Stream events
+   Codex sends structured events. Your backend normalizes them and forwards them to the dashboard.
+6. Inspect changes
+   Your platform displays file changes, terminal activity, approvals and Git diffs.
+7. Continue working
+   Users can send follow-up instructions, restart sessions or inspect the project in their own IDE.
+
+The native Codex application can also work with the same repository. However, native app conversation synchronization should be treated as a separate integration requirement, not assumed just because the files are shared.
+
+## 5. V1 versus future versions
+
+I would be very disciplined about the initial scope.
+
+Version 1 — MVP
+
+Build this first
+
+- [ ]User authentication
+- [ ]Project dashboard
+- [ ]GitHub repository integration
+- [ ]Persistent project workspaces
+- [ ]Codex App Server integration
+- [ ]Chat interface
+- [ ]Live task progress
+- [ ]File explorer
+- [ ]Terminal
+- [ ]Git diff viewer
+- [ ]Task and session history
+- [ ]Approval handling
+  Version 2 — Developer experience
+- [ ]Integrated code editor
+- [ ]Live application preview
+- [ ]Multiple concurrent tasks
+- [ ]Git branch management
+- [ ]Custom MCP servers
+- [ ]Extension management
+- [ ]Project templates
+  Version 3 — Multi-agent platform
+- [ ]Claude Code adapter
+- [ ]OpenHands adapter
+- [ ]OpenCode adapter
+- [ ]Agent selection per task
+- [ ]Agent collaboration
+- [ ]Multi-agent orchestration
+- [ ]Custom agent SDK
+
+## 6. Infrastructure for your IONOS VPS
+
+Your current VPS:
+
+- 2 vCores
+- 2 GB RAM
+- 90 GB NVMe
+
+I would use it initially for the lightweight control plane, not for executing coding agents.
+
+| Service | Location |
+| --- | --- |
+| Next.js | IONOS VPS |
+| FastAPI | IONOS VPS |
+| PostgreSQL | IONOS VPS, carefully sized |
+| Codex App Server | Separate execution machine |
+| Docker workspaces | Execution machine |
+| Git repositories | Persistent workspace storage |
+
+You could start with one additional x86 mini-PC or a small cloud server with 8–16 GB RAM.
+
+I would choose x86 rather than Raspberry Pi for this use case because Docker compatibility and development tooling are generally simpler.
+
+Also, Codex model inference is handled through the configured OpenAI service, so you do not need a powerful GPU for the agent itself.
+
+## 7\. Suggested repository structure
+
+I'd use a monorepo:
+
+text
+
+```text
+my-ai-platform/
+│
+├── apps/
+│   ├── web/                 # Next.js frontend
+│   └── api/                 # FastAPI backend
+│
+├── packages/
+│   ├── ui/                  # Shared components
+│   ├── agent-core/          # Agent abstractions
+│   ├── agent-events/        # Normalized events
+│   ├── workspace/           # Workspace management
+│   └── extensions/          # Extension interfaces
+│
+├── adapters/
+│   ├── codex/               # V1
+│   ├── claude-code/         # Future
+│   ├── openhands/           # Future
+│   └── opencode/            # Future
+│
+├── infrastructure/
+│   ├── docker/
+│   ├── database/
+│   └── deployment/
+│
+└── docs/
+    ├── architecture.md
+    ├── agent-adapters.md
+    └── api.md
+```
+
+This gives you a clean separation between the application, agent integrations and execution infrastructure.
+
+## 8\. What makes this platform special?
+
+I wouldn't position it as just another AI chat interface.
+
+The real value is that it combines:
+
+- A persistent development environment.
+- A unified interface for coding agents.
+- Full visibility into agent execution.
+- Project and workspace management.
+- Extensible integrations.
+- The ability to change the underlying agent without losing your projects.
+
+In the long run, users could even run different agents on the same project: Codex implements a feature, Claude reviews it, and another agent writes tests.
+
+That's where this concept becomes particularly interesting.
+
+## 9\. Proposed first development milestones
+
+| Milestone | Deliverable |
+| --- | --- |
+| 1 | Repository, frontend and backend foundation |
+| 2 | Authentication and project management |
+| 3 | Persistent workspace and Git integration |
+| 4 | Codex App Server adapter |
+| 5 | Chat and real-time event streaming |
+| 6 | Terminal, file explorer and diff viewer |
+| 7 | Permissions, approvals and security |
+| 8 | Deployment and testing |
+
+## My recommendation: three architectural principles
+
+1. Codex-first, not Codex-only. Build the first integration deeply, but never make Codex-specific assumptions in the main application.
+2. Workspace ownership belongs to your platform. An agent should never own the only copy of a project or its history.
+3. Treat agent execution as a secure, isolated service. Never expose a Docker socket, arbitrary terminal or agent credentials directly to the browser.
+
+One additional distinction worth preserving: your platform should own project and task history, while each provider retains its own native conversation state. Store the provider's session/thread identifier so you can resume sessions where supported.
+
+The product vision in one sentence:
+
+A self-hosted, extensible AI coding workspace that lets you manage projects, run Codex, monitor its work in real time, and eventually switch between different AI coding agents without changing your development environment.
+
+This is the foundation I would build.

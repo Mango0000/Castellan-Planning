@@ -1,0 +1,34 @@
+/* responsive — media queries, loaded last */
+
+@media(max-width:760px) {
+
+  .sm-empty{padding:16px}
+
+}
+
+@media(max-width:900px) {
+
+  .sm-context{width:264px}
+  .sm-dash{padding:10px 12px 14px}
+  .sm-temp-setup{padding:16px 18px 14px}
+
+}
+
+@media(max-width:900px) {
+
+  .shellmock{grid-template-columns:var(--left-w,200px) minmax(0,1fr)}
+  .sm-context{width:var(--right-w,248px)}
+  .sm-temp-setup{padding:14px 16px}
+  .sm-dash{padding:10px 12px 14px}
+  .sm-side{padding-left:7px;padding-right:7px}
+
+}
+
+@media(max-width:900px) {
+.sm-archive-wrap{padding:18px 16px 16px}
+}
+
+@media(max-width:760px) {
+.sm-archive-card{align-items:flex-start;flex-wrap:wrap}.sm-archive-actions{margin-left:33px}
+}
+

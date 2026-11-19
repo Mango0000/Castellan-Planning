@@ -1,0 +1,149 @@
+/* dashboard — workspace dashboard and dev-server card */
+
+.sm-dash {
+flex:1;min-height:0;overflow:auto;padding:12px 14px 16px;scrollbar-width:thin
+}
+
+.sm-dash-hero {
+border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:9px
+}
+
+.sm-dash-title {
+display:flex;align-items:center;gap:6px;min-width:0
+}
+
+.sm-dash-mark {
+display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);font-size:10px;flex:none
+}
+
+.sm-dash-title h3 {
+font-size:16px;line-height:1.2;margin:0;letter-spacing:-.015em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.sm-chip-soft {
+font-family:var(--font-mono);font-size:6.5px;color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:3px;padding:1px 4px;white-space:nowrap
+}
+
+.sm-dash-hero p {
+font-size:9px;line-height:1.5;color:var(--muted);margin:5px 0 6px;max-width:480px
+}
+
+.sm-dash-tags {
+display:flex;flex-wrap:wrap;gap:3px
+}
+
+.sm-dash-tools {
+display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px
+}
+
+.sm-custom {
+font-family:var(--font-mono);font-size:6.5px;color:var(--faint);display:inline-flex;align-items:center;gap:4px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.sm-custom .sm-spark {
+color:var(--accent-ink)
+}
+
+.sm-dash-grid {
+display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px
+}
+
+.sm-widget {
+border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:8px 9px;min-width:0
+}
+
+.sm-widget-wide {
+grid-column:1/-1
+}
+
+.sm-widget-h {
+display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;
+  font-family:var(--font-mono);font-size:6.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)
+}
+
+.sm-widget-h .pill {
+font-size:6.5px;padding:2px 5px
+}
+
+.sm-widget-hint {
+text-transform:none;letter-spacing:0;color:var(--faint);font-size:6.5px
+}
+
+.sm-server {
+display:flex;align-items:center;justify-content:space-between;gap:8px
+}
+
+.sm-server b {
+display:block;font-family:var(--font-mono);font-size:9px;color:var(--ink2);font-weight:500
+}
+
+.sm-server small {
+display:block;font-family:var(--font-mono);font-size:6.5px;color:var(--faint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.sm-widget-foot {
+display:flex;align-items:center;gap:9px;margin-top:6px
+}
+
+.sm-task-big {
+font-size:9.5px;font-weight:600;line-height:1.35;color:var(--ink)
+}
+
+.sm-task-meta {
+font-family:var(--font-mono);font-size:6.5px;color:var(--faint);margin-top:2px
+}
+
+.sm-change-file {
+font-family:var(--font-mono);font-size:7.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.sm-change-nums {
+font-family:var(--font-mono);font-size:7px;color:var(--accent-ink);margin:2px 0 5px
+}
+
+.sm-about {
+font-size:8px;line-height:1.5;color:var(--muted);margin:0 0 6px
+}
+
+.sm-about small {
+font-size:7px;color:var(--faint)
+}
+
+.sm-cmdlist {
+display:flex;flex-direction:column;gap:3px
+}
+
+.sm-cmd {
+display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:5px;background:var(--surface);
+  font-family:var(--font-mono);font-size:6.8px;color:var(--ink2);padding:3px 5px;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden
+}
+
+.sm-cmd:hover {
+border-color:var(--accent-line);color:var(--accent-ink)
+}
+
+.sm-cmd span {
+color:var(--faint)
+}
+
+.sm-widget-add {
+border-style:dashed;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  min-height:58px;color:var(--faint);font-family:var(--font-sans);font-size:8px;cursor:pointer;padding:8px
+}
+
+.sm-widget-add span {
+font-size:14px;line-height:1;color:var(--accent-ink);opacity:.7
+}
+
+.sm-widget-add small {
+font-size:6.5px;color:var(--faint)
+}
+
+.sm-widget-add:hover {
+border-color:var(--accent-ink);color:var(--accent-ink)
+}
+
+.sm-dash.editing .sm-widget {
+border-style:dashed;border-color:var(--accent-line)
+}
+

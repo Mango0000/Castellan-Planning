@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512"
+     shape-rendering="crispEdges" role="img" aria-label="Castellan">
+  <defs>
+    <clipPath id="stoneL">
+      <path d="M17,12 L23,12 L23,18 L29,18 L29,12 L35,12 L35,18 L41,18 L41,12 L47,12 L47,54 L17,54 Z"/>
+      <rect x="14" y="56" width="36" height="4"/>
+    </clipPath>
+    <pattern id="dLML" width="2" height="2" patternUnits="userSpaceOnUse">
+      <rect width="2" height="2" fill="#E2BC7C"/>
+      <rect width="1" height="1" fill="#F4DCA6"/>
+      <rect x="1" y="1" width="1" height="1" fill="#F4DCA6"/>
+    </pattern>
+    <pattern id="dMSL" width="2" height="2" patternUnits="userSpaceOnUse">
+      <rect width="2" height="2" fill="#C29559"/>
+      <rect width="1" height="1" fill="#E2BC7C"/>
+      <rect x="1" y="1" width="1" height="1" fill="#E2BC7C"/>
+    </pattern>
+  </defs>
+
+  <rect x="31" y="1" width="1" height="10" fill="#2E2338"/>
+  <g fill="#2E2338">
+    <rect x="32" y="1" width="9" height="1"/><rect x="32" y="2" width="9" height="1"/>
+    <rect x="32" y="3" width="8" height="1"/><rect x="32" y="4" width="7" height="1"/>
+    <rect x="32" y="5" width="8" height="1"/><rect x="32" y="6" width="9" height="1"/>
+    <rect x="32" y="7" width="9" height="1"/>
+  </g>
+  <rect x="33" y="2" width="7" height="1" fill="#FF8C74"/>
+  <rect x="33" y="3" width="6" height="1" fill="#E05445"/>
+  <rect x="33" y="4" width="5" height="1" fill="#E05445"/>
+  <rect x="33" y="5" width="6" height="1" fill="#E05445"/>
+  <rect x="33" y="6" width="7" height="1" fill="#C4453A"/>
+
+  <path d="M16,11 L24,11 L24,17 L28,17 L28,11 L36,11 L36,17 L40,17 L40,11 L48,11 L48,55 L16,55 Z" fill="#2E2338"/>
+  <rect x="13" y="55" width="38" height="6" fill="#2E2338"/>
+
+  <g clip-path="url(#stoneL)">
+    <rect x="0" y="0" width="64" height="64" fill="#E2BC7C"/>
+    <rect x="14" y="0" width="5" height="64" fill="#FFF6DC"/>
+    <rect x="19" y="0" width="8" height="64" fill="#F4DCA6"/>
+    <rect x="27" y="0" width="2" height="64" fill="url(#dLML)"/>
+    <rect x="29" y="0" width="10" height="64" fill="#E2BC7C"/>
+    <rect x="39" y="0" width="2" height="64" fill="url(#dMSL)"/>
+    <rect x="41" y="0" width="10" height="64" fill="#C29559"/>
+
+    <g fill="#4A3220" opacity="0.22">
+      <rect x="0" y="23" width="64" height="1"/><rect x="0" y="29" width="64" height="1"/>
+      <rect x="0" y="35" width="64" height="1"/><rect x="0" y="41" width="64" height="1"/>
+      <rect x="0" y="47" width="64" height="1"/><rect x="0" y="53" width="64" height="1"/>
+      <rect x="21" y="24" width="1" height="5"/><rect x="43" y="24" width="1" height="5"/>
+      <rect x="22" y="30" width="1" height="5"/><rect x="44" y="30" width="1" height="5"/>
+      <rect x="21" y="42" width="1" height="5"/><rect x="44" y="42" width="1" height="5"/>
+      <rect x="22" y="48" width="1" height="5"/><rect x="43" y="48" width="1" height="5"/>
+      <rect x="20" y="14" width="1" height="3"/><rect x="32" y="14" width="1" height="3"/>
+      <rect x="44" y="14" width="1" height="3"/>
+    </g>
+
+    <rect x="17" y="12" width="7" height="1" fill="#FFF6DC"/>
+    <rect x="29" y="12" width="7" height="1" fill="#F4DCA6"/>
+    <rect x="41" y="12" width="7" height="1" fill="#E2BC7C"/>
+
+    <g fill="#2E2338">
+      <rect x="30" y="26" width="4" height="1"/>
+      <rect x="29" y="27" width="6" height="1"/>
+      <rect x="28" y="28" width="8" height="8"/>
+    </g>
+    <rect x="30" y="27" width="4" height="1" fill="#FFD35C"/>
+    <rect x="29" y="28" width="6" height="7" fill="#FFD35C"/>
+    <rect x="29" y="29" width="2" height="3" fill="#FFF6C9"/>
+
+    <rect x="27" y="37" width="10" height="1" fill="#2E2338"/>
+    <rect x="28" y="38" width="8" height="1" fill="#9A7042"/>
+
+    <g fill="#2E2338">
+      <rect x="30" y="43" width="4" height="1"/>
+      <rect x="29" y="44" width="6" height="1"/>
+      <rect x="28" y="45" width="8" height="1"/>
+      <rect x="27" y="46" width="10" height="9"/>
+    </g>
+    <g fill="#A85B3E">
+      <rect x="30" y="44" width="4" height="1"/>
+      <rect x="29" y="45" width="6" height="1"/>
+      <rect x="28" y="46" width="8" height="8"/>
+    </g>
+    <rect x="31" y="46" width="2" height="8" fill="#8C4630"/>
+    <rect x="28" y="46" width="1" height="8" fill="#C4785B"/>
+    <rect x="34" y="50" width="1" height="1" fill="#2E2338"/>
+    <rect x="14" y="59" width="36" height="1" fill="#9A7042"/>
+  </g>
+</svg>

@@ -1,0 +1,75 @@
+<aside class="sm-context" id="sm-context" aria-label="Workspace context">
+            <div class="sm-resize sm-resize-right" id="sm-resize-right" role="separator" aria-orientation="vertical" aria-label="Resize context rail" title="Drag to resize"></div>
+            <div class="sm-ctx-head">
+              <div class="sm-ctx-tabbar" id="sm-ctx-tabbar" role="tablist" aria-label="Context tabs"></div>
+              <button class="sm-ctx-plus" id="sm-ctx-plus" type="button" aria-label="Add context tab" aria-expanded="false" title="Add tab">＋</button>
+              <button class="sm-ctx-x" type="button" id="sm-ctx-close" aria-label="Close context panel" title="Close panel">×</button>
+              <div class="sm-ctx-menu" id="sm-ctx-menu" hidden>
+                <button type="button" data-ctx-add="explorer"><span>▤</span> File explorer</button>
+                <button type="button" data-ctx-add="terminal"><span>›_</span> Terminal</button>
+                <button type="button" data-ctx-add="diff"><span>±</span> Diff</button>
+                <button type="button" data-ctx-add="preview"><span>◫</span> Preview</button>
+              </div>
+            </div>
+            <div class="sm-ctx-body">
+              <div class="sm-ctx-empty" id="sm-ctx-empty" hidden>
+                <span>No context tabs open.</span>
+                <button class="sm-linkbtn" type="button" id="sm-ctx-empty-add">Add a tab ＋</button>
+              </div>
+              <div class="sm-ctx-pane" data-ctx-pane="explorer">
+                <div class="sm-exp-loc">
+                  <span class="sm-exp-root" aria-hidden="true">▤</span>
+                  <div class="sm-exp-path" id="sm-exp-path" title="/home/manuel/Downloads/random_projects/codingPlatform">/home/manuel/Downloads/random_projects/codingPlatform</div>
+                  <button class="sm-exp-nav" id="sm-exp-refresh" type="button" aria-label="Refresh file tree" title="Refresh">⟳</button>
+                </div>
+                <div class="sm-exp-list" id="sm-exp-list" role="list"></div>
+                <div class="sm-exp-foot"><span id="sm-exp-count"></span><span>read-only</span></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="file" hidden>
+                <div class="sm-file-head">
+                  <span class="sm-file-ico" id="sm-file-ico">◻</span>
+                  <div class="sm-file-meta"><span class="sm-file-name" id="sm-file-name">LoginForm.tsx</span><small class="sm-file-path" id="sm-file-path">components/LoginForm.tsx</small></div>
+                  <span class="sm-file-kind" id="sm-file-kind">text</span>
+                </div>
+                <div class="sm-file-body" id="sm-file-body"></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="diff" hidden>
+                <div class="sm-ctx-filebar"><span class="sm-ctx-file" id="sm-ctx-diff-file">app/api/auth/route.ts</span><span class="sm-ctx-nums" id="sm-ctx-diff-nums">+64 −2</span></div>
+                <div class="sm-ctx-diff" id="sm-ctx-diff"></div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="preview" hidden>
+                <div class="sm-ctx-url"><span class="sm-dot run" id="sm-ctx-url-dot"></span><span id="sm-ctx-url">localhost:3000</span><span class="sm-ctx-open">↗</span></div>
+                <div class="sm-ctx-preview">
+                  <div class="sm-preview-site" id="sm-ctx-preview-site">
+                    <div class="sm-preview-brand">acme<span>.</span></div>
+                    <div class="sm-preview-h">Sign in</div>
+                    <div class="sm-preview-sub">Welcome back to <span id="sm-preview-ws">acme-web</span></div>
+                    <div class="sm-preview-input">you@acme.dev</div>
+                    <div class="sm-preview-input">••••••••</div>
+                    <div class="sm-preview-btn">Sign in</div>
+                    <div class="sm-preview-foot">preview link · opens in a tab</div>
+                  </div>
+                  <div class="sm-ctx-off" id="sm-ctx-preview-off" hidden>
+                    <span>Dev server is stopped.</span>
+                    <button class="mbtn" type="button" id="sm-ctx-preview-start">Start server</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm-ctx-pane" data-ctx-pane="terminal" hidden>
+                <div class="sm-ctx-filebar"><span class="sm-ctx-file" id="sm-ctx-term-title">acme-web</span><span class="sm-ctx-nums">read-only</span></div>
+                <pre class="sm-ctx-term">$ npm test
+<span class="sm-ctx-dim">&gt; vitest run</span>
+<span class="sm-ctx-ok">✓</span> 12 passed · 0 failed
+<span class="sm-ctx-ok">✓</span> 4.2s
+$ <span class="sm-ctx-cursor">▍</span></pre>
+              </div>
+            </div>
+          </aside>
+
+          <div class="sm-context-stub" id="sm-context-stub" hidden>
+            <button class="sm-ctx-expand" id="sm-ctx-expand" type="button" aria-label="Expand context rail" title="Open context">◧</button>
+          </div>

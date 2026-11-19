@@ -1,0 +1,97 @@
+/* composer — composer shell, model/effort toolbar and context chips */
+
+.sm-composer {
+flex:none;border-top:1px solid var(--line);padding:7px 9px 8px;background:var(--surface)
+}
+
+.sm-inputbox {
+display:flex;flex-direction:column;gap:4px;border:1px solid var(--line2);border-radius:8px;background:var(--surface);padding:5px 7px
+}
+
+.sm-inputbox .ph {
+font-size:8.5px;color:var(--faint);min-height:15px
+}
+
+.sm-compose-foot {
+display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:6.5px;color:var(--faint)
+}
+
+.sm-compose-foot .send {
+margin-left:auto;width:16px;height:16px;border-radius:4px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:8px
+}
+
+.sm-compose-tools {
+display:flex;align-items:center;gap:3px;min-height:18px;flex:none
+}
+
+.sm-plusbtn {
+width:18px;height:18px;flex:none;border:1px solid var(--line2);border-radius:4px;background:var(--surface2);
+  color:var(--muted);font-family:var(--font-sans);font-size:11px;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer
+}
+
+.sm-plusbtn:hover,.sm-plusbtn.on {
+background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)
+}
+
+.sm-tools-sp {
+flex:1;min-width:2px
+}
+
+.sm-modelbtn,.sm-effortbtn {
+height:17px;display:inline-flex;align-items:center;gap:3px;border:1px solid transparent;border-radius:3px;
+  background:none;color:var(--muted);font-family:var(--font-mono);font-size:6.1px;line-height:1;padding:0 3px;cursor:pointer;white-space:nowrap
+}
+
+.sm-modelbtn {
+border-color:var(--line);background:var(--surface2)
+}
+
+.sm-modelbtn:hover,.sm-effortbtn:hover,.sm-modelbtn.on,.sm-effortbtn.on {
+background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)
+}
+
+.sm-modelbtn i,.sm-effortbtn i {
+font-style:normal;font-size:5.5px;color:var(--faint)
+}
+
+.sm-compose-files {
+display:flex;flex-wrap:wrap;gap:3px
+}
+
+.sm-ctxchip {
+display:inline-flex;align-items:center;gap:3px;max-width:100%;border:1px solid var(--line2);border-radius:4px;background:var(--surface2);
+  color:var(--ink2);font-family:var(--font-mono);font-size:6.2px;line-height:1.2;padding:1px 2px 1px 3px
+}
+
+.sm-ctxchip .ci {
+color:var(--accent-ink);flex:none
+}
+
+.sm-ctxchip .tx {
+max-width:86px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.sm-ctxchip .x {
+border:0;background:none;color:var(--faint);font-size:8px;line-height:1;padding:0 1px;cursor:pointer
+}
+
+.sm-ctxchip .x:hover {
+color:var(--ink)
+}
+
+.sm-ctxchip.ws {
+border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent-ink)
+}
+
+.sm-ctxchip.folder .ci {
+color:var(--amber)
+}
+
+.sm-ctxchip.local {
+border-color:var(--blue);background:var(--blue-soft);color:var(--blue)
+}
+
+.sm-ctxchip.local .ci {
+color:var(--blue)
+}
+

@@ -1,0 +1,128 @@
+/* temp — temporary-chat intro and context setup */
+
+.sm-wspick {
+display:flex;flex-wrap:wrap;gap:4px
+}
+
+.sm-wspick button {
+font-family:var(--font-mono);font-size:7.5px;padding:3px 7px;border-radius:5px;border:1px solid var(--line2);background:var(--surface);color:var(--ink2);cursor:pointer
+}
+
+.sm-wspick button.on {
+border-color:var(--accent-ink);background:var(--accent-soft);color:var(--accent-ink)
+}
+
+.sm-temp-setup {
+padding:18px 26px 16px;justify-content:flex-start;gap:7px;overflow:auto
+}
+
+.sm-temp-setup h4 {
+font-size:15px
+}
+
+.sm-temp-setup>p {
+font-size:9px;line-height:1.5;max-width:430px
+}
+
+.sm-attach {
+border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:8px 9px;display:flex;flex-direction:column;gap:5px;max-width:520px
+}
+
+.sm-attach-h {
+display:flex;align-items:baseline;gap:6px;font-family:var(--font-mono);font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)
+}
+
+.sm-attach-h em {
+font-style:normal;font-size:6.5px;letter-spacing:0;text-transform:none;color:var(--faint)
+}
+
+.sm-temp-wspick button {
+font-size:7px;padding:2px 6px
+}
+
+.sm-folder {
+display:flex;align-items:center;gap:5px;border:1px solid var(--line2);border-radius:5px;background:var(--surface);padding:3px 6px
+}
+
+.sm-folder-ic {
+font-size:8px;color:var(--faint)
+}
+
+.sm-folder-input {
+flex:1;min-width:0;border:0;outline:none;background:transparent;font-family:var(--font-mono);font-size:7px;color:var(--ink2);padding:1px 0
+}
+
+.sm-folder-input::placeholder {
+color:var(--faint)
+}
+
+.sm-attach-note {
+font-size:7.5px;line-height:1.45;color:var(--faint);margin:0
+}
+
+.sm-temp-files {
+display:flex;flex-wrap:wrap;gap:4px
+}
+
+.sm-temp-files:empty {
+display:none
+}
+
+.sm-chip {
+display:inline-flex;align-items:center;gap:4px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent-ink);
+  border-radius:99px;padding:2px 6px;font-family:var(--font-mono);font-size:6.5px;max-width:100%
+}
+
+.sm-chip.file {
+border-color:var(--line2);background:var(--surface);color:var(--ink2)
+}
+
+.sm-chip.folder {
+border-color:#D8C7E4;background:var(--blue-soft);color:var(--blue)
+}
+
+.sm-chip button {
+border:0;background:none;color:inherit;font-size:8px;line-height:1;padding:0;cursor:pointer
+}
+
+.sm-temp-setup .sm-bigta {
+max-width:520px;min-height:48px
+}
+
+.sm-temp-setup .sm-empty-foot {
+max-width:520px
+}
+
+.sm-temp-intro {
+flex:1;min-height:0;overflow:auto;padding:38px 26px 18px;display:flex;flex-direction:column;gap:8px
+}
+
+.sm-temp-kicker {
+font-family:var(--font-mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)
+}
+
+.sm-temp-intro h4 {
+font-size:16px;line-height:1.15;letter-spacing:-.02em;margin:0;color:var(--ink)
+}
+
+.sm-temp-intro p {
+font-size:9.3px;line-height:1.55;color:var(--muted);margin:0;max-width:430px
+}
+
+.sm-temp-intro p b {
+color:var(--accent-ink)
+}
+
+.sm-suggest {
+display:flex;flex-wrap:wrap;gap:4px;margin-top:5px
+}
+
+.sm-suggest button {
+border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);
+  font-family:var(--font-sans);font-size:7.5px;padding:3px 7px;cursor:pointer
+}
+
+.sm-suggest button:hover {
+border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent-ink)
+}
+

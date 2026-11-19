@@ -1,0 +1,47 @@
+<!-- current task -->
+            <div class="sm-view" data-sm-view="auth">
+              <div class="sm-head">
+                <div class="sm-crumb">acme-web <span>/</span> task/auth-flow <span class="crumb-sub">thr_8f2a</span></div>
+                <div class="sm-head-r">
+                  <span class="pill wait">Approval</span>
+                  <button class="mbtn" type="button">Changes +64 −2</button>
+                  <button class="mbtn" type="button">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Add email + password auth with Postgres sessions. Keep it boring.</div>
+                <div class="sm-msg agent"><span class="who">Codex · turn 3</span> Plan: route handler, password helper, login form, one migration for <code>sessions</code>.
+                  <div class="sm-plan"><span class="done">✓ read repo</span><span class="done">✓ routes</span><span class="run">● login form</span><span>○ tests</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">✓</span><span class="tt">Read 18 files</span><span class="tm">4s · 18 files</span></div>
+                  <div class="sm-tool-b">package.json, app/layout.tsx, lib/db.ts, components/…</div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">±</span><span class="tt">app/api/auth/route.ts</span><span class="tm">+64 −2</span></div>
+                  <pre class="sm-diff"><span class="c">@@ -1,4 +1,9 @@</span><span class="a">+ import { NextResponse } from "next/server";</span><span class="a">+ import { z } from "zod";</span><span class="d">- export async function GET() {</span><span class="a">+ export async function POST(req: Request) {</span></pre>
+                  <div class="sm-tool-f"><span>View diff</span><span>Open file</span><span>Open in VS Code ↗</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">◧</span><span class="tt">components/LoginForm.tsx</span><span class="tm">modified</span></div>
+                  <pre class="sm-code"><span class="cm">"use client";</span>
+<span class="kw">export function</span> LoginForm() {
+  <span class="kw">const</span> [error, setError] = useState(<span class="kw">null</span>);
+  <span class="cm">// 57 lines · read-only viewer</span>
+}</pre>
+                  <div class="sm-tool-f"><span>Open viewer</span><span>Open in VS Code ↗</span></div>
+                </div>
+                <div class="sm-approve">
+                  <div class="ah">Approval needed · command</div>
+                  Run <code>npm install zod bcryptjs</code> in <code>acme-web</code>?
+                  <div class="ab"><button class="yes" type="button">Allow once</button><button type="button">Allow for task</button><button type="button">Deny</button></div>
+                </div>
+                <div class="sm-note">One agent at a time. One more task is queued for <code>acme-web</code>.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Steer the running turn…</span>
+                  <div class="sm-compose-foot"><span>Code</span><span>·</span><span>ask before run</span><span>·</span><span>$0.42 / $2.00</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>

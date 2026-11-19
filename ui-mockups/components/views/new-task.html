@@ -1,0 +1,24 @@
+<!-- new task -->
+            <div class="sm-view" data-sm-view="new" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">New task <span class="crumb-sub">one agent at a time</span></div>
+                <div class="sm-head-r"><span class="pill">not started</span></div>
+              </div>
+              <div class="sm-empty">
+                <h4>Start a task in <span id="sm-new-ws">acme-web</span></h4>
+                <p>A branch is created from the workspace's default branch. V1 runs one agent at a time; anything else queues behind it.</p>
+                <div class="sm-wspick">
+                  <button type="button" data-pick="acme-web" class="on">acme-web</button>
+                  <button type="button" data-pick="api-core">api-core</button>
+                  <button type="button" data-pick="shop">shop</button>
+                  <button type="button" data-pick="docs">docs</button>
+                </div>
+                <div class="sm-bigta">Describe the task. The agent will plan, work and stop for approvals…</div>
+                <div class="sm-empty-foot">
+                  <span>Policy: ask</span><span>·</span><span>Budget $2.00</span>
+                  <span style="flex:1"></span>
+                  <button class="mbtn primary" type="button">Start task</button>
+                  <button class="sm-linkbtn" type="button" data-sm-view="temp-new">or start a temporary chat →</button>
+                </div>
+              </div>
+            </div>

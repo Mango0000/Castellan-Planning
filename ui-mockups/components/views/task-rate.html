@@ -1,0 +1,29 @@
+<!-- finished, unread task -->
+            <div class="sm-view" data-sm-view="rate" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">api-core <span>/</span> task/rate-limit <span class="crumb-sub">thr_a19c</span></div>
+                <div class="sm-head-r">
+                  <span class="pill done">Done</span>
+                  <button class="mbtn" type="button">Changes +18 −0</button>
+                  <button class="mbtn" type="button">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Rate-limit the public API to 60 req/min per IP. Keep the window in memory, no Redis.</div>
+                <div class="sm-msg agent"><span class="who">Codex · turn 1</span> Added middleware with a sliding window. It reads the forwarded IP and returns 429 with a retry header. 12 tests pass.
+                  <div class="sm-plan"><span class="done">✓ read routes</span><span class="done">✓ middleware</span><span class="done">✓ tests</span></div>
+                </div>
+                <div class="sm-tool">
+                  <div class="sm-tool-h"><span class="ok">±</span><span class="tt">middleware.ts</span><span class="tm">+18 −0</span></div>
+                  <pre class="sm-diff"><span class="c">@@ -0,0 +1,18 @@</span><span class="a">+ const WINDOW_MS = 60_000;</span><span class="a">+ const LIMIT = 60;</span><span class="a">+ const hits = new Map&lt;string, number[]&gt;();</span><span class="a">+ export function middleware(req: Request) {</span></pre>
+                  <div class="sm-tool-f"><span>View diff</span><span>Open file</span></div>
+                </div>
+                <div class="sm-note">This session was unread. Opening it clears the dot; the task stays under <code>api-core</code>.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Ask a follow-up…</span>
+                  <div class="sm-compose-foot"><span>Code</span><span>·</span><span>ask before run</span><span>·</span><span>$0.11 / $2.00</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>

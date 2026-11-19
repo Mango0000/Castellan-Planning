@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Coding Platform — Product Blueprint</title>
+<style>
+:root {
+  --bg:#0b0e14; --panel:#121722; --panel2:#192130;
+  --border:#273247; --text:#edf2fa; --muted:#96a4b8;
+  --accent:#8b9cff; --green:#48d6a0;
+  --blue:#66b5ff; --purple:#bd9aff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+}
+.container { max-width:1100px; margin:auto; padding:40px 24px 80px; }
+header { padding:48px 0 35px; border-bottom:1px solid var(--border); }
+.eyebrow { color:var(--green); font-size:12px; letter-spacing:2px; font-weight:700; }
+h1 { font-size:clamp(36px,6vw,58px); line-height:1.1; margin:15px 0; }
+h2 { font-size:25px; margin-top:50px; }
+h3 { font-size:17px; }
+p,.muted { color:var(--muted); }
+.subtitle { max-width:700px; font-size:18px; }
+.tag {
+ display:inline-block; padding:5px 10px; border-radius:20px;
+ background:#20332f; color:var(--green); font-size:12px;
+ margin:4px 4px 4px 0;
+}
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.card {
+ background:var(--panel); border:1px solid var(--border);
+ border-radius:14px; padding:20px;
+}
+.card p { font-size:14px; margin-bottom:0; }
+.icon { font-size:25px; }
+.arch {
+ background:var(--panel); border:1px solid var(--border);
+ border-radius:13px; padding:20px; text-align:center;
+}
+.arrow { text-align:center; color:var(--accent); font-size:24px; padding:8px; }
+.engines {
+ display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+}
+.engine {
+ background:var(--panel2); padding:18px 8px;
+ border:1px solid var(--border); border-radius:10px;
+ text-align:center; font-weight:650;
+}
+.engine small { display:block; color:var(--muted); font-weight:400; }
+.primary { border-color:#496c65; background:#142923; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+td,th { padding:13px; border-bottom:1px solid var(--border); text-align:left; }
+th { color:var(--muted); font-weight:500; }
+code {
+ color:#b9c5ff; background:#20283a; padding:3px 6px;
+ border-radius:5px; font-size:12px;
+}
+pre {
+ background:#090d14; border:1px solid var(--border);
+ padding:20px; overflow:auto; border-radius:12px;
+ color:#b9c5ff; font-size:13px;
+}
+li { margin:7px 0; color:var(--muted); }
+strong { color:var(--text); }
+.progress {
+ height:7px; background:#263044; border-radius:10px; margin-top:10px;
+}
+.progress span { display:block; height:100%; background:var(--green); border-radius:10px; }
+footer { border-top:1px solid var(--border); margin-top:55px; padding-top:25px; }
+@media(max-width:700px) {
+ .grid,.grid3 { grid-template-columns:1fr; }
+ .engines { grid-template-columns:repeat(2,1fr); }
+ .container { padding:24px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="eyebrow">PRODUCT BLUEPRINT · VERSION 1.0</div>
+  <h1>Your AI Coding<br>Platform.</h1>
+  <p class="subtitle">
+    A self-hosted, extensible AI development environment.
+    One workspace to manage projects, run coding agents,
+    monitor their work and eventually switch between different AI engines.
+  </p>
+  <span class="tag">Codex-first</span>
+  <span class="tag">Self-hosted</span>
+  <span class="tag">Extensible architecture</span>
+  <span class="tag">Multi-agent ready</span>
+</header>
+
+<h2>01 — Product Vision</h2>
+<p>
+  Build your own alternative to the development environments of
+  Cursor, Replit and Claude Code, with an independent frontend,
+  backend, project infrastructure and agent integration layer.
+</p>
+<div class="grid">
+  <div class="card">
+    <div class="icon">📁</div>
+    <h3>Project Ownership</h3>
+    <p>Projects, repositories, files and workspaces belong to your platform, not to an individual AI provider.</p>
+  </div>
+  <div class="card">
+    <div class="icon">🤖</div>
+    <h3>Agent Independence</h3>
+    <p>Use Codex initially, then integrate Claude Code, OpenHands and OpenCode through adapters.</p>
+  </div>
+  <div class="card">
+    <div class="icon">⚡</div>
+    <h3>Live Execution</h3>
+    <p>Watch agents execute tasks, modify files, run commands and report results in real time.</p>
+  </div>
+  <div class="card">
+    <div class="icon">🧩</div>
+    <h3>Extensibility</h3>
+    <p>Add MCP servers, custom tools, integrations, workflows and future agent providers.</p>
+  </div>
+</div>
+
+<h2>02 — Application Modules</h2>
+<div class="grid">
+  <div class="card">
+    <div class="icon">📊</div>
+    <h3>Dashboard</h3>
+    <ul>
+      <li>Projects and repositories</li>
+      <li>Running and completed tasks</li>
+      <li>Recent agent activity</li>
+      <li>System resource overview</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="icon">💻</div>
+    <h3>Project Workspace</h3>
+    <ul>
+      <li>File explorer</li>
+      <li>Integrated code editor</li>
+      <li>AI chat</li>
+      <li>Terminal</li>
+      <li>Git integration</li>
+      <li>Application preview</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="icon">🤖</div>
+    <h3>Agent Management</h3>
+    <ul>
+      <li>Start and stop sessions</li>
+      <li>Agent configuration</li>
+      <li>Task history</li>
+      <li>Permissions and approvals</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="icon">📡</div>
+    <h3>Live Activity</h3>
+    <ul>
+      <li>Streaming agent events</li>
+      <li>Tool execution</li>
+      <li>Terminal output</li>
+      <li>File modifications</li>
+      <li>Errors and test results</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="icon">🔀</div>
+    <h3>Git Management</h3>
+    <ul>
+      <li>Branches and commits</li>
+      <li>Diff viewer</li>
+      <li>Push and pull</li>
+      <li>Pull requests</li>
+      <li>Git worktrees</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="icon">🧩</div>
+    <h3>Extensions</h3>
+    <ul>
+      <li>MCP servers</li>
+      <li>Custom tools</li>
+      <li>GitHub and GitLab</li>
+      <li>Database integrations</li>
+      <li>Custom workflows</li>
+    </ul>
+  </div>
+</div>
+
+<h2>03 — System Architecture</h2>
+<div class="arch">
+  <strong>Frontend — Next.js / React</strong>
+  <p>Dashboard · Projects · Chat · Terminal · Editor · Git</p>
+</div>
+<div class="arrow">↓</div>
+<div class="arch">
+  <strong>Backend — Python FastAPI</strong>
+  <p>Authentication · Projects · Tasks · Sessions · Permissions · WebSockets</p>
+</div>
+<div class="arrow">↓</div>
+<div class="arch">
+  <strong>Agent Abstraction Layer</strong>
+  <p>Provider adapters · Normalized events · Capabilities · Session routing</p>
+</div>
+<div class="arrow">↓</div>
+<div class="engines">
+  <div class="engine primary">Codex<small>V1</small></div>
+  <div class="engine">Claude Code<small>Future</small></div>
+  <div class="engine">OpenHands<small>Future</small></div>
+  <div class="engine">OpenCode<small>Future</small></div>
+</div>
+<div class="arrow">↓</div>
+<div class="arch">
+  <strong>Runtime Infrastructure</strong>
+  <p>Docker · Workspace Manager · Git · Persistent Storage · Terminals</p>
+</div>
+<div class="arrow">↓</div>
+<div class="arch">
+  <strong>Data Infrastructure</strong>
+  <p>PostgreSQL · Redis · Object Storage</p>
+</div>
+
+<h2>04 — Codex Integration</h2>
+<p>
+  The first agent integration uses OpenAI Codex App Server.
+  It provides structured communication with the agent, thread
+  management, streaming events and approval workflows.
+</p>
+<div class="grid">
+  <div class="card">
+    <h3>Task lifecycle</h3>
+    <ol>
+      <li>Create or select project.</li>
+      <li>Prepare persistent workspace.</li>
+      <li>Start or resume Codex session.</li>
+      <li>Send task through backend.</li>
+      <li>Stream execution events.</li>
+      <li>Display progress and changes.</li>
+      <li>Inspect results and continue.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Visible agent information</h3>
+    <ul>
+      <li>Current activity</li>
+      <li>Tool calls</li>
+      <li>Terminal commands and output</li>
+      <li>File changes</li>
+      <li>Approval requests</li>
+      <li>Test results</li>
+      <li>Session state</li>
+    </ul>
+  </div>
+</div>
+
+<h2>05 — Technology Stack</h2>
+<table>
+<tr><th>Component</th><th>Technology</th></tr>
+<tr><td>Frontend</td><td>Next.js + React</td></tr>
+<tr><td>UI</td><td>Tailwind CSS + shadcn/ui</td></tr>
+<tr><td>Backend</td><td>Python + FastAPI</td></tr>
+<tr><td>Agent integration</td><td>OpenAI Codex App Server</td></tr>
+<tr><td>Database</td><td>PostgreSQL</td></tr>
+<tr><td>Realtime</td><td>WebSockets</td></tr>
+<tr><td>Background jobs</td><td>Redis + workers</td></tr>
+<tr><td>Runtime</td><td>Docker</td></tr>
+<tr><td>Version control</td><td>Git + GitHub</td></tr>
+</table>
+
+<h2>06 — Extensible Agent Adapter</h2>
+<p>
+  The application must never directly depend on Codex-specific
+  logic. Every provider implements a shared interface.
+</p>
+<pre>
+interface AgentAdapter {
+  createSession(config): Promise&lt;Session&gt;;
+
+  sendMessage(sessionId, message): Promise&lt;void&gt;;
+
+  streamEvents(sessionId): AsyncIterable&lt;AgentEvent&gt;;
+
+  stopSession(sessionId): Promise&lt;void&gt;;
+
+  getStatus(sessionId): Promise&lt;AgentStatus&gt;;
+
+  getCapabilities(): AgentCapabilities;
+}
+</pre>
+<p>
+  Provider-specific features such as approvals, file operations,
+  session recovery and terminal access should be exposed through
+  capability declarations rather than assumed to be identical.
+</p>
+
+<h2>07 — Repository Structure</h2>
+<pre>
+my-ai-platform/
+│
+├── apps/
+│   ├── web/
+│   └── api/
+│
+├── packages/
+│   ├── ui/
+│   ├── agent-core/
+│   ├── agent-events/
+│   ├── workspace/
+│   └── extensions/
+│
+├── adapters/
+│   ├── codex/
+│   ├── claude-code/
+│   ├── openhands/
+│   └── opencode/
+│
+├── infrastructure/
+│   ├── docker/
+│   ├── database/
+│   └── deployment/
+│
+└── docs/
+    ├── architecture.md
+    ├── agent-adapters.md
+    └── api.md
+</pre>
+
+<h2>08 — Development Roadmap</h2>
+<div class="card">
+  <h3>Phase 1 — MVP Foundation</h3>
+  <span class="tag">Priority: High</span>
+  <ul>
+    <li>User authentication</li>
+    <li>Project dashboard</li>
+    <li>GitHub integration</li>
+    <li>Persistent workspaces</li>
+    <li>Codex App Server adapter</li>
+    <li>Chat and event streaming</li>
+  </ul>
+  <div class="progress"><span style="width:0%"></span></div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3>Phase 2 — Developer Experience</h3>
+  <ul>
+    <li>Integrated code editor</li>
+    <li>Terminal</li>
+    <li>File explorer</li>
+    <li>Diff viewer</li>
+    <li>Live application preview</li>
+    <li>Approval management</li>
+  </ul>
+  <div class="progress"><span style="width:0%"></span></div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3>Phase 3 — Extensibility</h3>
+  <ul>
+    <li>Extension registry</li>
+    <li>MCP integration</li>
+    <li>Custom tools</li>
+    <li>Custom workflows</li>
+  </ul>
+  <div class="progress"><span style="width:0%"></span></div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3>Phase 4 — Multi-Agent Platform</h3>
+  <ul>
+    <li>Claude Code adapter</li>
+    <li>OpenHands adapter</li>
+    <li>OpenCode adapter</li>
+    <li>Agent selection per task</li>
+    <li>Agent collaboration</li>
+    <li>Multi-agent orchestration</li>
+  </ul>
+  <div class="progress"><span style="width:0%"></span></div>
+</div>
+
+<h2>09 — Infrastructure Plan</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Existing IONOS VPS</h3>
+    <span class="tag">Control plane</span>
+    <p>2 vCores · 2 GB RAM · 90 GB NVMe</p>
+    <ul>
+      <li>Next.js frontend</li>
+      <li>FastAPI backend</li>
+      <li>Authentication</li>
+      <li>Database, if carefully sized</li>
+      <li>Agent routing</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Separate execution machine</h3>
+    <span class="tag">Recommended: 8–16 GB RAM</span>
+    <ul>
+      <li>Codex App Server</li>
+      <li>Docker workspaces</li>
+      <li>Project execution</li>
+      <li>Terminals</li>
+      <li>Persistent storage</li>
+    </ul>
+  </div>
+</div>
+<p>
+  Agent execution should be isolated from the public-facing control
+  plane. Use restricted permissions, separate workspaces and secure
+  credential handling.
+</p>
+
+<h2>10 — Product Principles</h2>
+<div class="card">
+  <p><strong>01. Codex-first, not Codex-only.</strong><br>
+  Build the initial integration deeply without coupling the platform to it.</p>
+  <p><strong>02. Platform-owned projects.</strong><br>
+  Projects, files, Git repositories and task history remain independent of agent providers.</p>
+  <p><strong>03. Secure execution.</strong><br>
+  Run coding agents in isolated environments with controlled permissions.</p>
+  <p><strong>04. Real-time transparency.</strong><br>
+  Show actual execution events instead of artificial progress indicators.</p>
+  <p><strong>05. Replaceable engines.</strong><br>
+  Add new agents without redesigning the frontend or project system.</p>
+</div>
+
+<footer>
+  <div class="eyebrow">THE PRODUCT VISION</div>
+  <h2>A development environment without agent lock-in.</h2>
+  <p>
+    A self-hosted AI coding workspace that allows users to manage
+    projects, run Codex, monitor its work in real time and eventually
+    switch between different AI coding agents without changing
+    their development environment.
+  </p>
+  <p style="font-size:12px">AI Coding Platform · Product Blueprint · V1: Codex</p>
+</footer>
+
+</div>
+</body>
+</html>

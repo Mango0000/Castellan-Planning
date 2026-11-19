@@ -1,0 +1,26 @@
+<!-- existing temporary chat -->
+            <div class="sm-view" data-sm-view="temp" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Temporary chat <span class="sm-ephem">ephemeral</span></div>
+                <div class="sm-head-r">
+                  <button class="mbtn" type="button" data-sm-view="new" data-sm-ws="acme-web">Keep as task</button>
+                  <button class="mbtn" type="button" data-sm-view="auth">Close</button>
+                </div>
+              </div>
+              <div class="sm-chat">
+                <div class="sm-msg user">Why does Prisma throw P2002 when I seed with createMany?</div>
+                <div class="sm-msg agent"><span class="who">Codex · scratch</span> P2002 is a unique-constraint violation. With <code>createMany</code> Postgres aborts the whole batch, so one duplicate row fails all of them. Use <code>skipDuplicates</code> or <code>upsert</code>.
+                  <pre class="sm-code"><span class="kw">await</span> db.user.createMany({
+  data: rows,
+  skipDuplicates: <span class="kw">true</span>,
+});</pre>
+                </div>
+                <div class="sm-note temp">No branch, no commit. Read-only sandbox; this chat expires in 7 days — or promote it to a task. Add context with ＋ in the composer.</div>
+              </div>
+              <div class="sm-composer">
+                <div class="sm-inputbox">
+                  <span class="ph">Ask anything. Nothing is committed…</span>
+                  <div class="sm-compose-foot"><span>Temp</span><span>·</span><span>read-only</span><span>·</span><span>7 days</span><span class="send">↑</span></div>
+                </div>
+              </div>
+            </div>

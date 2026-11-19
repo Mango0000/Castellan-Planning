@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Castellan — a self-hosted AI coding platform blueprint: Codex-first, multi-agent ready, with interactive mockups, scope checklist and roadmap.">
+<title>Castellan — AI Coding Platform Blueprint</title>
+<script>
+try {
+  var savedTheme = localStorage.getItem("blueprint.theme");
+  if (savedTheme !== null) { document.documentElement.dataset.theme = JSON.parse(savedTheme); }
+  else if (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) { document.documentElement.dataset.theme = "dark"; }
+} catch (e) {}
+</script>
+<link rel="icon" href="logo/LogoLight.svg">
+<link rel="stylesheet" href="plan.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="readbar" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#top">
+      <span class="brand-logo" aria-hidden="true">
+        <img class="brand-light" src="logo/LogoLight.svg" alt="">
+        <img class="brand-dark" src="logo/LogoDark.svg" alt="">
+      </span>
+      <span class="brand-txt">Castellan</span><span class="brand-short">Castellan</span>
+      <span class="brand-sub">Blueprint</span>
+    </a>
+    <div class="top-actions">
+      <button class="btn ghost only-mobile" id="menu-btn" aria-expanded="false" aria-controls="toc">Contents</button>
+      <button class="btn ghost" id="fold-all">Collapse all</button>
+      <button class="btn icon" id="theme-btn" aria-label="Switch theme" title="Switch theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="hero-in">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow"><span class="dot"></span>Castellan · product blueprint · rebuilt from the draft</p>
+        <h1>A coding platform<br>you own, <em>end to end.</em></h1>
+        <p class="sub">One self-hosted shell for Codex: workspaces and throwaway chats in the left rail, one agent in the middle, real branches and an audit trail underneath.</p>
+        <div class="chips">
+          <span class="chip"><b>Codex-first</b></span>
+          <span class="chip">Self-hosted</span>
+          <span class="chip">Single-user V1</span>
+          <span class="chip">Workspaces + temp chats</span>
+          <span class="chip">~20 min read</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="#vision">Read the plan →</a>
+          <a class="btn" href="#scope">V1 checklist</a>
+          <a class="btn" href="#product">Jump to mockups</a>
+        </div>
+        <p class="hero-note">Built from <code>PlanDump.txt</code> + <code>ai-coding-platform.html</code>. The plan is an offline HTML/CSS/JS page; the mockups live in <code>ui-mockups/</code> and are embedded here as live frames. Fold sections and tick scope items. Your ticks stay in this browser.</p>
+      </div>
+      <aside class="hero-card" aria-label="Short version">
+        <span class="label">The short version</span>
+        <ul>
+          <li><b>V1</b> shell, chat, diff, approvals. No editor.</li>
+          <li><b>Shell</b> working sessions, workspace dashboards, temporary chats.</li>
+          <li><b>Context</b> files, diff, preview, terminal on the right.</li>
+          <li><b>Agent</b> one Codex session at a time, over stdio.</li>
+          <li><b>Truth</b> a Postgres event log, not the browser tab.</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar" id="toc">
+    <nav class="toc" aria-label="Contents">
+      <p class="toc-label">Contents</p>
+      <a href="#vision"><span>01</span> The product</a>
+      <a href="#changes"><span>02</span> What I changed</a>
+      <a href="#product"><span>03</span> Shell &amp; mockups</a>
+      <a href="#architecture"><span>04</span> How it works</a>
+      <a href="#stack"><span>05</span> Stack &amp; repo</a>
+      <a href="#scope"><span>06</span> V1 scope</a>
+      <a href="#roadmap"><span>07</span> Roadmap</a>
+      <a href="#infra"><span>08</span> Infra &amp; security</a>
+      <a href="#risks"><span>09</span> Risks &amp; questions</a>
+      <div class="toc-foot">
+        <div class="toc-prog"><span>V1 items done</span><b id="scope-count">0 / 17</b></div>
+        <div class="bar" aria-hidden="true"><i id="scope-bar"></i></div>
+        <button class="linkbtn" id="reset-all" type="button">Reset saved progress</button>
+      </div>
+    </nav>
+  </aside>
+
+  <main id="main">
+
+  <!-- ================= 01 ================= -->
+  <section id="vision">
+    <details class="sec" open>
+      <summary>
+        <span class="num">01</span>
+        <span class="sec-head"><h2>The product in one page</h2><span class="hint">Vision · promises · what it isn't</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">Strip away the tooling and the product makes three promises: your code stays yours, you can see what the agent is doing, and you can replace the agent without losing anything.</p>
+
+        <div class="g2">
+          <div class="card"><span class="tag">01</span><div class="ico">◇</div><h4>Own the workspace</h4><p>Repositories, branches, tasks and history live in your infrastructure. Delete the agent provider tomorrow and your project is still there, with every change accounted for.</p></div>
+          <div class="card"><span class="tag">02</span><div class="ico">⇄</div><h4>One UI, many engines</h4><p>Codex ships first, one agent at a time. Claude Code, OpenHands and OpenCode come later through one adapter contract — not four special cases bolted into the shell.</p></div>
+          <div class="card"><span class="tag">03</span><div class="ico">◉</div><h4>Live, not theatre</h4><p>Every progress line comes from a real app-server event: a tool call, a file change, an approval request, a test result. No fake spinners, no invented percentages.</p></div>
+          <div class="card"><span class="tag">04</span><div class="ico">✓</div><h4>Safety you can audit</h4><p>Risky operations stop and ask. Every decision is a row in the database, scoped to a turn, a task or a project — so “why did it run that?” has an answer.</p></div>
+        </div>
+
+        <h3>What it is — and what it deliberately isn't</h3>
+        <div class="g2">
+          <div class="card">
+            <h4 style="color:var(--accent-ink)">It is</h4>
+            <ul style="margin-bottom:0">
+              <li>A personal cloud dev environment for one motivated developer.</li>
+              <li>A durable queue of agent tasks on real git branches — plus a scratch chat for questions that need no repo.</li>
+              <li>An audit trail of everything an agent did, and why.</li>
+              <li>A thin, honest shell over the Codex App Server protocol.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4 style="color:var(--rose)">It isn't</h4>
+            <ul style="margin-bottom:0">
+              <li>A browser IDE that beats VS Code. Don't try.</li>
+              <li>A Cursor rival for inline tab-completion.</li>
+              <li>A multi-tenant SaaS in V1 — the auth boundary matters (see 02.09).</li>
+              <li>A GPU box. Inference happens remotely; your hardware just runs processes.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="call quote">
+          <span class="label">One sentence</span>
+          <p>A self-hosted, extensible AI coding workspace where projects, tasks and history belong to you, quick questions get a scratch chat, and the agent is a replaceable execution provider.</p>
+        </div>
+
+        <p style="font-size:13.5px;color:var(--muted)">The original draft frames this well. The rest of this document is about making it buildable: the missing data model, the scope cuts, and the decisions that keep a 2 vCPU VPS alive.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 02 ================= -->
+  <section id="changes">
+    <details class="sec" open>
+      <summary>
+        <span class="num">02</span>
+        <span class="sec-head"><h2>What I changed from the draft</h2><span class="hint">Eleven decisions, and why</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">Both documents describe the same product, and the architecture is right. The weak spots are scope and the missing data model. Eleven changes turn the blueprint into a build plan.</p>
+
+        <div class="g2">
+          <div class="card"><span class="tag">Data</span><h4>01 · Make the Task the object</h4><p>The draft uses “task”, “session” and “conversation” interchangeably. Define one durable <strong>Task</strong>: workspace + branch + provider thread + budget + state. Chat is a view of the thread, not the record.</p></div>
+          <div class="card"><span class="tag">Data</span><h4>02 · Persist events, stream views</h4><p>Streaming is not storage. Append every normalized event to Postgres. The UI then replays a task after a refresh, supports audit, and survives a runner restart.</p></div>
+          <div class="card"><span class="tag">Scope</span><h4>03 · No code editor in V1</h4><p>An editor is weeks of polish for something VS Code already does better. Ship a read-only viewer with line numbers and an <em>Open in VS Code</em> SSH link.</p></div>
+          <div class="card"><span class="tag">Scope</span><h4>04 · Terminal: output now, PTY later</h4><p>The draft disagrees with itself — PlanDump puts Terminal in V1, the HTML puts it in Phase 2. Resolve it: V1 shows live command output; an interactive shell lands in V1.5.</p></div>
+          <div class="card"><span class="tag">Safety</span><h4>05 · One active task, period</h4><p>V1 runs one agent at a time; queue the rest per workspace. Worktrees and a concurrency limit come in V1.5, once the single-agent loop is boring. Two agents in one worktree is a merge-conflict generator.</p></div>
+          <div class="card"><span class="tag">Architecture</span><h4>06 · Runner dials out, never listens</h4><p>App-server's WebSocket transport is documented as experimental and unsupported, and non-loopback listeners accept unauthenticated connections by default. Keep app-server on stdio behind the runner; expose nothing.</p></div>
+          <div class="card"><span class="tag">Infra</span><h4>07 · Skip Redis for V1</h4><p>On a 2 GB control plane, Redis is ~100 MB you would rather spend elsewhere. Postgres <code>SKIP LOCKED</code> is a perfectly good queue until there is more than one worker.</p></div>
+          <div class="card"><span class="tag">Product</span><h4>08 · Put money on the task</h4><p>Token spend is the one number that can go wrong silently. Show tokens and estimated cost in the task header, and cap each task's budget with a hard stop.</p></div>
+          <div class="card"><span class="tag">Legal</span><h4>09 · Mind the auth boundary</h4><p>App-server login is for local and open-source use; per OpenAI's docs it has never been permitted for commercial or hosted services. Personal instance today — own API key or Sign in with ChatGPT if you ever host it for others.</p></div>
+          <div class="card"><span class="tag">UX</span><h4>10 · The sidebar is the dashboard</h4><p>A dashboard page is a place you forget to check. Put working sessions, workspaces and temporary chats in one rail that never leaves the screen; the middle pane is always the thing you selected. A second rail on the right holds files, diff, preview and terminal, and both rails collapse independently.</p></div>
+          <div class="card"><span class="tag">Product</span><h4>11 · Workspace dashboards are data</h4><p>A dashboard is a JSON widget list, not generated HTML. The agent edits that list through one narrow tool; the UI renders a fixed vocabulary of widgets. Agent-customizable without letting the agent run arbitrary UI code.</p></div>
+        </div>
+
+        <div class="call">
+          <span class="label">What the draft got right</span>
+          <p>The adapter abstraction, the worktree guidance, event normalization, approval handling and the two-box split are all correct. This version keeps them and adds the missing data model, the budget guard and an explicit deployment boundary.</p>
+        </div>
+
+        <h3>Positioning: don't rebuild the desktop app</h3>
+        <p>Vibe Console — the first moodboard link in the draft — already runs twelve agent CLIs side by side in a native Mac window, with local projects, git and usage limits. Competing on “many agents in one window on my laptop” is a losing race you don't want to run.</p>
+        <p>Your wedge is the part a desktop app structurally can't give you: <strong>web access to durable tasks</strong>, history that survives your laptop closing, approvals with an audit trail, and more than one person using the same environments.</p>
+
+        <div class="call warn">
+          <span class="label">One thing to verify before building</span>
+          <p>The App Server protocol is the backbone of this design. Generated schemas are version-specific, so pin the Codex CLI version on the runner, generate JSON Schema at build time, and keep a contract test that fails loudly on protocol drift. The details below reflect the public docs as of this writing.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 03 ================= -->
+  <section id="product">
+    <details class="sec" open>
+      <summary>
+        <span class="num">03</span>
+        <span class="sec-head"><h2>The shell is the dashboard</h2><span class="hint">Rail · dashboard · context</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">The draft planned a dashboard page. Skip it. The shell is the overview: working sessions pinned at the top, workspaces below, throwaway chats at the bottom — and one agent in the middle. A context rail on the right opens files, diffs, the dev preview and terminal output without leaving the session. V1 is deliberately single-agent: one conversation, one running task at a time. Anything else in the rail is waiting on you or unread.</p>
+
+        <div class="g3">
+          <div class="card"><span class="tag">Pinned</span><h4>Working</h4><p>Live sessions across every workspace. V1 runs one at a time; a second entry is waiting on you or unread, not another agent at work. A session stays until you have read its latest message — even after the task ends.</p></div>
+          <div class="card"><span class="tag">Durable</span><h4>Workspaces</h4><p>Repositories, tasks, branches and history. Click a workspace to open its dashboard, not a task. One active agent at a time; everything else queues.</p></div>
+          <div class="card"><span class="tag">Ephemeral</span><h4>Temporary</h4><p>Quick questions with no branch and no commit. Same agent and event pipeline; optionally mount a workspace or folder read-only for context. Auto-expiry.</p></div>
+        </div>
+        <p class="scroll-note">On a narrow screen, swipe the mockups sideways to see the full UI.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Surface</th><th>Job to be done</th><th>In V1</th></tr></thead>
+            <tbody>
+              <tr><td>Rail / shell</td><td>Find what needs you and switch context without losing the agent.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Working agents</td><td>Keep live and unread sessions pinned across all workspaces.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Task view</td><td>Talk, watch tool calls, approve, review the change; pick the model and reasoning effort in the composer.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Workspace dashboard</td><td>Start or restart the dev server, read the description, active task and recent changes. Agent-editable widgets.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Context sidebar</td><td>Expandable file tree with a location bar; file tabs for code, Markdown, images and static HTML; plus menu for terminal, diff and preview.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Temporary chat</td><td>Ask a quick question; <b>＋</b> opens Upload / Remote. Remote is a workspace file browser with path navigation; no setup screen.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Archive</td><td>Hide old tasks and temporary chats from the rail; browse them with the count on the Archive button and restore or delete from the Archive view, including Delete all.</td><td><span class="pill run">Yes</span></td></tr>
+              <tr><td>Changes &amp; git</td><td>Diff, commit, discard the task branch.</td><td><span class="pill run">Diff + commit</span></td></tr>
+              <tr><td>Extensions</td><td>Add MCP tools and integrations, later.</td><td><span class="pill no">Schema only</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mock-source">The mockups are built from components in <code>ui-mockups/components/</code> — the browser window, app shell, left rail, right rail and eight views. The UI is <a href="ui-mockups/app.html" target="_blank" rel="noopener">app.html</a> (embedded below); <a href="ui-mockups/console-shell.html" target="_blank" rel="noopener">console-shell.html</a> is the same UI inside a separate browser window. <code>build.py</code> assembles them; this document stays the plan.</p>
+
+        <h3>One shell, eight states</h3>
+        <p style="font-size:13.5px;color:var(--muted)">Click a workspace to open its dashboard, a session to open the task, a temporary chat to start with or without context, or <code>+ New task</code> for the global composer. The rails collapse; the middle pane is always one session.</p>
+        <div class="mock-scroll mock-wide">
+          <iframe class="mock-frame mock-frame-shell" src="ui-mockups/app.html" title="Interactive Castellan app mockup: full-height rails, explorer, file tabs and workspace dashboard"></iframe>
+        </div>
+        <p class="mock-open"><a href="ui-mockups/app.html" target="_blank" rel="noopener">Open the app UI full screen ↗</a></p>
+        <p class="mock-print">The interactive app is best opened on screen: <code>ui-mockups/app.html</code>. This page prints the plan; the mockups are live frames.</p>
+        <p class="mcaption"><b>Why</b>The rail is the app's memory: working sessions outrank workspaces, and an ephemeral chat never pretends to be a project. The middle pane shows exactly one agent session, so there is never a question of where a message goes.</p>
+
+        <h3>Two rails, one agent</h3>
+        <p>The left rail is navigation; the right rail is evidence. The Explorer starts at the workspace root with a location bar; folders expand in place, and clicking a file opens a new tab for code, rendered Markdown, an image or a sandboxed static page. A <b>＋</b> menu adds Terminal, Diff or Preview, and tabs close independently. Both rails run full height, resize by dragging the divider, and collapse from their own headers. Browser chrome is a separate wrapper; the app UI has no global title bar. The middle pane never changes: one session, one composer, one approval queue. Each task and temporary-chat row in the left rail carries a small archive button; the rail has a muted Archive link pinned at the bottom with the count inline, no separate header. It asks for confirmation in a centered dialog over a blurred workspace; the Archive view restores or deletes old work, and offers Delete all with its own confirmation.</p>
+        <p>Every composer carries the same three controls: a Codex <b>model</b> picker, a <b>reasoning effort</b> picker with only the efforts that model supports, and a <b>＋</b> context button. The plus offers <b>Upload</b> for local files and <b>Remote</b> for a file browser that starts at the workspace root with a path bar, expandable folders and double-click-to-open; in temporary chats the same dialog switches workspace. Model, effort and attachments are per chat. The model list comes from <code>model/list</code> in the real runner; the mock keeps it in <code>models.js</code>.</p>
+        <div class="call">
+          <span class="label">V1 scope, stated plainly</span>
+          <p>The Preview tab opens the workspace's dev-server URL over the tailnet; embedding a proxied page is V2. The Terminal tab is command output in V1; an interactive PTY is the first V1.5 item. The right rail is a real feature — it links out rather than running browser-in-browser.</p>
+        </div>
+
+        <h3>Workspace dashboards are data</h3>
+        <p>Clicking a workspace opens that workspace's dashboard. The description, dev-server controls, active task, recent changes and pinned commands are widgets. The agent can add, remove and reorder them — not by writing HTML, but by editing a small JSON document owned by the workspace.</p>
+        <details class="fold">
+          <summary>The dashboard document, in one widget list</summary>
+          <div class="fold-body">
+            <pre class="codeblock">{
+  "version": 3,
+  "widgets": [
+    { "type": "dev-server", "span": 2 },
+    { "type": "active-task" },
+    { "type": "recent-changes" },
+    { "type": "description", "props": { "text": "Marketing site..." } },
+    { "type": "commands", "props": { "commands": ["npm test", "open preview"] } }
+  ]
+}</pre>
+            <p style="margin-bottom:0">Known widget types only. Props are data, never markup. The agent gets a <code>dashboard.update</code> tool (or edits <code>.castellan/dashboard.json</code>); the renderer validates against a schema and ignores unknown widgets. Dev-server actions are a fixed <code>start</code> / <code>restart</code> vocabulary, not a shell.</p>
+          </div>
+        </details>
+        <div class="call">
+          <span class="label">Agent-customizable, not agent-authored</span>
+          <p>This is the line that makes the dashboard useful without making it dangerous: the agent decides <em>what is on the dashboard</em>, never <em>what code the dashboard runs</em>. The same rule applies to the context rail: files and diffs are rendered from records, not generated UI.</p>
+        </div>
+
+        <h3>What the rail is telling you</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>State</th><th>Cue</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td>Running</td><td><span class="legend-dot run"></span>green dot + last event</td><td>Stays pinned in Working until the turn completes or you archive it.</td></tr>
+              <tr><td>Needs you</td><td><span class="legend-dot wait"></span>amber badge</td><td>An approval or a question. Sorted first, survives refresh and navigation.</td></tr>
+              <tr><td>Unread</td><td><span class="legend-dot unread"></span>blue dot</td><td>Clears when you open the session. It stays pinned until then, even if the task already finished.</td></tr>
+              <tr><td>Idle</td><td>no dot</td><td>Lives under its workspace; one click to resume, no place in the way.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="call">
+          <span class="label">Temporary chat is a mode, not a second app</span>
+          <p>Same turn, same events; no workspace by default. A scratch directory and a read-only sandbox unless you attach context. Use <b>＋</b> in the composer: Upload adds local files; Remote opens the workspace file browser, where folders expand, double-click opens a folder, and the path bar updates. There is no separate context setup screen. No branch and no commit. It expires after 7 days — or <em>Keep as task</em> promotes it when it turns out to matter.</p>
+        </div>
+
+        <h3>The rest of the surface</h3>
+        <div class="g3">
+          <div class="card"><div class="ico">⑂</div><h4>Git, but small</h4><p>V1: view diff, commit to the task branch, discard the task, open a PR link. V2: branches, worktrees, PR creation, revert an agent commit. Never force-push from the UI.</p></div>
+          <div class="card"><div class="ico">!</div><h4>Approvals, not modals</h4><p>A pending approval lives inline and as a rail badge, not a full-screen dialog. Scope the decision: once, for this task, or for the project. Deny is always one click away.</p></div>
+          <div class="card"><div class="ico">⎔</div><h4>Extensions, via MCP</h4><p>App-server already speaks MCP, so V1 supports MCP server config as a pass-through. No plugin marketplace, no custom SDK, no sandbox for third-party UI.</p></div>
+        </div>
+
+        <div class="call warn">
+          <span class="label">A note on the mockups</span>
+          <p>These are UI hypotheses, not pixel specs. The one rule worth keeping: every visual claim must trace back to an event, a record, or a policy decision. If the UI can't point at the source, delete the element.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+  <!-- ================= 04 ================= -->
+  <section id="architecture">
+    <details class="sec" open>
+      <summary>
+        <span class="num">04</span>
+        <span class="sec-head"><h2>How it actually works</h2><span class="hint">Layers · flow · protocol · data model</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">The control plane never runs code. It records what happened and decides what is allowed. Everything else happens on the runner, next to the repository.</p>
+
+        <div class="call">
+          <span class="label">The one rule that keeps this simple</span>
+          <p>If a component can execute a command in a repository, it is not allowed to hold a user session, serve the browser, or accept an inbound connection.</p>
+        </div>
+
+        <h3>Seven layers</h3>
+        <p style="font-size:13.5px;color:var(--muted)">Click a layer for its job, what it owns, and its failure mode.</p>
+        <div class="archx">
+          <div class="archx-stack" role="tablist" aria-label="Architecture layers" aria-orientation="vertical">
+            <button class="layer" role="tab" aria-selected="true" data-layer="web">
+              <span class="lt"><b>Web UI</b><small>Next.js · browser</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="api">
+              <span class="lt"><b>Control plane</b><small>FastAPI · auth · tasks</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="agent">
+              <span class="lt"><b>Agent layer</b><small>adapters · normalizer</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="runner">
+              <span class="lt"><b>Runner</b><small>exec box · outbound WSS</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="codex">
+              <span class="lt"><b>Codex app-server</b><small>JSON-RPC over stdio</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="workspace">
+              <span class="lt"><b>Workspace</b><small>worktree · container</small></span><span class="la">V1</span>
+            </button>
+            <button class="layer" role="tab" aria-selected="false" data-layer="data">
+              <span class="lt"><b>Data</b><small>events · audit · artifacts</small></span><span class="la">V1</span>
+            </button>
+          </div>
+          <div class="archx-detail" id="arch-detail" aria-live="polite">
+            <div class="ad-k"><h4>Web UI</h4><span class="pill run">V1</span></div>
+            <div class="ad-sub">Next.js · App Router</div>
+            <p>Renders state and captures intent. No secrets, no repository paths, no provider credentials — those stop at the API.</p>
+            <div class="ad-row"><span>Owns</span><span>task views, WS client, approval cards, read-only viewer</span></div>
+            <div class="ad-row"><span>Never</span><span>talks to app-server directly</span></div>
+            <div class="ad-row"><span>Fails</span><span>stale view → reconnect and replay after the last sequence number</span></div>
+          </div>
+        </div>
+
+        <h3>One task, end to end</h3>
+        <ol class="flow">
+          <li><strong>You send a prompt.</strong> The API creates a Task (<code>queued</code>) with a budget, a target project and a policy, then offers a job to the queue.</li>
+          <li><strong>The runner claims it.</strong> Postgres <code>SKIP LOCKED</code>, no Redis. It fetches the repo, creates branch <code>task/&lt;slug&gt;</code>, and prepares the workspace path.</li>
+          <li><strong>It starts Codex.</strong> Spawns <code>codex app-server</code> with cwd set to the workspace, sends <code>initialize</code>, then <code>initialized</code>, then <code>thread/start</code>.</li>
+          <li><strong>The turn begins.</strong> <code>turn/start</code> carries the prompt, working directory and sandbox policy. The returned <code>threadId</code> is stored on the task.</li>
+          <li><strong>Events arrive.</strong> Items, deltas and approval requests stream back over stdio. The runner normalizes each one and batches it to <code>POST /internal/events</code>.</li>
+          <li><strong>The UI follows.</strong> The API appends events with a per-task sequence number and fans them out over WebSocket. Steps, logs and diffs update from data.</li>
+          <li><strong>You decide.</strong> An approval becomes a row plus a card. Your choice travels back through the runner as the response to the pending JSON-RPC request.</li>
+          <li><strong>The turn ends.</strong> <code>turn/completed</code> closes the task, records tokens and cost, shows the diff, and offers commit, PR or discard.</li>
+        </ol>
+
+        <div class="call">
+          <span class="label">Two doors, one pipeline</span>
+          <p>A workspace task and a temporary chat differ in a few fields: <code>kind</code>, <code>workspace_id</code>, <code>context_folder</code> and <code>expires_at</code>. Everything else — initialize, thread, turn, events, approvals, spend — is identical. A chat uses a scratch directory by default, or mounts one workspace/folder read-only when you attach context. No branch, no commit. <em>Keep as task</em> copies the transcript into a real task once you pick a workspace.</p>
+        </div>
+
+        <h3>The adapter is a mapping, not a rewrite</h3>
+        <p>App Server already exposes almost everything this product needs. The adapter's job is to normalize events and translate policy — not to re-implement an agent runtime.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Contract method</th><th>Codex App Server call</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>start</td><td><code>thread/start</code></td><td>Returns the thread id; store it on the task.</td></tr>
+              <tr><td>resume</td><td><code>thread/resume</code></td><td>After a runner restart, or to continue yesterday's task.</td></tr>
+              <tr><td>send</td><td><code>turn/start</code></td><td>Prompt plus optional cwd and sandbox policy.</td></tr>
+              <tr><td>steer</td><td><code>turn/steer</code></td><td>Add input to the in-flight turn — no new turn, no lost context.</td></tr>
+              <tr><td>interrupt</td><td><code>turn/interrupt</code></td><td>Ends the turn as <code>interrupted</code>; the branch stays for inspection.</td></tr>
+              <tr><td>stream</td><td>notifications</td><td><code>item/*</code>, deltas, <code>turn/*</code>, <code>thread/status/changed</code>.</td></tr>
+              <tr><td>decide</td><td>JSON-RPC response</td><td><code>accept</code>, <code>acceptForSession</code>, <code>decline</code>, <code>cancel</code>.</td></tr>
+              <tr><td>models</td><td><code>model/list</code></td><td>Populate the model picker instead of hard-coding names.</td></tr>
+              <tr><td>review</td><td><code>review/start</code></td><td>V1.5: “review this branch” as a second opinion.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="snippet">
+          <div class="snippet-h"><span>packages/contracts/src/agent.ts</span><span class="tag">the seam</span></div>
+          <pre><b>export interface</b> AgentAdapter {
+  <b>readonly</b> id: "codex" | "claude-code" | "openhands" | "opencode";
+  <b>readonly</b> capabilities: Capabilities;   <i>// resume, approvals, terminal, diff…</i>
+
+  start(task: TaskContext): Promise&lt;{ threadId: string }&gt;;
+  resume(threadId: string): Promise&lt;void&gt;;
+  send(threadId: string, input: string): Promise&lt;void&gt;;
+  steer(threadId: string, input: string): Promise&lt;void&gt;;
+  interrupt(threadId: string): Promise&lt;void&gt;;
+  stream(threadId: string): AsyncIterable&lt;AgentEvent&gt;;
+  decide(requestId: string, decision: Decision): Promise&lt;void&gt;;
+  close(threadId: string): Promise&lt;void&gt;;
+}</pre>
+        </div>
+
+        <div class="call warn">
+          <span class="label">Why stdio, not a public WebSocket</span>
+          <p>OpenAI's docs describe the app-server WebSocket transport as experimental and unsupported, and non-loopback WebSocket listeners currently accept unauthenticated connections by default. So: the runner spawns one app-server process per workspace over stdio, one thread per task, and the runner's own connection to the control plane is outbound-only. Nothing agent-related listens on a network port. <a href="https://learn.chatgpt.com/docs/app-server">App Server docs ↗</a></p>
+        </div>
+
+        <h3>Event mapping</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>App-server notification</th><th>Platform event</th><th>What the UI does</th></tr></thead>
+            <tbody>
+              <tr><td><code>turn/started</code> · <code>turn/completed</code></td><td><code>task.status</code></td><td>Header pill, timer, final summary, cost.</td></tr>
+              <tr><td><code>item/agentMessage/delta</code></td><td><code>message.delta</code></td><td>Streams the assistant's text into chat.</td></tr>
+              <tr><td><code>item/started</code> (commandExecution)</td><td><code>tool.started</code></td><td>“Running tests” line with the command.</td></tr>
+              <tr><td><code>item/commandExecution/outputDelta</code></td><td><code>log.appended</code></td><td>Read-only terminal tail.</td></tr>
+              <tr><td><code>item/completed</code> (fileChange)</td><td><code>file.changed</code></td><td>Changed-files badge and editor markers.</td></tr>
+              <tr><td><code>turn/diff/updated</code></td><td><code>diff.updated</code></td><td>Unified diff view.</td></tr>
+              <tr><td><code>item/*/requestApproval</code></td><td><code>approval.requested</code></td><td>Approval card + inbox count.</td></tr>
+              <tr><td><code>error</code></td><td><code>task.error</code></td><td>Banner with retry and the error class.</td></tr>
+              <tr><td><code>thread/status/changed</code></td><td><code>agent.status</code></td><td>Engine state: idle, running, waiting.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details class="fold">
+          <summary>The data model, in six tables</summary>
+          <div class="fold-body">
+            <div class="tbl-wrap" style="margin-top:8px">
+              <table>
+                <thead><tr><th>Table</th><th>Columns that matter</th></tr></thead>
+                <tbody>
+                  <tr><td>projects</td><td>id, name, repo_url, default_branch, policy, created_at</td></tr>
+                  <tr><td>workspaces</td><td>id, project_id, path, status, last_seen_at, dashboard jsonb, dashboard_version, server_port</td></tr>
+                  <tr><td>tasks</td><td>id, kind (code | chat), project_id?, workspace_id?, context_folder?, read_only, model, reasoning_effort, title, state, branch, provider, thread_id, last_read_seq, last_event_at, budget_cents, cost_cents, expires_at</td></tr>
+                  <tr><td>events</td><td>id, task_id, seq, type, payload jsonb, created_at <em>(append-only)</em></td></tr>
+                  <tr><td>approvals</td><td>id, task_id, kind, payload, decision, decided_by, decided_at</td></tr>
+                  <tr><td>audit_log</td><td>id, actor, action, target, meta, created_at</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="margin-top:10px">One normalized event, as stored:</p>
+            <pre class="codeblock">{
+  "id": 41207,
+  "task_id": "tsk_24",
+  "seq": 118,
+  "ts": "2026-11-19T09:41:22.918Z",
+  "type": "approval.requested",
+  "source": "codex.item.commandExecution.requestApproval",
+  "payload": {
+    "itemId": "item_9",
+    "command": "npm install zod bcryptjs",
+    "cwd": "/srv/workspaces/acme-web/task-auth",
+    "reason": "Add validation and password hashing"
+  },
+  "raw": { "...": "provider payload kept for debugging, never rendered by default" }
+}</pre>
+            <p>Unread is derived, not a flag: a session is unread when <code>last_read_seq &lt; max(events.seq)</code>. Opening it advances <code>last_read_seq</code>; an approval is separate state and stays until you decide.</p>
+            <p style="margin-bottom:0">Indexes: <code>events(task_id, seq)</code>, <code>tasks(state, created_at)</code>. Retention: keep task summaries forever, archive raw events after 90 days.</p>
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>The HTTP + WebSocket surface (V1)</summary>
+          <div class="fold-body">
+            <pre class="codeblock">POST /api/projects                 { name, repo_url }
+GET  /api/projects
+POST /api/chats                    { prompt, workspace_id?, folder?, model?, reasoning_effort? }
+POST /api/chats/:id/promote        { project_id }         // → real task
+POST /api/workspaces/:id/server    { action: start | restart }
+GET  /api/workspaces/:id/dashboard
+PUT  /api/workspaces/:id/dashboard { version, widgets }    // UI + dashboard.update tool
+POST /api/tasks                    { project_id, prompt, model?, reasoning_effort?, policy?, budget_cents? }
+GET  /api/tasks/:id                task + last 100 events
+GET  /api/tasks/:id/events?after=  replay / catch-up
+POST /api/tasks/:id/messages       follow-up, or steer a running turn
+POST /api/tasks/:id/read           { seq }  // clears unread up to seq
+POST /api/tasks/:id/interrupt
+POST /api/approvals/:id            { decision: allow_once | allow_task | deny }
+GET  /api/tasks/:id/diff
+POST /api/tasks/:id/commit         { message }
+WS   /api/stream                   subscribe: task events, approvals, status
+
+internal (runner → API, bearer token)
+POST /internal/events              batched, idempotent on (task_id, seq)
+POST /internal/status
+GET  /internal/approvals/:id       long-poll for a decision</pre>
+            <p style="margin-bottom:0">Auth: httpOnly session cookie, Argon2 password, optional TOTP. The runner uses a per-runner token and a dedicated internal route prefix — never a user session.</p>
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>The runner loop, compressed</summary>
+          <div class="fold-body">
+            <pre class="codeblock">claim job → workspace task: fetch + branch
+          → chat: scratch directory
+  → spawn app-server (cwd = workspace | scratch)
+  → initialize → initialized
+  → thread/start | thread/resume
+  → turn/start
+  → for each notification: normalize, batch, POST
+  → on approval request: publish, await decision, respond
+  → on turn/completed: usage, diff (task only), release
+  → on crash: mark orphaned; resume by thread id</pre>
+            <p style="margin-bottom:0">The runner is deliberately dumb about product logic. It knows workspaces, processes and protocol — not users, projects or permissions.</p>
+          </div>
+        </details>
+
+        <div class="call">
+          <span class="label">Workspace control stays declarative</span>
+          <p>The dev-server button is a runner job: a fixed <code>start</code> / <code>restart</code> action for a whitelisted command, a process record, logs streamed into the terminal tab, and a port reachable only over the tailnet. Dashboard widgets are a JSON schema; the agent edits data. Neither is a general shell nor arbitrary HTML.</p>
+        </div>
+
+        <div class="call">
+          <span class="label">The native Codex app can coexist</span>
+          <p>Codex's own desktop app can work on the same repository, because files are just files. Conversations are not shared: threads are provider state. Keep the platform's task and event history as the record, store the <code>threadId</code> so you can resume, and treat native-app conversation sync as a separate integration rather than an assumption.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 05 ================= -->
+  <section id="stack">
+    <details class="sec" open>
+      <summary>
+        <span class="num">05</span>
+        <span class="sec-head"><h2>Stack and repository</h2><span class="hint">Boring choices, chosen on purpose</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">Every choice below is the one that costs the least to keep alive on a small box — not the one that looks best in a job posting.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Component</th><th>Pick</th><th>Why</th><th>If it hurts later</th></tr></thead>
+            <tbody>
+              <tr><td>Frontend</td><td>Next.js (App Router)</td><td>Server-rendered task lists, one WS client, room to grow.</td><td>—</td></tr>
+              <tr><td>UI kit</td><td>Tailwind + shadcn/ui</td><td>Fast, accessible defaults, components you own.</td><td>—</td></tr>
+              <tr><td>Code view</td><td>CodeMirror 6 (read-only)</td><td>Small, fast, good highlighting and diff extensions.</td><td>Monaco if you ever edit</td></tr>
+              <tr><td>Backend</td><td>FastAPI + SQLAlchemy + Alembic</td><td>Async, typed, first-class WebSockets, migrations.</td><td>Django if you want admin</td></tr>
+              <tr><td>Database</td><td>PostgreSQL 16</td><td>Queue, event log, audit and search in one service.</td><td>Managed Postgres</td></tr>
+              <tr><td>Queue</td><td><code>SKIP LOCKED</code></td><td>No Redis on a 2 GB box; transactional by default.</td><td>Redis Streams</td></tr>
+              <tr><td>Realtime</td><td>API WebSocket fanout</td><td>One process can serve one user comfortably.</td><td>Redis pub/sub</td></tr>
+              <tr><td>Runner</td><td>Python asyncio + JSON-RPC</td><td>No extra runtime to deploy; the protocol is newline JSON.</td><td>Go for tighter binaries</td></tr>
+              <tr><td>Isolation</td><td>Docker + app-server sandbox</td><td>Two independent layers; neither is a full trust boundary alone.</td><td>microVM per task</td></tr>
+              <tr><td>Proxy</td><td>Caddy</td><td>Automatic TLS in three lines.</td><td>Cloudflare Tunnel</td></tr>
+              <tr><td>Auth</td><td>Session cookie + Argon2 + TOTP</td><td>One owner, no SSO tax.</td><td>OIDC</td></tr>
+              <tr><td>Deploy</td><td>Docker Compose + systemd</td><td>Debuggable, reproducible, no control plane to babysit.</td><td>k8s, not before 10 users</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Repository layout</h3>
+        <div class="snippet">
+          <div class="snippet-h"><span>my-ai-platform/</span><span class="tag">monorepo</span></div>
+          <pre>my-ai-platform/
+├─ apps/
+│  ├─ web/                <i># Next.js: rail shell, task view, viewer</i>
+│  ├─ api/                <i># FastAPI: auth, projects, tasks, events, WS</i>
+│  └─ runner/             <i># Python: app-server lifecycle, git, containers</i>
+├─ packages/
+│  ├─ contracts/          <i># generated app-server schema + event types</i>
+│  └─ ui/                 <i># shared components</i>
+├─ infra/
+│  ├─ compose/            <i># control plane + runner stacks</i>
+│  ├─ caddy/              <i># TLS, reverse proxy</i>
+│  └─ scripts/            <i># backup, restore, migrate</i>
+├─ docs/
+│  ├─ architecture.md
+│  ├─ events.md
+│  └─ adr/                <i># 0001-stdio.md, 0002-no-redis.md …</i>
+└─ Makefile</pre>
+        </div>
+        <p style="font-size:13px;color:var(--muted)">The draft's layout was close. Two additions: <code>apps/runner</code> (the half that actually executes) and <code>packages/contracts</code> (generated from the pinned Codex version, so protocol drift becomes a failing test instead of a mystery).</p>
+
+        <h3>The “editor” feature is a link</h3>
+        <div class="snippet">
+          <div class="snippet-h"><span>~/.ssh/config</span><span class="tag">on your laptop</span></div>
+          <pre>Host runner
+  HostName 100.88.14.2      <i># tailnet address, no public port</i>
+  User dev
+  ForwardAgent no
+
+<i># then, in the workspace UI:</i>
+vscode://vscode-remote/ssh-remote+runner/home/dev/acme-web</pre>
+        </div>
+        <p>Readers get a real editor with extensions, language servers and debugging — for zero platform code. If you later want editing in the browser, add Monaco behind a feature flag; don't build it twice.</p>
+
+        <div class="call warn">
+          <span class="label">Do not install yet</span>
+          <p>Redis · Kafka · Kubernetes · LangChain · a vector database · Monaco · a plugin runtime · a second auth system. Each one is a service to patch, monitor and backup. The architecture above has exactly three moving processes: web, API, runner — plus Postgres.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 06 ================= -->
+  <section id="scope">
+    <details class="sec" open>
+      <summary>
+        <span class="num">06</span>
+        <span class="sec-head"><h2>V1 scope — tick as you go</h2><span class="hint">17 items · saved in this browser</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">The draft's scope creeps in two directions at once. This list is the smallest thing that delivers the promise: send a task or open a temporary chat, watch it work, approve the risk, review the change.</p>
+
+        <div class="call">
+          <span class="label">Scope rule</span>
+          <p>V1 is done when you can go from a GitHub URL to a committed branch without opening a terminal on the server.</p>
+        </div>
+
+        <div class="progress-row">
+          <div class="bar" aria-hidden="true"><i id="mvp-bar"></i></div>
+          <span class="count" id="mvp-count"><b>0</b> / 17</span>
+        </div>
+
+        <div data-group="mvp" class="checks">
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-auth"><span class="ct"><span class="title">Single-user authentication</span><span class="meta">Session cookie · Argon2 password · optional TOTP · no registration flow</span></span><span class="when">M2</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-projects"><span class="ct"><span class="title">Projects + GitHub import</span><span class="meta">Clone on the runner, default branch, per-project policy and budget</span></span><span class="when">M2</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-shell"><span class="ct"><span class="title">Rail shell: working, workspaces, temporary</span><span class="meta">One sidebar, workspace switching, unread and approval badges, one click between sessions</span></span><span class="when">M3</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-dashboard"><span class="ct"><span class="title">Workspace dashboards</span><span class="meta">Agent-editable JSON widgets, dev-server start/restart, description, active task, recent changes</span></span><span class="when">M3</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-workspace"><span class="ct"><span class="title">Persistent workspace</span><span class="meta">Stable path per project, git identity, branch <code>task/&lt;slug&gt;</code> per task</span></span><span class="when">M3</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-context"><span class="ct"><span class="title">Right context sidebar</span><span class="meta">Expandable file tree with location bar and file tabs (code / Markdown / images / static HTML); plus menu for terminal, diff, preview; rails resizable and collapsible</span></span><span class="when">M3–M6</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-viewer"><span class="ct"><span class="title">Read-only file tree and viewer</span><span class="meta">Path-guarded API, line numbers, “Open in VS Code” link</span></span><span class="when">M3</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-codex"><span class="ct"><span class="title">Codex sessions</span><span class="meta">Start, resume and interrupt a thread; one running at a time; store <code>threadId</code> on the task</span></span><span class="when">M4</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-chat"><span class="ct"><span class="title">Chat with streaming output</span><span class="meta">Deltas rendered live, messages persisted, steer a running turn; per-chat model + reasoning effort</span></span><span class="when">M5</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-events"><span class="ct"><span class="title">Normalized event log with replay</span><span class="meta">Append-only, sequence per task, catch-up with <code>?after=</code></span></span><span class="when">M5</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-steps"><span class="ct"><span class="title">Live task steps from events</span><span class="meta">No fabricated percentages; steps derived from real items</span></span><span class="when">M5</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-output"><span class="ct"><span class="title">Command output view</span><span class="meta">Read-only terminal tail from output deltas — not an interactive shell</span></span><span class="when">M5</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-temp"><span class="ct"><span class="title">Temporary chat</span><span class="meta">Context via ＋ → Upload / Remote file browser in the composer; scratch by default; no branch; 7-day expiry; promote to task</span></span><span class="when">M5</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-diff"><span class="ct"><span class="title">Diff view, commit and discard</span><span class="meta">Unified diff, changed-file list, commit to the task branch, safe discard</span></span><span class="when">M6</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-approvals"><span class="ct"><span class="title">Approval inbox and policy</span><span class="meta">Allow once / for task / deny; read-only, ask, auto-safe; every choice audited</span></span><span class="when">M6</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-spend"><span class="ct"><span class="title">Task history and spend meter</span><span class="meta">Tokens, estimated cost, per-task cap, daily budget stop; archive/restore old work</span></span><span class="when">M6</span></label>
+          <label class="check"><input class="chk" type="checkbox" data-k="v1-backup"><span class="ct"><span class="title">Backups, retention and audit view</span><span class="meta">Nightly <code>pg_dump</code>, restic for workspaces, 90-day event retention, restore drill</span></span><span class="when">M7</span></label>
+        </div>
+
+        <h3>First after V1</h3>
+        <div class="g2">
+          <div class="card">
+            <span class="pill">V1.5 — quality of life</span>
+            <ul style="margin:10px 0 0">
+              <li>Interactive PTY via <code>command/exec</code> with resize</li>
+              <li>Worktree per task and a real concurrency limit</li>
+              <li>Pull request creation from the task branch</li>
+              <li>Review this branch (<code>review/start</code>)</li>
+              <li>Model picker from <code>model/list</code></li>
+              <li>Read-only task view that works on a phone</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="pill no">V2 / V3 — only after V1 is boring</span>
+            <ul style="margin:10px 0 0">
+              <li>Second adapter (Claude Code), then a third</li>
+              <li>Agent selection per task; agent-to-agent review</li>
+              <li>MCP configuration UI and an extension registry</li>
+              <li>Live preview proxy for dev servers</li>
+              <li>Multi-user with roles and per-project access</li>
+              <li>Custom agent SDK</li>
+            </ul>
+          </div>
+        </div>
+
+        <details class="fold">
+          <summary>Not in V1 — and the reason</summary>
+          <div class="fold-body">
+            <div class="tbl-wrap" style="margin-top:8px">
+              <table>
+                <thead><tr><th>Cut</th><th>Reason</th></tr></thead>
+                <tbody>
+                  <tr><td>Code editor</td><td>VS Code exists, is better, and is one SSH link away. Editing in the browser is a product of its own.</td></tr>
+                  <tr><td>Embedded application preview</td><td>Proxying, auth, HMR and container networking are a product of their own; V1 opens the dev-server URL over the tailnet instead.</td></tr>
+                  <tr><td>Agent-authored dashboard HTML</td><td>The dashboard is a fixed widget vocabulary fed by JSON. No generated HTML or JavaScript.</td></tr>
+                  <tr><td>Multi-user</td><td>Doubles the auth, permission and isolation surface; changes the provider terms story too.</td></tr>
+                  <tr><td>Multi-agent</td><td>Meaningless until one agent is reliable. Build the seam, not the orchestra.</td></tr>
+                  <tr><td>Plugin marketplace</td><td>A distribution problem. V1 needs a config field for MCP servers, nothing more.</td></tr>
+                  <tr><td>Mobile editing</td><td>Read-only monitoring is useful; editing on a phone is not.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <div class="call warn">
+          <span class="label">Reconciling the two drafts</span>
+          <p>PlanDump §5 puts Terminal, file explorer and diff viewer in V1. The HTML moves Terminal, editor and diff viewer to Phase 2. This version resolves it explicitly: live command output, file viewer and diff are V1; an interactive terminal is V1.5; a browser editor is not in scope at all.</p>
+        </div>
+
+        <h3>Definition of done</h3>
+        <ol class="flow">
+          <li><strong>The happy path, no SSH.</strong> Import a repo, send a prompt, watch the events, approve one command, review the diff, commit. Done from the browser only.</li>
+          <li><strong>Refresh mid-task.</strong> Close the tab while Codex runs. Reopen: the log is complete and still live.</li>
+          <li><strong>Restart the runner.</strong> The task either resumes on the same thread or lands in a clear, recoverable state — never a silent hang.</li>
+          <li><strong>Deny something.</strong> Refuse an approval. The agent stops or adapts, and the audit log records who denied what and when.</li>
+          <li><strong>Restore.</strong> Rebuild the control plane from last night's dump and keep every task, event and decision.</li>
+          <li><strong>Quick detour.</strong> Open a temporary chat with no workspace, get an answer and close it. No branch was created; the scratch directory is gone or was explicitly promoted.</li>
+          <li><strong>The workspace loop.</strong> Open a workspace, start or restart its dev server, open the preview link and a file or diff in the context sidebar, then attach a file to a temporary chat.</li>
+        </ol>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 07 ================= -->
+  <section id="roadmap">
+    <details class="sec" open>
+      <summary>
+        <span class="num">07</span>
+        <span class="sec-head"><h2>Roadmap</h2><span class="hint">8 milestones · ~35 focused days</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">Order matters more than the estimate. Each milestone ends with something you can demo, and the dangerous integration (the runner) is proven before the UI gets ambitious.</p>
+
+        <div class="progress-row">
+          <div class="bar" aria-hidden="true"><i id="roadmap-bar"></i></div>
+          <span class="count" id="roadmap-count"><b>0</b> / 8</span>
+        </div>
+
+        <div data-group="roadmap">
+          <label class="ms"><input class="chk" type="checkbox" data-k="m1"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M1</span><h4>Foundation</h4><span class="ms-est">~3 days</span></div>
+            <ul><li>Monorepo, lint, type check, CI</li><li>Compose stack: Postgres, Caddy, API, web</li><li>Health endpoint and a deploy that restarts cleanly</li></ul>
+            <p class="done"><b>Done when</b>a push deploys and <code>/healthz</code> reports the DB connection.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m2"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M2</span><h4>Auth and projects</h4><span class="ms-est">~4 days</span></div>
+            <ul><li>Single-user login, sessions, TOTP optional</li><li>Project CRUD and GitHub clone on the runner</li><li>Project policy and default budget</li></ul>
+            <p class="done"><b>Done when</b>a private repo is cloned to the runner and listed in the rail.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m3"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M3</span><h4>Shell, dashboards and git</h4><span class="ms-est">~6 days</span></div>
+            <ul><li>Rail shell and right context rail, both collapsible</li><li>Workspace dashboard JSON, description, dev-server start/restart</li><li>Workspace path, branch per task, safe path guards</li><li>Read-only files, diff endpoint and VS Code deep link</li></ul>
+            <p class="done"><b>Done when</b>you can switch workspaces, start a dev server, open a file and a diff in the context rail without a reload.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m4"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M4</span><h4>Runner and Codex integration</h4><span class="ms-est">~6 days</span></div>
+            <ul><li>Runner service with outbound WSS and reconnect</li><li>app-server spawn, initialize, thread start/resume</li><li>Event normalization, interrupt, approval round-trip</li></ul>
+            <p class="done"><b>Done when</b>a prompt from a test script runs a turn, streams events, and answers an approval.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m5"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M5</span><h4>Chat, temporary mode, working</h4><span class="ms-est">~5 days</span></div>
+            <ul><li>WebSocket fanout with catch-up</li><li>Chat, steps, read-only terminal tail</li><li>Temporary chats: scratch, expiry, promote to task</li><li>Unread and approval state in the rail</li></ul>
+            <p class="done"><b>Done when</b>refreshing mid-turn loses nothing, and a temporary chat never creates a branch.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m6"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M6</span><h4>Diff, approvals, money</h4><span class="ms-est">~5 days</span></div>
+            <ul><li>Context rail: diff, preview link, read-only terminal output</li><li>Unified diff and commit/discard from the task view</li><li>Approval inbox, policy mapping, audit rows</li><li>Token and cost meter with a hard cap</li></ul>
+            <p class="done"><b>Done when</b>denying a command visibly stops the agent, and the context rail shows the real diff and log.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m7"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M7</span><h4>Safety and operations</h4><span class="ms-est">~3 days</span></div>
+            <ul><li>Secret injection at the runner, redaction in events</li><li>Container limits, disk guard, retention job</li><li>Nightly backups and a restore drill</li></ul>
+            <p class="done"><b>Done when</b>you restore a task history from last night's dump.</p>
+          </div></label>
+          <label class="ms"><input class="chk" type="checkbox" data-k="m8"><div class="ms-body">
+            <div class="ms-top"><span class="ms-num">M8</span><h4>Polish and deploy</h4><span class="ms-est">~3 days</span></div>
+            <ul><li>Empty states, error states, onboarding copy</li><li>Mobile read-only pass, keyboard walkthrough</li><li>Public deploy (or tailnet), docs, demo script</li></ul>
+            <p class="done"><b>Done when</b>a friend can use it without you narrating.</p>
+          </div></label>
+        </div>
+
+        <p style="font-size:13px;color:var(--muted);margin-top:14px">Calendar estimate: ~35 focused days. At nights-and-weekends pace, 10–12 weeks. At full-time, 7. The estimate assumes you already know Next.js and FastAPI; it does not assume you have ever driven a JSON-RPC protocol by hand.</p>
+
+        <h3>First seven days</h3>
+        <div class="card" style="margin-bottom:12px">
+          <ul style="margin-bottom:0;columns:2;column-gap:26px">
+            <li><strong>Day 1</strong> — repo, compose, Postgres, health check</li>
+            <li><strong>Day 2</strong> — login, session, one protected route</li>
+            <li><strong>Day 3</strong> — project CRUD, clone on the runner</li>
+            <li><strong>Day 4</strong> — runner hello world: spawn app-server, <code>initialize</code></li>
+            <li><strong>Day 5</strong> — <code>thread/start</code> + print every notification</li>
+            <li><strong>Day 6</strong> — events table, batch ingest, WS echo</li>
+            <li><strong>Day 7</strong> — rail shell plus an ugly chat that streams real output</li>
+          </ul>
+        </div>
+        <p>If day seven works, you have de-risked the only genuinely unknown part. Everything after that is CRUD, UI and policy — work you already know how to estimate.</p>
+
+        <div class="call warn">
+          <span class="label">The cut line</span>
+          <p>If the project stalls, stop after M6. Chat, live events, diff and approvals is already a useful product. Everything below that line is convenience.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 08 ================= -->
+  <section id="infra">
+    <details class="sec" open>
+      <summary>
+        <span class="num">08</span>
+        <span class="sec-head"><h2>Infrastructure and security</h2><span class="hint">Two boxes · no inbound ports on the runner</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">The IONOS VPS runs the product. A cheap x86 box runs the code. Keeping those two jobs apart is what makes the whole thing safe and recoverable.</p>
+
+        <div class="boxes">
+          <div class="box">
+            <div class="box-h"><h4>Control plane</h4><span class="spec">IONOS · 2 vCPU · 2 GB</span></div>
+            <p class="box-sub">Public or tailnet. Never executes project code.</p>
+            <ul>
+              <li>Caddy (TLS)</li>
+              <li>Next.js standalone</li>
+              <li>FastAPI, one worker</li>
+              <li>PostgreSQL 16</li>
+              <li>Nightly dump to object storage</li>
+            </ul>
+          </div>
+          <div class="net" aria-hidden="true">
+            <span class="net-label">WSS<br>outbound</span>
+            <span class="ln"></span>
+            <span class="net-label">443 only</span>
+          </div>
+          <div class="box">
+            <div class="box-h"><h4>Execution box</h4><span class="spec">x86 · 16 GB · 512 GB</span></div>
+            <p class="box-sub">On your desk, behind NAT. Dials out; accepts nothing.</p>
+            <ul>
+              <li>Runner service (systemd)</li>
+              <li>1–2 Codex app-server processes</li>
+              <li>Workspaces on NVMe</li>
+              <li>Docker, no socket exposed to web</li>
+              <li>Per-project secrets, injected at runtime</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Does the VPS survive?</h3>
+        <p>With the right settings, yes. The failure mode is not the database — it's running an agent and a Next.js build on the same 2 GB.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Service</th><th>Expected RAM</th><th>Setting that matters</th></tr></thead>
+            <tbody>
+              <tr><td>OS + systemd</td><td>250–350 MB</td><td>Disable snapd and anything you don't use.</td></tr>
+              <tr><td>Caddy</td><td>~20 MB</td><td>Nothing.</td></tr>
+              <tr><td>Next.js</td><td>180–260 MB</td><td>Standalone output, no build on the server.</td></tr>
+              <tr><td>FastAPI</td><td>120–180 MB</td><td>One uvicorn worker; no Celery.</td></tr>
+              <tr><td>PostgreSQL</td><td>250–350 MB</td><td><code>shared_buffers=256MB</code>, <code>max_connections=20</code>.</td></tr>
+              <tr><td>Swap</td><td>2 GB (disk)</td><td>Safety net, not a strategy.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:13.5px;color:var(--muted)">Total: roughly 1.0–1.5 GB resident. Skip Redis, skip a background worker in V1, and never run <code>npm run build</code> on this machine. Add alerts at 80% memory and disk. Dev servers live on the execution box, not here; budget one per active workspace and stop idle ones.</p>
+
+        <h3>Network shape</h3>
+        <ul>
+          <li><strong>Tailscale</strong> between laptop, control plane and runner. SSH exists only on the tailnet.</li>
+          <li><strong>The runner makes one outbound WSS connection</strong> to the API and holds it. Commands, events and approval decisions all travel inside that connection.</li>
+          <li><strong>App-server never listens on a network port.</strong> The runner talks to it over stdio; its optional WebSocket listener stays off.</li>
+          <li><strong>Dev servers bind loopback on the runner.</strong> Preview links go through the tailnet (or an authenticated Caddy route), never a public port per workspace.</li>
+          <li><strong>Public exposure is optional.</strong> If the platform is public, Caddy terminates TLS and rate-limits <code>/api/auth</code>; everything else can stay behind the tailnet.</li>
+        </ul>
+
+        <h3>Security checklist</h3>
+        <ul class="sec-list">
+          <li>No Docker socket mounted into the web or API container. The runner is the only component allowed to touch Docker.</li>
+          <li>Repo paths are validated against the workspace root on every file request; symlinks are resolved and rejected if they escape.</li>
+          <li>Secrets live in the runner's environment or a file mounted at <code>/run/secrets</code>, never in Postgres, never in events.</li>
+          <li>An event redaction pass strips bearer tokens, API keys and anything matching a secret pattern before persistence.</li>
+          <li>Project policy defaults to “ask” for network and commands outside the workspace; auto-safe is opt-in per project.</li>
+          <li>Containers run as non-root with CPU/memory limits and a per-workspace disk quota; the runner refuses to start a task above the limit.</li>
+          <li>Temporary chats run under <code>/srv/scratch/&lt;id&gt;</code> with a read-only sandbox, no git remote, a 7-day expiry job and no backup.</li>
+          <li>Dashboard documents are validated against a widget schema; props render as text/data, never HTML or JavaScript.</li>
+          <li>Dev-server actions are a whitelisted <code>start</code> / <code>restart</code> per workspace, resource-limited and stopped on idle; the API never forwards arbitrary shell.</li>
+          <li>Every approval writes an audit row with actor, scope, command and timestamp. Deletes are soft.</li>
+          <li>Backups are encrypted and tested. A backup you have never restored is a hope, not a backup.</li>
+        </ul>
+
+        <h3>Hardware and cost</h3>
+        <div class="g2">
+          <div class="card"><h4>Buy once</h4><p>A used Lenovo Tiny, Dell Micro or NUC with 16 GB RAM and a 512 GB NVMe: €150–250. x86, Ubuntu LTS, wired Ethernet, a UPS if the power is flaky.</p></div>
+          <div class="card"><h4>Or rent</h4><p>A small cloud instance with 8–16 GB (Hetzner CX32 class, roughly €7–9/month) if you don't want hardware at home. You lose the “my repo never leaves the house” argument.</p></div>
+        </div>
+        <p style="font-size:13.5px;color:var(--muted);margin-top:10px">No GPU anywhere. Model inference is remote; this hardware only runs processes, git and tests. Compute the Codex cost separately and cap it per task.</p>
+
+        <div class="call">
+          <span class="label">Backup, minimum viable</span>
+          <p>Nightly <code>pg_dump -Fc</code> to S3-compatible storage; <code>restic</code> snapshots of <code>/srv/workspaces</code> daily; every project has a real git remote; a monthly restore of the database into a scratch container. Three copies, two media, one off-site — of the two things that would actually hurt to lose: task history and repositories. Scratch chats are excluded by design; promote one to a task if it matters.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 09 ================= -->
+  <section id="risks">
+    <details class="sec" open>
+      <summary>
+        <span class="num">09</span>
+        <span class="sec-head"><h2>Risks, open questions, references</h2><span class="hint">What could go wrong · what to decide</span></span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="sec-body">
+        <p class="lede">A plan is only useful if it says where it breaks. These are the failure modes worth designing around before the first line of code, and the decisions that change the shape of V1.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Risk</th><th>Odds</th><th>Impact</th><th>Mitigation</th></tr></thead>
+            <tbody>
+              <tr><td>App Server protocol drift</td><td><span class="pill wait">Likely</span></td><td><span class="pill wait">Medium</span></td><td>Pin the Codex version; generate schemas in CI; contract test <code>initialize</code> + one turn against the pinned binary.</td></tr>
+              <tr><td>OOM on the 2 GB control plane</td><td><span class="pill wait">Medium</span></td><td><span class="pill wait">Medium</span></td><td>No Redis, one worker, swap, memory alerts, builds elsewhere.</td></tr>
+              <tr><td>Runaway token spend</td><td><span class="pill wait">Medium</span></td><td><span class="pill hi">High</span></td><td>Hard budget per task, daily stop, visible meter, alert at 80%.</td></tr>
+              <tr><td>Git conflicts or lost changes</td><td><span class="pill wait">Medium</span></td><td><span class="pill hi">High</span></td><td>One active task at a time, commit before run, never force-push, keep the branch on discard.</td></tr>
+              <tr><td>Secret leaked into a log</td><td><span class="pill no">Low</span></td><td><span class="pill hi">High</span></td><td>No secrets in the control plane, runtime injection, redaction before persist, audit of reads.</td></tr>
+              <tr><td>Runner offline or power cut</td><td><span class="pill wait">Medium</span></td><td><span class="pill no">Low</span></td><td>Reconnect with backoff, task marked orphaned, resume via <code>thread/resume</code>, visible “runner offline” state.</td></tr>
+              <tr><td>Temporary chat becomes a second product</td><td><span class="pill wait">Medium</span></td><td><span class="pill wait">Medium</span></td><td>One pipeline and one sandbox policy. No repo tools in scratch, 7-day expiry, promote to a task for anything that should persist.</td></tr>
+              <tr><td>Agent-authored dashboard UI</td><td><span class="pill no">Low</span></td><td><span class="pill hi">High</span></td><td>Fixed widget vocabulary, schema validation and props rendered as data; never HTML or JavaScript from the agent.</td></tr>
+              <tr><td>Dev-server control abused</td><td><span class="pill wait">Medium</span></td><td><span class="pill hi">High</span></td><td>Whitelisted <code>start</code> / <code>restart</code> per workspace, no arbitrary args, loopback/tailnet only, resource limits, stop on idle.</td></tr>
+              <tr><td>Hosting it for other people</td><td><span class="pill wait">Later</span></td><td><span class="pill hi">High</span></td><td>App-server auth is not permitted for hosted use; plan an API key or Sign in with ChatGPT before sharing.</td></tr>
+              <tr><td>Scope creep past V1</td><td><span class="pill hi">Almost sure</span></td><td><span class="pill wait">Medium</span></td><td>The cut line at M6, the “not in V1” table, and this checklist. Ticks are a commitment device.</td></tr>
+              <tr><td>You lose interest after the demo</td><td><span class="pill wait">Real</span></td><td><span class="pill wait">Medium</span></td><td>Ship the thing you will use weekly: approvals and task history, not a prettier chat box.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Open questions — with a default so you can move</h3>
+        <div class="qcard"><h4>1 · One user, or a few friends?</h4><p>Changes auth, isolation and the provider-terms story. Multi-user is the largest hidden scope multiplier in the draft.</p><p class="def"><b>Default</b>single user for V1; invite-only magic links later.</p></div>
+        <div class="qcard"><h4>2 · ChatGPT plan or API key for Codex?</h4><p>The plan is cheaper for personal use; a key is cleaner for automation and required if you ever host it for others.</p><p class="def"><b>Default</b>your existing plan on the runner's own account; add key support behind config from day one.</p></div>
+        <div class="qcard"><h4>3 · Public internet or tailnet only?</h4><p>Public means TLS, rate limits, brute-force protection and a real auth review. Tailnet means no exposure at all.</p><p class="def"><b>Default</b>tailnet first; public only when someone else needs it.</p></div>
+        <div class="qcard"><h4>4 · Embedded preview, or just a link?</h4><p>The context rail has a Preview tab. Opening the dev-server URL in a tab is nearly free; proxying the page into the shell is the expensive part.</p><p class="def"><b>Default</b>open the link over the tailnet in V1; embedded proxy in V2.</p></div>
+        <div class="qcard"><h4>5 · Which second agent?</h4><p>Claude Code has the closest mental model (streaming JSON, permission prompts, session ids), so it doubles as a test of the adapter contract.</p><p class="def"><b>Default</b>Claude Code after V1.5 — only if the first adapter has needed no special cases.</p></div>
+        <div class="qcard"><h4>6 · How long do you keep event data?</h4><p>Terminal output and diffs get large; task summaries stay small and useful.</p><p class="def"><b>Default</b>summaries forever, raw events 90 days, artifacts 30 days.</p></div>
+        <div class="qcard"><h4>7 · What is the spend cap?</h4><p>A number that is small enough to not hurt and large enough to finish a feature.</p><p class="def"><b>Default</b>$2 per task, $20 per day, stop rather than warn.</p></div>
+        <div class="qcard"><h4>8 · Where does “done” live?</h4><p>A task ends at a commit, a PR, or a deployed preview — pick one and make the UI's final button match.</p><p class="def"><b>Default</b>commit to the task branch; PR creation in V1.5.</p></div>
+        <div class="qcard"><h4>9 · How long should a temporary chat live?</h4><p>Long enough to come back tomorrow, short enough that it never becomes a hidden project.</p><p class="def"><b>Default</b>7 days, no repo, no branch; <em>Keep as task</em> to promote.</p></div>
+        <div class="qcard"><h4>10 · How much workspace control should the agent get?</h4><p>Dashboard widgets and dev-server actions are useful; arbitrary shell is already the runner's job, behind approvals.</p><p class="def"><b>Default</b>dashboard JSON plus <code>start</code> / <code>restart</code>; the agent cannot author UI code or open public ports.</p></div>
+
+        <h3>References</h3>
+        <div class="refs">
+          <div class="ref"><a href="https://learn.chatgpt.com/docs/app-server">Codex App Server — protocol, approvals, auth</a><span>primary source for §04</span></div>
+          <div class="ref"><a href="https://github.com/openai/codex/tree/main/codex-rs/app-server">app-server source (openai/codex)</a><span>for edge cases</span></div>
+          <div class="ref"><a href="https://learn.chatgpt.com/docs/codex-sdk">Codex SDK</a><span>the better tool for CI jobs</span></div>
+          <div class="ref"><a href="https://developers.openai.com/codex">Codex documentation</a><span>get started</span></div>
+          <div class="ref"><a href="https://www.vibeconsole.dev">Vibe Console</a><span>macOS multi-CLI — the positioning reference</span></div>
+          <div class="ref"><a href="https://tryorca.com">Orca</a><span>draft moodboard</span></div>
+          <div class="ref"><a href="https://athas.dev">Athas</a><span>draft moodboard</span></div>
+          <div class="ref"><a href="https://emberai.work">Ember</a><span>draft moodboard</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--faint);margin-top:10px">The draft's tracking parameters were stripped. The first two and Vibe Console were checked while writing; the other moodboard links are kept for provenance only. The original draft also cites a Medium post, a Devpost project and a Dribbble shot — mood only, so they are omitted here.</p>
+
+        <h3>If you only remember five things</h3>
+        <ol>
+          <li>The rail is the home; the task is the product. Persist the events.</li>
+          <li>Codex is a replaceable process behind an adapter, not the architecture.</li>
+          <li>The runner is untrusted, outbound-only, and never shares a machine with the API.</li>
+          <li>Ship read, diff and approve before you ship edit, preview and orchestrate.</li>
+          <li>Put a hard number on every task's budget from day one.</li>
+        </ol>
+      </div>
+    </details>
+  </section>
+
+  <footer class="site-foot">
+    <div>
+      <div class="foot-mark"><span>◇</span>Blueprint v2</div>
+      <p style="margin-top:8px">Castellan blueprint · rebuilt from <code>PlanDump.txt</code> and <code>ai-coding-platform.html</code> · November 2026.<br>Offline plan · mockups in <code>ui-mockups/</code> · no network requests · no tracking · progress saved in this browser only.</p>
+    </div>
+    <p style="max-width:280px;text-align:right">Edit this file as decisions land. The open questions are the interesting part — the rest is implementation.</p>
+  </footer>
+
+  </main>
+</div>
+
+<script src="plan.js"></script>
+</body>
+</html>

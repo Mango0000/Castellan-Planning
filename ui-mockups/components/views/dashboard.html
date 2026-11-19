@@ -1,0 +1,76 @@
+<!-- workspace dashboard -->
+            <div class="sm-view" data-sm-view="dashboard" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Workspace <span>/</span> <span id="wd-crumb">acme-web</span> <span class="crumb-sub" id="wd-branch">main</span></div>
+                <div class="sm-head-r">
+                  <span class="pill" id="wd-state">ready</span>
+                  <button class="mbtn" type="button" id="wd-open-ide">Open IDE</button>
+                </div>
+              </div>
+              <div class="sm-dash" id="sm-dash">
+                <div class="sm-dash-hero">
+                  <div class="sm-dash-title">
+                    <span class="sm-dash-mark">◇</span>
+                    <h3 id="wd-name">acme-web</h3>
+                    <span class="sm-chip-soft" id="wd-branch-chip">main</span>
+                  </div>
+                  <p id="wd-desc">Marketing site for Acme. Next.js, Postgres and Stripe checkout.</p>
+                  <div class="sm-dash-tags" id="wd-tags"></div>
+                  <div class="sm-dash-tools">
+                    <span class="sm-custom"><span class="sm-spark">✦</span> Customized by Codex · 8m ago</span>
+                    <button class="sm-linkbtn" type="button" id="wd-edit">Edit layout</button>
+                  </div>
+                </div>
+
+                <div class="sm-dash-grid" id="wd-grid">
+                  <section class="sm-widget sm-widget-wide">
+                    <div class="sm-widget-h"><span>Dev server</span><span class="pill run" id="wd-server-pill">running</span></div>
+                    <div class="sm-server">
+                      <div><b id="wd-server-url">localhost:3000</b><small id="wd-server-meta">npm run dev · PID 4821 · 4h</small></div>
+                      <button class="mbtn" type="button" id="wd-server-btn">Restart</button>
+                    </div>
+                    <div class="sm-widget-foot">
+                      <button class="sm-linkbtn" type="button" data-ctx-open="preview">Open preview →</button>
+                      <button class="sm-linkbtn" type="button" data-ctx-open="terminal">Logs</button>
+                    </div>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Active task</span><span class="pill wait" id="wd-task-pill">needs you</span></div>
+                    <div class="sm-task-big" id="wd-task-title">Implement authentication</div>
+                    <div class="sm-task-meta" id="wd-task-meta">task/auth-flow · 4m</div>
+                    <button class="sm-linkbtn" type="button" id="wd-task-open">Open task →</button>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Recent changes</span><span class="sm-widget-hint">working tree</span></div>
+                    <div class="sm-change-file" id="wd-change-file">app/api/auth/route.ts</div>
+                    <div class="sm-change-nums" id="wd-change-nums">+64 −2</div>
+                    <button class="sm-linkbtn" type="button" data-ctx-open="diff">Open diff →</button>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>About</span><span class="sm-widget-hint">agent-editable</span></div>
+                    <p class="sm-about" id="wd-about">The public site and customer account area. Auth lands here first; billing follows.</p>
+                    <div class="sm-dash-tags" id="wd-about-tags"></div>
+                  </section>
+
+                  <section class="sm-widget">
+                    <div class="sm-widget-h"><span>Pinned commands</span></div>
+                    <div class="sm-cmdlist">
+                      <button class="sm-cmd" type="button" data-ctx-open="terminal"><span>$</span> npm test</button>
+                      <button class="sm-cmd" type="button" data-ctx-open="preview"><span>◫</span> Open preview</button>
+                      <button class="sm-cmd" type="button" data-ctx-open="explorer"><span>▤</span> Browse files</button>
+                    </div>
+                  </section>
+
+                  <button class="sm-widget sm-widget-add" type="button" id="wd-add-widget"><span>＋</span> Add widget <small>Ask Codex, or add one here</small></button>
+
+                  <section class="sm-widget" id="wd-extra" hidden>
+                    <div class="sm-widget-h"><span>Deployments</span><span class="pill done">healthy</span></div>
+                    <p class="sm-about" id="wd-extra-text">production · acme-web.vercel.app<br><small>last deploy 2h ago</small></p>
+                    <span class="sm-linkbtn">Open dashboard ↗</span>
+                  </section>
+                </div>
+              </div>
+            </div>

@@ -1,0 +1,27 @@
+<!-- working agents -->
+            <div class="sm-view" data-sm-view="working" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Working agents</div>
+                <div class="sm-head-r"><span class="pill wait">1 needs you</span><span class="pill" id="sm-working-unread">1 unread</span></div>
+              </div>
+              <div class="sm-body">
+                <div class="sm-filters"><span class="sm-filter on">All 2</span><span class="sm-filter">Needs you 1</span><span class="sm-filter" id="sm-unread-filter">Unread 1</span></div>
+                <button class="sm-agentcard" type="button" data-sm-view="auth">
+                  <span>
+                    <span class="ac-t"><span class="sm-dot wait"></span> Implement authentication <span class="sm-badge">1</span></span>
+                    <span class="ac-m">acme-web · task/auth-flow · 4m</span>
+                    <span class="ac-last"><span class="sm-dot wait" style="margin:0;flex:none"></span> approval · npm install zod bcryptjs</span>
+                  </span>
+                  <span class="ac-r"><span class="pill wait">Needs you</span><span class="ac-open">Open →</span></span>
+                </button>
+                <button class="sm-agentcard" type="button" data-sm-view="rate">
+                  <span>
+                    <span class="ac-t"><span class="sm-dot" style="background:var(--blue)"></span> Rate-limit the public API</span>
+                    <span class="ac-m">api-core · task/rate-limit · 12m</span>
+                    <span class="ac-last"><span class="sm-unread" style="margin:0"></span> turn/completed · 12 tests passed</span>
+                  </span>
+                  <span class="ac-r"><span class="pill">Unread</span><span class="ac-open">Open →</span></span>
+                </button>
+                <div class="sm-note">A session stays while it runs, and remains if its last message is unread — even after it ends. Once read, it lives under its workspace.</div>
+              </div>
+            </div>
