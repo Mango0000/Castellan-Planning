@@ -16,25 +16,9 @@
   };
 
   /* ---------- theme ---------- */
-  var themeBtn = $("#theme-btn");
   var savedTheme = store.get("theme", null);
   var prefersDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme = savedTheme || (prefersDark ? "dark" : "light");
-  function syncTheme() {
-    var dark = root.dataset.theme === "dark";
-    var label = "Switch to " + (dark ? "light" : "dark") + " theme";
-    themeBtn.textContent = dark ? "☀" : "☾";
-    themeBtn.setAttribute("aria-label", label);
-    themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
-    themeBtn.title = label;
-  }
-  syncTheme();
-  themeBtn.addEventListener("click", function () {
-    root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
-    store.set("theme", root.dataset.theme);
-    syncTheme();
-    syncMockThemes();
-  });
 
   /* ---------- embedded mockups: theme sync ---------- */
   function syncMockThemes() {
@@ -55,7 +39,6 @@
     if (e.data.type === "mock-theme-change" && (e.data.theme === "light" || e.data.theme === "dark")) {
       root.dataset.theme = e.data.theme;
       store.set("theme", e.data.theme);
-      syncTheme();
       syncMockThemes();
     }
   });

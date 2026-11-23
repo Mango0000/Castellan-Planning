@@ -62,19 +62,11 @@ opacity:.35;cursor:default
 }
 
 .shellmock.nav-collapsed {
-grid-template-columns:26px minmax(0,1fr)
+grid-template-columns:minmax(0,1fr)
 }
 
 .shellmock.nav-collapsed .sm-side {
-width:auto;min-width:0;padding:0;gap:0;overflow:hidden;visibility:visible;pointer-events:auto
-}
-
-.shellmock.nav-collapsed .sm-side > *:not(.sm-side-stub) {
 display:none
-}
-
-.shellmock.nav-collapsed .sm-side-stub {
-display:flex
 }
 
 .shellmock.nav-collapsed .sm-resize-left {
@@ -150,10 +142,6 @@ font-size:11.5px;line-height:1.45;color:var(--ink)
 display:flex;flex-direction:column;height:100%;min-height:0
 }
 
-.shellmock.nav-collapsed .sm-side-stub .sm-navbtn {
-margin-top:1px
-}
-
 .sm-resize {
 position:absolute;top:0;bottom:0;width:7px;cursor:col-resize;z-index:40;touch-action:none;background:transparent
 }
@@ -186,3 +174,54 @@ body.resizing .sm-resize::after {
 opacity:.7
 }
 
+
+/* floating reopen controls keep the main pane edge-to-edge */
+.sm-float-reopen {
+position:absolute;top:5px;z-index:60;display:none;place-items:center;width:24px;height:24px;
+border:0;border-radius:5px;background:transparent;color:var(--muted);font-family:var(--font-sans);
+font-size:12px;line-height:1;padding:0;cursor:pointer
+}
+
+.sm-float-left {
+left:6px
+}
+
+.sm-float-right {
+right:6px
+}
+
+.shellmock.nav-collapsed .sm-float-left {
+display:grid
+}
+
+.shellmock.ctx-collapsed .sm-float-right {
+display:grid
+}
+
+.sm-float-reopen:hover {
+background:var(--accent-soft);color:var(--accent-ink)
+}
+
+.sm-float-left img {
+width:18px;height:18px;display:block;image-rendering:pixelated
+}
+
+.sm-float-left .float-logo-dark {
+display:none
+}
+
+html[data-theme="dark"] .sm-float-left .float-logo-light {
+display:none
+}
+
+html[data-theme="dark"] .sm-float-left .float-logo-dark {
+display:block
+}
+
+.shellmock.nav-collapsed .sm-view .sm-head {
+padding-left:38px
+}
+
+.shellmock.ctx-collapsed .sm-view .sm-head {
+padding-right:38px
+}

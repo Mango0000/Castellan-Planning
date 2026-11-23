@@ -54,14 +54,7 @@
               </span>
               <span class="brand-name">Castellan</span>
             </div>
-            <button class="sm-navbtn sm-theme-btn" id="sm-theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Switch to dark theme">☾</button>
             <button class="sm-navbtn" id="sm-nav-toggle" type="button" aria-label="Collapse workspaces rail" aria-pressed="false" title="Collapse workspaces">«</button>
-          </div>
-          <div class="sm-side-stub">
-            <button class="sm-stub-logo" id="sm-nav-expand" type="button" aria-label="Expand Castellan rail" title="Expand Castellan rail">
-              <img class="stub-logo-light" src="../logo/LogoLight.svg" alt="">
-              <img class="stub-logo-dark" src="../logo/LogoDark.svg" alt="">
-            </button>
           </div>
 
           <div class="sm-newrow">
@@ -91,18 +84,24 @@
 
           <div class="sm-sec sm-ws-sec" id="sm-ws-sec">
             <button class="sm-sec-toggle" id="sm-ws-toggle" type="button" aria-expanded="true" aria-controls="sm-ws-list" title="Collapse workspaces">
-              <span>Workspaces</span><span class="chev" aria-hidden="true">▾</span>
+              <span>Workspaces</span><span class="chev" aria-hidden="true"></span>
             </button>
             <div class="sm-ws-list" id="sm-ws-list">
-            <button class="sm-ws on" type="button" data-sm-view="dashboard" data-sm-ws="acme-web"><span class="ic">◇</span> acme-web <span class="meta">1 task</span></button>
-            <div class="sm-kids">
+            <div class="sm-ws-row">
+              <button class="sm-ws on" type="button" data-sm-view="dashboard" data-sm-ws="acme-web"><span class="ic">◇</span> acme-web <span class="meta">1 task</span></button>
+              <button class="sm-ws-toggle" type="button" data-ws-toggle="acme-web" aria-expanded="true" aria-controls="sm-kids-acme-web" aria-label="Collapse acme-web tasks" title="Collapse acme-web tasks"><span class="chev" aria-hidden="true"></span></button>
+            </div>
+            <div class="sm-kids" id="sm-kids-acme-web">
               <div class="sm-task-row" data-rail-key="auth">
                 <button class="sm-task on" type="button" data-sm-view="auth"><span class="sm-dot wait"></span> auth-flow <span class="sm-badge">1</span></button>
                 <button class="sm-row-archive" type="button" data-archive-confirm="auth" title="Archive task" aria-label="Archive task">⇩</button>
               </div>
             </div>
-            <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="api-core"><span class="ic">◇</span> api-core <span class="meta">unread</span></button>
-            <div class="sm-kids">
+            <div class="sm-ws-row">
+              <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="api-core"><span class="ic">◇</span> api-core <span class="meta">unread</span></button>
+              <button class="sm-ws-toggle" type="button" data-ws-toggle="api-core" aria-expanded="true" aria-controls="sm-kids-api-core" aria-label="Collapse api-core tasks" title="Collapse api-core tasks"><span class="chev" aria-hidden="true"></span></button>
+            </div>
+            <div class="sm-kids" id="sm-kids-api-core">
               <div class="sm-task-row" data-rail-key="rate">
                 <button class="sm-task" type="button" data-sm-view="rate"><span class="sm-unread" style="margin:0"></span> rate-limit</button>
                 <button class="sm-row-archive" type="button" data-archive-confirm="rate" title="Archive task" aria-label="Archive task">⇩</button>
@@ -130,7 +129,12 @@
             <span class="count" id="sm-archive-count">0</span>
           </button>
 
-          <div class="sm-foot"><span class="av">M</span> Manuel <span class="live-dot">runner online</span></div>
+          <div class="sm-foot">
+            <button class="sm-profile" id="sm-profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sm-profile-pop" title="Open settings">
+              <span class="av">M</span><span class="sm-profile-name">Manuel</span>
+            </button>
+            <span class="live-dot">runner online</span>
+          </div>
         </aside>
 
 
@@ -490,10 +494,14 @@ $ <span class="sm-ctx-cursor">▍</span></pre>
             </div>
           </aside>
 
-          <div class="sm-context-stub" id="sm-context-stub" hidden>
-            <button class="sm-ctx-expand" id="sm-ctx-expand" type="button" aria-label="Expand context rail" title="Open context">◧</button>
-          </div>
 
+
+
+      <button class="sm-float-reopen sm-float-left" id="sm-nav-expand" type="button" aria-label="Open workspaces rail" title="Open workspaces">
+        <img class="float-logo-light" src="../logo/LogoLight.svg" alt="">
+        <img class="float-logo-dark" src="../logo/LogoDark.svg" alt="">
+      </button>
+      <button class="sm-float-reopen sm-float-right" id="sm-ctx-expand" type="button" aria-label="Open context rail" title="Open context">◧</button>
     </div>
   </div>
 </div>

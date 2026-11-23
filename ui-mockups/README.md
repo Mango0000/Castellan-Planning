@@ -37,7 +37,7 @@ components/
    └─ archived.html
 ```
 
-The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. When the left rail is collapsed it leaves a 26 px strip with the Castellan mark; click it to reopen. The Workspaces section has its own chevron and remembers its collapsed state. When the context rail is closed it leaves a 26 px reopen strip.
+The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. Collapsing either side gives the main view the full width: no residual strip or border. A floating Castellan mark appears at the top-left to reopen the left rail; a floating pane control at the top-right reopens the context rail. The Workspaces section has its own chevron and remembers its collapsed state, and each workspace with tasks has a smaller chevron with its own state.
 
 ## Styles and behavior
 
@@ -56,7 +56,8 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 | `styles/archive.css` | Archive cards, bottom rail link and blurred confirmations. |
 | `styles/responsive.css` | All media queries, loaded last. |
 | `scripts/00-store.js` | State, workspace data, DOM refs, small helpers. |
-| `scripts/05-theme.js` | Rail theme toggle, `castellan.theme` persistence and parent sync. |
+| `scripts/05-theme.js` | Theme persistence, parent sync and the shared theme API used by Settings. |
+| `scripts/65-profile.js` | Account menu, appearance Settings dialog and local sign-out state. |
 | `scripts/10-dashboard.js` | Workspace dashboard and dev-server state. |
 | `scripts/15-left-rail.js` | Workspace selection and unread cleanup. |
 | `scripts/20-right-rail.js` | Context tab strip and pane behavior. |
@@ -101,7 +102,7 @@ The model list is demo data in `models.js`. The real app should hydrate it from 
 - Folders are a tree: clicking one expands or collapses it in place, with the path bar staying at the workspace root. Files open in **new context tabs**. The Explorer itself never shows file contents.
 - File tabs are shared by code, rendered **Markdown**, **images**, and **static HTML** rendered in a sandboxed iframe.
 - The **＋** menu in the rail adds Explorer, Terminal, Diff or Preview. Tabs close individually; closing the active one activates its neighbour.
-- Closing the rail leaves a 26 px context strip; clicking it reopens the rail with the existing tabs.
+- Closing the rail gives the main view the full width; a floating pane control at the top-right reopens it with the existing tabs.
 - Dashboard actions (*Open preview*, *Logs*, *Open diff*, *Browse files*) add or activate the matching tab.
 - There are two different plus buttons: **composer ＋** opens Upload/Remote; **rail ＋** adds a Context tab (Explorer, Terminal, Diff, Preview).
 
@@ -118,7 +119,7 @@ The model list is demo data in `models.js`. The real app should hydrate it from 
 
 - No global title bar. The left rail, central view and context rail span the app height and each owns its own header.
 - Drag the divider on either side of the central view to resize the left and right rails. Widths are clamped so the central pane stays usable and are remembered in `localStorage`.
-- Left rail collapse and context close leave slim reopen strips rather than disappearing entirely.
+- Left rail collapse and context close leave no strips or side borders; their small reopen controls float over the main view header.
 
 ## Sizes
 
@@ -133,7 +134,11 @@ Both generated pages post a theme request and listen for:
 { type: "mock-theme", theme: "light" | "dark" }
 ```
 
-The blueprint sends its current theme to both iframes. The app rail has its own light/dark button: it stores the choice in `castellan.theme`, updates the logos, and — when embedded — posts `{ type: "mock-theme-change", theme }` to the blueprint. The blueprint applies and persists that choice, then syncs the frames. Standalone pages start from the saved `castellan.theme`, falling back to the OS color scheme.
+The blueprint sends its current theme to both iframes. There is no separate theme button in the rail or the blueprint header: **Profile → Settings → Appearance** is the only theme control. It stores `castellan.theme`, updates the logos, and — when embedded — posts `{ type: "mock-theme-change", theme }` to the blueprint. The blueprint applies and persists that choice, then syncs the frames. Standalone pages start from the saved `castellan.theme`, falling back to the OS color scheme.
+
+## Profile settings
+
+Click **Manuel** in the rail footer to open the account menu: **Settings** and **Log out**. Settings opens a dialog with **Light / Dark** appearance; the choice persists locally. Log out shows a local signed-out screen with **Return to Castellan**.
 
 ## Editing
 

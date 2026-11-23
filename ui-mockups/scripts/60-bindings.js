@@ -106,6 +106,31 @@
   try { savedWsCollapsed = localStorage.getItem("castellan.workspacesCollapsed"); } catch (e) {}
   if (savedWsCollapsed === "1") setWorkspacesCollapsed(true);
 
+  var wsTaskState = {};
+  try { wsTaskState = JSON.parse(localStorage.getItem("castellan.workspaceTaskCollapsed") || "{}") || {}; } catch (e) {}
+  function setWorkspaceTasksCollapsed(key, collapsed) {
+    var btn = $('[data-ws-toggle="' + key + '"]', shell);
+    var kids = $("#sm-kids-" + key, shell);
+    if (!btn || !kids) return;
+    kids.hidden = !!collapsed;
+    btn.classList.toggle("collapsed", !!collapsed);
+    btn.setAttribute("aria-expanded", String(!collapsed));
+    var label = (collapsed ? "Expand " : "Collapse ") + key + " tasks";
+    btn.title = label;
+    btn.setAttribute("aria-label", label);
+    wsTaskState[key] = !!collapsed;
+    try { localStorage.setItem("castellan.workspaceTaskCollapsed", JSON.stringify(wsTaskState)); } catch (e) {}
+  }
+  $$("[data-ws-toggle]", shell).forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.dataset.wsToggle;
+      setWorkspaceTasksCollapsed(key, wsTaskState[key] !== true);
+    });
+  });
+  Object.keys(wsTaskState).forEach(function (key) {
+    setWorkspaceTasksCollapsed(key, wsTaskState[key] === true);
+  });
+
   var wdServerBtn = $("#wd-server-btn", shell);
   if (wdServerBtn) {
     wdServerBtn.addEventListener("click", function () { toggleServer(dashboardWs); });

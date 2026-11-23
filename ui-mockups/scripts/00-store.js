@@ -191,7 +191,6 @@
   var triggers = $$("button[data-sm-view]", shell);
   var shellmock = $("#shellmock", shell);
   var ctxPanel = $("#sm-context", shell);
-  var ctxStub = $("#sm-context-stub", shell);
   var navToggle = $("#sm-nav-toggle", shell);
   var navExpand = $("#sm-nav-expand", shell);
 

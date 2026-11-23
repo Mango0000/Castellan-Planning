@@ -108,7 +108,7 @@
   function applyContext() {
     var visible = ctxAvailable && ctxOpen;
     if (ctxPanel) ctxPanel.hidden = !visible;
-    if (ctxStub) ctxStub.hidden = !(ctxAvailable && !ctxOpen);
+    if (shellmock) shellmock.classList.toggle("ctx-collapsed", !!(ctxAvailable && !ctxOpen));
     if (visible) updateCtxPanes();
   }
 
