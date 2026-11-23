@@ -37,7 +37,7 @@ components/
    └─ archived.html
 ```
 
-The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. Collapsing either side gives the main view the full width: no residual strip or border. A floating Castellan mark appears at the top-left to reopen the left rail; a floating pane control at the top-right reopens the context rail. The Workspaces section has its own chevron and remembers its collapsed state, each workspace row has a small ＋ to start a task in that workspace, each workspace with tasks has a smaller chevron with its own state, and the Temporary section has the same chevron behavior with its own persisted state.
+The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. Collapsing either side gives the main view the full width: no residual strip or border. A floating Castellan mark appears at the top-left to reopen the left rail; a floating pane control at the top-right reopens the context rail. The Workspaces section has its own chevron and remembers its collapsed state; a ＋ beside the header opens **New workspace**. Each workspace row has a small ＋ to start a task in that workspace, each workspace with tasks has a smaller chevron with its own state, and the Temporary section has the same chevron behavior plus a ＋ for a new temporary chat.
 
 ## Styles and behavior
 
@@ -50,7 +50,7 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 | `styles/views.css` | Shared view chrome, task/chat cards, approvals and empty states. |
 | `styles/right-rail.css` | Context tabs, Explorer, file viewer, previews and terminal. |
 | `styles/dashboard.css` | Workspace dashboard widgets and dev-server card. |
-| `styles/temp.css` | Temporary-chat intro and context setup. |
+| `styles/temp.css` | Temporary-chat intro. |
 | `styles/composer.css` | Composer shell, model/effort toolbar and context chips. |
 | `styles/pickers.css` | Add menu, Upload, Remote chooser and model/effort popovers. |
 | `styles/archive.css` | Archive cards, bottom rail link and blurred confirmations. |
@@ -62,7 +62,7 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 | `scripts/15-left-rail.js` | Workspace selection and unread cleanup. |
 | `scripts/20-right-rail.js` | Context tab strip and pane behavior. |
 | `scripts/25-explorer.js` | File tree, file tabs, Markdown/SVG previews, diffs and context sync. |
-| `scripts/30-temp.js` | Temporary-chat workspace/folder context. |
+| `scripts/30-temp.js` | Temporary-chat reset. |
 | `scripts/40-archive.js` | Archive list, restore/delete, confirmations and Delete all. |
 | `scripts/50-navigation.js` | View switching and active rail state. |
 | `scripts/60-bindings.js` | Global event bindings and menu wiring. |
@@ -77,6 +77,13 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 | `app.js` | Generated bundle; never edit directly. |
 | `plan.css` / `plan.js` | Blueprint styles and behavior, extracted from the root HTML. |
 
+## Task tabs and plan
+
+- Task views have **Chat** and **Plan** tabs beneath the task header.
+- The Plan tab is an editable document: click into it to revise the plan, then **Approve plan**. The state and tab badge move through draft, edited and approved.
+- The composer and the approval/queued dock stay mounted when switching to Plan, so the same task can be steered from either tab.
+- In Plan, **Hide composer & pending** collapses the composer, approval and queued cards to a slim bar; the plan then uses the full height. Switching to Chat always restores the composer, and the Plan collapse state is remembered while switching tabs.
+
 ## Composer controls
 
 Every chat input has the same controls:
@@ -85,23 +92,23 @@ Every chat input has the same controls:
 - **Mode** picker — left of the model: **Plan**, **Edit** and **Review**, selected per composer.
 - **Model** picker — GPT-5.3 Codex, GPT-5.2 Codex, GPT-5.1 Codex Max, GPT-5.1 Codex Mini, GPT-5.1 and o3.
 - **Reasoning effort** picker — next to the model selector; only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
-- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with a segmented meter marked **87k / 128k** and category rows for workspace/instructions, open files, task thread, tool output and attachments.
-- **＋ context** — opens a two-choice menu: **Upload** (pick one or more local files from this device) or **Remote** (open a searchable file chooser for the remote machine).
-- **Remote** opens a large file browser at the workspace root with the same path bar and expandable tree as the Context Explorer; it scales up with the rest of the UI on large displays. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Task/new-task composers use the fixed workspace; temporary chats can switch workspace in the same dialog.
+- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with a segmented meter marked **87k / 128k**. Task composers break down workspace/instructions, open files, task thread, tool output and attachments; temporary chats use chat-oriented categories.
+- **＋ context** — opens **Upload** and **Remote**. Temporary chats are workspace-less, so there is no Workspace option and no workspace chooser inside Remote.
+- **Remote** opens a large file browser with the same path bar and expandable tree as the Context Explorer; it scales up with the rest of the UI on large displays. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Temporary chats use it only to pick files.
 - Local uploads and remote files appear as removable chips above the bottom toolbar. Remote selections are staged until **Attach**; Cancel discards them. Mode, model, effort and attachments are per composer.
 
-Only one composer popover (mode, model, effort, context usage or add) is open at a time. The model list is demo data in `models.js`; the real app should hydrate it from app-server `model/list`.
+Only one composer popover (mode, model, effort, context usage or add) is open at a time. The New task workspace picker starts with a ＋ to create a workspace in place. The model list is demo data in `models.js`; the real app should hydrate it from app-server `model/list`.
 
 ## Queue steering
 
-- The task view shows the queued task in the floating dock above the composer.
+- The task view shows the queued task in the floating dock above the composer. The × in the **Queued** separator removes it from the queue; once a task is steered, removal is hidden.
 - **Steer current run** adds the queued task to the running turn without starting a second agent. It is enabled only when the selected auth-composer model advertises live steering (`steer` in `models.js`); unsupported models disable it and explain why.
 - Steering switches the queue card to **Steering**, updates its status and note, and posts an inline steering event in the chat. The approval card remains pending.
 
 ## Temporary chat
 
-- A temporary chat is a normal empty chat with a composer: no workspace/folder setup block.
-- Use **＋ → Remote** to choose a workspace and browse folders/files. Choosing a workspace also opens the Context rail on the Explorer; selected remote files become chips. **＋ → Upload** adds local files.
+- A temporary chat is a workspace-less, ChatGPT-style chat: no workspace or folder context, no context rail, and no workspace chooser in Remote.
+- Use **＋ → Upload** for local files or **＋ → Remote** for files on the remote machine. Selected files become chips; they do not scope the chat to a workspace.
 - No branch, no commit, read-only, 7-day expiry, or promote with **Keep as task**.
 
 ## Right rail: Explorer + file tabs

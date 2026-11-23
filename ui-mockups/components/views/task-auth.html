@@ -1,5 +1,5 @@
 <!-- current task -->
-            <div class="sm-view" data-sm-view="auth">
+            <div class="sm-view" data-sm-view="auth" data-task-tab="chat">
               <div class="sm-head">
                 <div class="sm-crumb">acme-web <span>/</span> task/auth-flow <span class="crumb-sub">thr_8f2a</span></div>
                 <div class="sm-head-r">
@@ -8,7 +8,12 @@
                   <button class="mbtn" type="button">Open IDE</button>
                 </div>
               </div>
-              <div class="sm-chat">
+              <div class="sm-task-tabs" role="tablist" aria-label="Task view">
+                <button class="sm-task-tab on" id="sm-task-tab-chat" type="button" role="tab" aria-selected="true" aria-controls="sm-task-chat" data-task-tab="chat">Chat</button>
+                <button class="sm-task-tab" id="sm-task-tab-plan" type="button" role="tab" aria-selected="false" aria-controls="sm-task-plan" data-task-tab="plan">Plan <span class="sm-task-tab-badge" data-plan-badge>draft</span></button>
+              </div>
+              <div class="sm-task-main">
+              <div class="sm-chat" id="sm-task-chat" data-task-pane="chat" role="tabpanel" aria-labelledby="sm-task-tab-chat">
                 <div class="sm-msg user">Add email + password auth with Postgres sessions. Keep it boring.</div>
                 <div class="sm-msg agent"><span class="who">Codex · turn 3</span> Plan: route handler, password helper, login form, one migration for <code>sessions</code>.
                   <div class="sm-plan"><span class="done">✓ read repo</span><span class="done">✓ routes</span><span class="run">● login form</span><span>○ tests</span></div>
@@ -32,9 +37,58 @@
                   <div class="sm-tool-f"><span>Open viewer</span><span>Open in VS Code ↗</span></div>
                 </div>
               </div>
+              <div class="sm-plan-pane" id="sm-task-plan" data-task-pane="plan" role="tabpanel" aria-labelledby="sm-task-tab-plan" hidden>
+                <div class="sm-plan-head">
+                  <div class="sm-plan-title"><b>Plan</b><span class="sm-plan-state" data-plan-state>Draft</span></div>
+                  <div class="sm-plan-actions">
+                    <span class="sm-plan-hint">Editable</span>
+                    <button class="sm-plan-approve" type="button" data-plan-approve>Approve plan</button>
+                  </div>
+                </div>
+                <div class="sm-plan-scroll">
+                  <article class="sm-plan-doc" data-plan-doc contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true" aria-label="Task plan">
+                    <h1>Add email + password authentication</h1>
+                    <p class="sm-plan-meta">Drafted by Codex · acme-web · just now</p>
+                    <h2>Goal</h2>
+                    <p>Add a boring, production-safe email/password login flow backed by Postgres sessions, without changing the existing dashboard experience.</p>
+                    <h2>Approach</h2>
+                    <ol>
+                      <li>Validate signup and login payloads with <code>zod</code>.</li>
+                      <li>Hash passwords with <code>bcryptjs</code> and never return them from an API response.</li>
+                      <li>Create an opaque session token, store only its hash in Postgres, and set an <code>HttpOnly</code> cookie.</li>
+                      <li>Wire the existing <code>LoginForm</code> to the new route and surface field-level errors.</li>
+                    </ol>
+                    <blockquote>No schema changes beyond the new <code>sessions</code> table. No auth provider or email delivery in this slice.</blockquote>
+                    <h2>Changes</h2>
+                    <ul>
+                      <li><code>app/api/auth/route.ts</code> — POST login and signup handlers.</li>
+                      <li><code>lib/password.ts</code> — hash and verify helpers.</li>
+                      <li><code>lib/session.ts</code> — session issue, lookup and revocation.</li>
+                      <li><code>components/LoginForm.tsx</code> — submit states and inline errors.</li>
+                      <li><code>db/migrations/*_sessions.sql</code> — sessions table and indexes.</li>
+                    </ul>
+                    <h2>Verification</h2>
+                    <ul>
+                      <li>Run the auth unit tests and the login flow against a disposable Postgres database.</li>
+                      <li>Check that logout revokes the session and that cookies are cleared.</li>
+                      <li>Confirm no password or raw session token is logged.</li>
+                    </ul>
+                    <h2>Open questions</h2>
+                    <ul>
+                      <li>Session lifetime: 7 days or 30 days?</li>
+                      <li>Do we need login rate limiting in this slice?</li>
+                    </ul>
+                  </article>
+                </div>
+              </div>
+              </div>
+              <div class="sm-task-bottom" data-task-bottom>
+                <button class="sm-task-bottom-toggle" type="button" data-task-bottom-toggle aria-expanded="true" aria-label="Hide composer and pending items">
+                  <span class="chev" aria-hidden="true"></span><span class="lbl">Hide composer &amp; pending</span>
+                </button>
               <div class="sm-approval-dock">
                 <div class="sm-queued">
-                  <div class="sm-queued-sep"><span>Queued</span></div>
+                  <div class="sm-queued-sep"><span>Queued</span><span class="sm-queued-line"></span><button class="sm-queue-remove" type="button" data-queue-remove aria-label="Remove queued task" title="Remove queued task">×</button></div>
                   <div class="sm-queued-task">
                     <span class="sm-dot wait"></span>
                     <span class="sm-queued-copy"><b>Add password reset flow</b><small>acme-web · starts after auth-flow</small></span>
@@ -56,5 +110,6 @@
                 <div class="sm-inputbox">
                   <span class="ph">Steer the running turn…</span>
                 </div>
+              </div>
               </div>
             </div>

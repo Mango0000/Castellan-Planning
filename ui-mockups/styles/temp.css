@@ -12,6 +12,14 @@ font-family:var(--font-mono);font-size:7.5px;padding:3px 7px;border-radius:5px;b
 border-color:var(--accent-ink);background:var(--accent-soft);color:var(--accent-ink)
 }
 
+.sm-wspick .sm-wspick-add {
+border-style:dashed;color:var(--accent-ink);background:transparent;font-family:var(--font-sans);font-size:10px;padding:1px 6px
+}
+
+.sm-wspick .sm-wspick-add:hover {
+border-color:var(--accent-line);background:var(--accent-soft)
+}
+
 .sm-temp-setup {
 padding:18px 26px 16px;justify-content:flex-start;gap:7px;overflow:auto
 }
@@ -34,10 +42,6 @@ display:flex;align-items:baseline;gap:6px;font-family:var(--font-mono);font-size
 
 .sm-attach-h em {
 font-style:normal;font-size:6.5px;letter-spacing:0;text-transform:none;color:var(--faint)
-}
-
-.sm-temp-wspick button {
-font-size:7px;padding:2px 6px
 }
 
 .sm-folder {

@@ -16,8 +16,8 @@
       dashboardWs = ws;
       canCtx = true;
     }
-    else if (name === "temp-new") { ws = tempWs || null; canCtx = !!ws; }
-    else if (name === "temp") { ws = tempWs || null; canCtx = !!ws; }
+    else if (name === "temp-new") { ws = null; canCtx = false; }
+    else if (name === "temp") { ws = null; canCtx = false; }
     else if (name === "archived") { ws = null; canCtx = false; }
     else if (name === "new") {
       selectWorkspace(opts.ws || lastWorkspace);

@@ -1,4 +1,4 @@
-/* 80-pickers — add menu, Upload, Remote chooser, model and effort popovers */
+/* 80-pickers — add menu, Upload, Remote chooser, workspace context, model and effort popovers */
 
   function buildPickers() {
     if (attachPop) return;
@@ -45,7 +45,6 @@
       '<div class="sm-remote-h"><div><b>Remote files</b><span class="sm-remote-sub" id="sm-remote-sub"></span></div>' +
       '<button class="sm-pop-x" id="sm-remote-x" type="button" aria-label="Close">×</button></div>' +
       '<div class="sm-remote-body">' +
-      '<div class="sm-remote-ctx" id="sm-remote-ctx"><div class="sm-pop-label">Workspace</div><div class="sm-attach-ws" id="sm-remote-ws"></div></div>' +
       '<div class="sm-exp-loc sm-remote-pathbar"><button class="sm-exp-nav" id="sm-remote-up" type="button" aria-label="Up one folder" title="Up one folder">←</button>' +
       '<div class="sm-exp-path" id="sm-remote-path" title="/home/manuel/Downloads/random_projects/codingPlatform">/home/manuel/Downloads/random_projects/codingPlatform</div>' +
       '<button class="sm-exp-nav" id="sm-remote-refresh" type="button" aria-label="Refresh folder" title="Refresh">⟳</button></div>' +
@@ -189,7 +188,7 @@
     activeComposer = box;
     clearTimeout(remoteClickTimer);
     var tempBox = isTempComposer(box);
-    remoteWsId = tempBox ? (tempWs || "") : (currentView === "new" ? lastWorkspace : (currentWs || lastWorkspace || ""));
+    remoteWsId = tempBox ? "" : (currentView === "new" ? lastWorkspace : (currentWs || lastWorkspace || ""));
     remoteDir = [];
     remoteOpenDirs = {};
     remoteSearch = "";
@@ -318,21 +317,7 @@
     if (!activeComposer || !remotePop) return;
     var temp = isTempComposer(activeComposer);
     var sub = $("#sm-remote-sub", remotePop);
-    if (sub) sub.textContent = temp ? "optional context · read-only" : ((currentWs || lastWorkspace) + " · read-only");
-    show($("#sm-remote-ctx", remotePop), temp);
-    if (temp) {
-      var wsWrap = $("#sm-remote-ws", remotePop);
-      wsWrap.innerHTML = "";
-      var choices = [{ id: "", label: "No context" }].concat(Object.keys(WS).map(function (id) { return { id: id, label: id }; }));
-      choices.forEach(function (c) {
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "sm-wschoice" + ((tempWs || "") === c.id ? " on" : "");
-        b.textContent = c.label;
-        b.addEventListener("click", function () { setTempWorkspace(c.id, activeComposer); });
-        wsWrap.appendChild(b);
-      });
-    }
+    if (sub) sub.textContent = temp ? "remote machine · read-only" : ((currentWs || lastWorkspace) + " · read-only");
     renderRemotePath();
     renderRemoteFiles();
   }

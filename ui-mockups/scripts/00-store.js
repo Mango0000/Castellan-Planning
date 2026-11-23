@@ -144,8 +144,6 @@
   var currentView = "auth";
   var currentWs = "acme-web";
   var dashboardWs = "acme-web";
-  var tempWs = "";
-  var tempFolder = "";
   var activeComposer = null;
   var attachPop = null;
   var remotePop = null;

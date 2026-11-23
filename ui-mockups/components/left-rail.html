@@ -36,14 +36,17 @@
           </div>
 
           <div class="sm-sec sm-ws-sec" id="sm-ws-sec">
-            <button class="sm-sec-toggle" id="sm-ws-toggle" type="button" aria-expanded="true" aria-controls="sm-ws-list" title="Collapse workspaces">
-              <span>Workspaces</span><span class="chev" aria-hidden="true"></span>
-            </button>
+            <div class="sm-sec-head">
+              <button class="sm-sec-toggle" id="sm-ws-toggle" type="button" aria-expanded="true" aria-controls="sm-ws-list" title="Collapse workspaces">
+                <span>Workspaces</span><span class="chev" aria-hidden="true"></span>
+              </button>
+              <button class="sm-sec-add" id="sm-ws-new" type="button" data-new-workspace="rail" aria-label="New workspace" title="New workspace">＋</button>
+            </div>
             <div class="sm-ws-list" id="sm-ws-list">
             <div class="sm-ws-row">
               <button class="sm-ws on" type="button" data-sm-view="dashboard" data-sm-ws="acme-web"><span class="ic">◇</span> acme-web <span class="meta">1 task</span></button>
-              <button class="sm-ws-add" type="button" data-sm-view="new" data-sm-ws="acme-web" aria-label="Add task to acme-web" title="Add task to acme-web">＋</button>
               <button class="sm-ws-toggle" type="button" data-ws-toggle="acme-web" aria-expanded="true" aria-controls="sm-kids-acme-web" aria-label="Collapse acme-web tasks" title="Collapse acme-web tasks"><span class="chev" aria-hidden="true"></span></button>
+              <button class="sm-ws-add" type="button" data-sm-view="new" data-sm-ws="acme-web" aria-label="Add task to acme-web" title="Add task to acme-web">＋</button>
             </div>
             <div class="sm-kids" id="sm-kids-acme-web">
               <div class="sm-task-row" data-rail-key="auth">
@@ -53,8 +56,8 @@
             </div>
             <div class="sm-ws-row">
               <button class="sm-ws" type="button" data-sm-view="dashboard" data-sm-ws="api-core"><span class="ic">◇</span> api-core <span class="meta">unread</span></button>
-              <button class="sm-ws-add" type="button" data-sm-view="new" data-sm-ws="api-core" aria-label="Add task to api-core" title="Add task to api-core">＋</button>
               <button class="sm-ws-toggle" type="button" data-ws-toggle="api-core" aria-expanded="true" aria-controls="sm-kids-api-core" aria-label="Collapse api-core tasks" title="Collapse api-core tasks"><span class="chev" aria-hidden="true"></span></button>
+              <button class="sm-ws-add" type="button" data-sm-view="new" data-sm-ws="api-core" aria-label="Add task to api-core" title="Add task to api-core">＋</button>
             </div>
             <div class="sm-kids" id="sm-kids-api-core">
               <div class="sm-task-row" data-rail-key="rate">
@@ -74,9 +77,12 @@
           </div>
 
           <div class="sm-sec sm-temp-sec" id="sm-temp-sec">
-            <button class="sm-sec-toggle" id="sm-temp-toggle" type="button" aria-expanded="true" aria-controls="sm-temp-list" title="Collapse temporary">
-              <span>Temporary</span><span class="chev" aria-hidden="true"></span>
-            </button>
+            <div class="sm-sec-head">
+              <button class="sm-sec-toggle" id="sm-temp-toggle" type="button" aria-expanded="true" aria-controls="sm-temp-list" title="Collapse temporary">
+                <span>Temporary</span><span class="chev" aria-hidden="true"></span>
+              </button>
+              <button class="sm-sec-add" id="sm-temp-new" type="button" data-sm-view="temp-new" aria-label="New temporary chat" title="New temporary chat">＋</button>
+            </div>
             <div class="sm-temp-list" id="sm-temp-list">
             <div class="sm-row" data-rail-key="temp">
               <button class="sm-item" type="button" data-sm-view="temp">

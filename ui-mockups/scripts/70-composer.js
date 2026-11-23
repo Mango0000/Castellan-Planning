@@ -109,6 +109,14 @@
     if (!queued) return;
     var btn = $("[data-queue-steer]", queued);
     var authBox = $('.sm-view[data-sm-view="auth"] .sm-inputbox', shell);
+    var removeBtn = $("[data-queue-remove]", queued);
+    if (removeBtn) {
+      removeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (queued.dataset.steered === "1") return;
+        queued.remove();
+      });
+    }
     if (btn) {
       btn.addEventListener("click", function () {
         if (queued.dataset.steered === "1" || !authBox) return;
@@ -172,18 +180,6 @@
     var st = box.__composer;
     var wrap = st.chips;
     wrap.innerHTML = "";
-    if (isTempComposer(box)) {
-      if (tempWs) {
-        wrap.appendChild(chipEl("◈", tempWs, "Workspace context · read-only", "ws", function () {
-          setTempWorkspace("", box);
-        }));
-      } else if (tempFolder) {
-        var seg = tempFolder.split("/").filter(Boolean);
-        wrap.appendChild(chipEl("▸", seg.length ? seg[seg.length - 1] : tempFolder, tempFolder, "folder", function () {
-          setTempFolder("", box);
-        }));
-      }
-    }
     st.files.forEach(function (path) {
       var f = fileMeta(path) || {};
       var kind = f.kind || kindOf(path);
@@ -279,7 +275,7 @@
       if (st.usage) {
         st.usage.addEventListener("click", function (e) {
           e.stopPropagation();
-          openUsage(st.usage);
+          openUsage(st.usage, box);
         });
       }
     });
@@ -324,7 +320,35 @@
     });
   }
 
-  function openUsage(btn) {
+  function renderUsage(box) {
+    if (!usagePop) return;
+    var body = $(".sm-usage-body", usagePop);
+    if (!body) return;
+    var temp = box && isTempComposer(box);
+    var rows = temp ? [
+      { color: "var(--accent)", label: "System & instructions", tokens: "8k", pct: "6%", width: 6.25 },
+      { color: "var(--blue)", label: "Conversation", tokens: "52k", pct: "41%", width: 40.625 },
+      { color: "var(--success)", label: "Attached files", tokens: "14k", pct: "11%", width: 10.9375 },
+      { color: "var(--warn)", label: "Tool output", tokens: "13k", pct: "10%", width: 10.15625 }
+    ] : [
+      { color: "var(--accent)", label: "Workspace & instructions", tokens: "12k", pct: "9%", width: 9.375 },
+      { color: "var(--blue)", label: "Open files", tokens: "22k", pct: "17%", width: 17.1875 },
+      { color: "var(--success)", label: "Task thread", tokens: "31k", pct: "24%", width: 24.21875 },
+      { color: "var(--warn)", label: "Tool output", tokens: "17k", pct: "13%", width: 13.28125 },
+      { color: "var(--rose)", label: "Attachments", tokens: "5k", pct: "4%", width: 3.90625 }
+    ];
+    var html = '<div class="sm-usage-meterrow"><div class="sm-usage-meter">';
+    rows.forEach(function (r) {
+      html += '<i style="width:' + r.width + '%;background:' + r.color + '"></i>';
+    });
+    html += '</div><span class="sm-usage-meterlabel">87k / 128k</span></div>';
+    rows.forEach(function (r) {
+      html += '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:' + r.color + '"></span><span class="nm">' + r.label + '</span><b>' + r.tokens + '</b><small>' + r.pct + '</small></div>';
+    });
+    body.innerHTML = html;
+  }
+
+  function openUsage(btn, box) {
     buildUsage();
     if (!usagePop || (usageBtn === btn && !usagePop.hidden)) {
       closeUsage();
@@ -335,6 +359,7 @@
     closeAttach();
     closeRemote();
     usageBtn = btn;
+    renderUsage(box);
     btn.classList.add("on");
     btn.setAttribute("aria-expanded", "true");
     usagePop.hidden = false;

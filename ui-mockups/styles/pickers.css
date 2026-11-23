@@ -171,6 +171,7 @@ width:12px;flex:none;text-align:center;color:var(--accent-ink);font-size:8px
 width:208px
 }
 
+
 .sm-add-menu {
 padding:4px;display:flex;flex-direction:column;gap:2px
 }
@@ -178,6 +179,10 @@ padding:4px;display:flex;flex-direction:column;gap:2px
 .sm-add-item {
 display:flex;align-items:center;gap:8px;width:100%;border:1px solid transparent;border-radius:5px;background:none;
   text-align:left;padding:7px 7px;cursor:pointer;color:var(--ink2)
+}
+
+.sm-add-item[hidden] {
+display:none
 }
 
 .sm-add-item:hover {

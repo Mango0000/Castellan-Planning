@@ -54,8 +54,22 @@ display:flex;align-items:center;gap:6px;margin-bottom:1px;font-family:var(--font
 font-size:6px;line-height:1.4;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)
 }
 
-.sm-queued-sep::after {
-content:"";height:1px;flex:1;background:var(--line)
+.sm-queued-line {
+flex:1;height:1px;background:var(--line)
+}
+
+.sm-queue-remove {
+width:15px;height:15px;flex:none;display:grid;place-items:center;border:0;border-radius:3px;
+background:none;color:var(--faint);font-family:var(--font-mono);font-size:9px;line-height:1;
+padding:0;cursor:pointer
+}
+
+.sm-queue-remove:hover {
+background:var(--surface2);color:var(--ink)
+}
+
+.sm-queued.sm-steered .sm-queue-remove {
+display:none
 }
 
 .sm-queued-task {
@@ -344,7 +358,7 @@ height:100vh
 }
 
 html.app-full .shellmock {
-width:100%;height:100vh;min-width:0
+width:100%;height:calc(100vh / var(--ui-scale));min-width:0
 }
 
 /* full-screen app: scale the work surface up on large displays */

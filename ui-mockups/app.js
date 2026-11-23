@@ -149,8 +149,6 @@
   var currentView = "auth";
   var currentWs = "acme-web";
   var dashboardWs = "acme-web";
-  var tempWs = "";
-  var tempFolder = "";
   var activeComposer = null;
   var attachPop = null;
   var remotePop = null;
@@ -715,54 +713,7 @@
 
   /* ----------------------------------------------------------- temp chat */
 
-  function setTempWorkspace(ws, box) {
-    var target = box || activeComposer;
-    tempWs = ws || "";
-    tempFolder = "";
-    if (remotePop && !remotePop.hidden) {
-      remoteWsId = tempWs;
-      remoteDir = [];
-      remoteOpenDirs = {};
-      remoteSearch = "";
-      var rsearch = $("#sm-remote-search", remotePop);
-      if (rsearch) rsearch.value = "";
-    }
-    if (tempWs) {
-      currentWs = tempWs;
-      ctxAvailable = true;
-      ctxOpen = true;
-      syncContext(tempWs);
-      addContextTab("explorer");
-    } else {
-      currentWs = null;
-      ctxAvailable = false;
-      ctxOpen = false;
-    }
-    applyContext();
-    if (target) activeComposer = target;
-    renderAllComposerChips();
-    if (remotePop && !remotePop.hidden) renderRemote();
-  }
-
-  function setTempFolder(path, box) {
-    var target = box || activeComposer;
-    tempFolder = (path || "").trim();
-    if (!tempFolder) {
-      tempFolder = "";
-    }
-    tempWs = "";
-    currentWs = null;
-    ctxAvailable = false;
-    ctxOpen = false;
-    applyContext();
-    if (target) activeComposer = target;
-    renderAllComposerChips();
-    if (remotePop && !remotePop.hidden) renderRemote();
-  }
-
   function resetTempContext() {
-    tempWs = "";
-    tempFolder = "";
     currentWs = null;
     ctxAvailable = false;
     ctxOpen = false;
@@ -964,8 +915,8 @@
       dashboardWs = ws;
       canCtx = true;
     }
-    else if (name === "temp-new") { ws = tempWs || null; canCtx = !!ws; }
-    else if (name === "temp") { ws = tempWs || null; canCtx = !!ws; }
+    else if (name === "temp-new") { ws = null; canCtx = false; }
+    else if (name === "temp") { ws = null; canCtx = false; }
     else if (name === "archived") { ws = null; canCtx = false; }
     else if (name === "new") {
       selectWorkspace(opts.ws || lastWorkspace);
@@ -1029,6 +980,211 @@
   $$("[data-pick]", shell).forEach(function (b) {
     b.addEventListener("click", function () { selectWorkspace(b.dataset.pick); });
   });
+
+  var newWsLayer = null;
+  var newWsInput = null;
+  var newWsCallback = null;
+  var newWsRoot = "/home/manuel/Downloads/random_projects/codingPlatform";
+
+  function closeNewWorkspace() {
+    if (newWsLayer) newWsLayer.hidden = true;
+    newWsCallback = null;
+    if (newWsInput) newWsInput.value = "";
+  }
+
+  function buildNewWorkspaceDialog() {
+    if (newWsLayer) return;
+    newWsLayer = document.createElement("div");
+    newWsLayer.className = "sm-new-ws-layer";
+    newWsLayer.hidden = true;
+    newWsLayer.innerHTML =
+      '<div class="sm-new-ws-card" role="dialog" aria-modal="true" aria-labelledby="sm-new-ws-title">' +
+      '<div class="sm-new-ws-h"><b id="sm-new-ws-title">New workspace</b><button class="sm-pop-x" id="sm-new-ws-x" type="button" aria-label="Close">×</button></div>' +
+      '<div class="sm-new-ws-body"><label for="sm-new-ws-name">Name</label>' +
+      '<input id="sm-new-ws-name" type="text" autocomplete="off" placeholder="project-name">' +
+      '<p>Adds a workspace to the rail. You can create its first task next.</p></div>' +
+      '<div class="sm-new-ws-f"><button id="sm-new-ws-cancel" type="button">Cancel</button>' +
+      '<button class="primary" id="sm-new-ws-create" type="button">Create workspace</button></div></div>';
+    shell.appendChild(newWsLayer);
+    newWsInput = $("#sm-new-ws-name", newWsLayer);
+    newWsLayer.addEventListener("click", function (e) {
+      if (e.target === newWsLayer) closeNewWorkspace();
+    });
+    $("#sm-new-ws-x", newWsLayer).addEventListener("click", closeNewWorkspace);
+    $("#sm-new-ws-cancel", newWsLayer).addEventListener("click", closeNewWorkspace);
+    $("#sm-new-ws-create", newWsLayer).addEventListener("click", createNewWorkspace);
+    newWsInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); createNewWorkspace(); }
+      if (e.key === "Escape") closeNewWorkspace();
+    });
+    addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && newWsLayer && !newWsLayer.hidden) closeNewWorkspace();
+    });
+  }
+
+  function openNewWorkspace(callback) {
+    buildNewWorkspaceDialog();
+    newWsCallback = callback || null;
+    newWsLayer.hidden = false;
+    if (newWsInput) {
+      newWsInput.value = "";
+      setTimeout(function () { newWsInput.focus(); }, 0);
+    }
+  }
+
+  function addWorkspaceToRail(name) {
+    var list = $("#sm-ws-list", shell);
+    if (!list) return;
+    var row = document.createElement("div");
+    row.className = "sm-ws-row";
+    var wsBtn = document.createElement("button");
+    wsBtn.className = "sm-ws";
+    wsBtn.type = "button";
+    wsBtn.dataset.smWs = name;
+    wsBtn.dataset.smView = "dashboard";
+    var ic = document.createElement("span");
+    ic.className = "ic";
+    ic.textContent = "◇";
+    var meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = "idle";
+    wsBtn.appendChild(ic);
+    wsBtn.appendChild(document.createTextNode(" " + name + " "));
+    wsBtn.appendChild(meta);
+    wsBtn.addEventListener("click", function () { openView("dashboard", { ws: name }); });
+    var addBtn = document.createElement("button");
+    addBtn.className = "sm-ws-add";
+    addBtn.type = "button";
+    addBtn.textContent = "＋";
+    addBtn.title = "Add task to " + name;
+    addBtn.setAttribute("aria-label", "Add task to " + name);
+    addBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      selectWorkspace(name);
+      openView("new", { ws: name });
+    });
+    row.appendChild(wsBtn);
+    row.appendChild(addBtn);
+    list.appendChild(row);
+
+    var pickWrap = $(".sm-wspick", shell);
+    if (pickWrap) {
+      var pick = document.createElement("button");
+      pick.type = "button";
+      pick.dataset.pick = name;
+      pick.textContent = name;
+      pick.addEventListener("click", function () { selectWorkspace(name); });
+      pickWrap.appendChild(pick);
+    }
+  }
+
+  function createNewWorkspace() {
+    if (!newWsInput) return;
+    var name = newWsInput.value.trim();
+    if (!name) { newWsInput.focus(); return; }
+    if (!WS[name]) {
+      WS[name] = {
+        name: name, branch: "main", path: newWsRoot,
+        desc: "A new workspace.", tags: [],
+        about: "A new workspace. Start a task from the rail or the workspace dashboard.",
+        server: { running: false, port: 3000, cmd: "npm run dev", meta: "not running", busy: false },
+        task: null, change: { file: "—", add: 0, del: 0 }, diff: [], files: []
+      };
+      addWorkspaceToRail(name);
+    }
+    var cb = newWsCallback;
+    closeNewWorkspace();
+    if (cb) cb(name);
+    else { selectWorkspace(name); openView("dashboard", { ws: name }); }
+  }
+
+  $$("[data-new-workspace]", shell).forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var mode = btn.dataset.newWorkspace;
+      openNewWorkspace(function (name) {
+        selectWorkspace(name);
+        if (mode === "task") openView("new", { ws: name });
+        else openView("dashboard", { ws: name });
+      });
+    });
+  });
+
+  var taskView = $('.sm-view[data-sm-view="auth"]', shell);
+  if (taskView) {
+    var taskTabs = $$("[data-task-tab]", taskView);
+    var taskPanes = $$("[data-task-pane]", taskView);
+    var taskBottom = $("[data-task-bottom]", taskView);
+    var taskBottomToggle = $("[data-task-bottom-toggle]", taskView);
+    var planCollapsed = false;
+
+    function updateTaskBottom() {
+      if (!taskBottom || !taskBottomToggle) return;
+      var collapsed = taskBottom.classList.contains("collapsed");
+      var lbl = $(".lbl", taskBottomToggle);
+      if (lbl) lbl.textContent = collapsed ? "Show composer & pending" : "Hide composer & pending";
+      taskBottomToggle.setAttribute("aria-expanded", String(!collapsed));
+      taskBottomToggle.setAttribute("aria-label", (collapsed ? "Show" : "Hide") + " composer and pending items");
+    }
+
+    function setTaskTab(name) {
+      taskView.dataset.taskTab = name;
+      taskTabs.forEach(function (tab) {
+        var on = tab.dataset.taskTab === name;
+        tab.classList.toggle("on", on);
+        tab.setAttribute("aria-selected", String(on));
+        tab.tabIndex = on ? 0 : -1;
+      });
+      taskPanes.forEach(function (pane) {
+        pane.hidden = pane.dataset.taskPane !== name;
+      });
+      if (taskBottom) {
+        if (name === "chat") taskBottom.classList.remove("collapsed");
+        else taskBottom.classList.toggle("collapsed", planCollapsed);
+      }
+      updateTaskBottom();
+    }
+
+    taskTabs.forEach(function (tab) {
+      tab.addEventListener("click", function () { setTaskTab(tab.dataset.taskTab); });
+    });
+
+    if (taskBottomToggle) {
+      taskBottomToggle.addEventListener("click", function () {
+        if (taskView.dataset.taskTab !== "plan") return;
+        planCollapsed = !planCollapsed;
+        taskBottom.classList.toggle("collapsed", planCollapsed);
+        updateTaskBottom();
+      });
+    }
+
+    var planDoc = $("[data-plan-doc]", taskView);
+    var planState = $("[data-plan-state]", taskView);
+    var planBadge = $("[data-plan-badge]", taskView);
+    var planApprove = $("[data-plan-approve]", taskView);
+    var planApproved = false;
+    if (planDoc) {
+      planDoc.addEventListener("input", function () {
+        if (planApproved) {
+          planApproved = false;
+          if (planApprove) { planApprove.disabled = false; planApprove.textContent = "Approve plan"; }
+        }
+        if (planState) { planState.textContent = "Draft · edited"; planState.classList.remove("approved"); }
+        if (planBadge) { planBadge.textContent = "edited"; planBadge.classList.remove("approved"); }
+      });
+    }
+    if (planApprove) {
+      planApprove.addEventListener("click", function () {
+        planApproved = true;
+        if (planState) { planState.textContent = "Approved"; planState.classList.add("approved"); }
+        if (planBadge) { planBadge.textContent = "approved"; planBadge.classList.add("approved"); }
+        planApprove.textContent = "Approved";
+        planApprove.disabled = true;
+      });
+    }
+
+    setTaskTab("chat");
+  }
 
 
   $$("[data-ctx-open]", shell).forEach(function (b) {
@@ -1458,6 +1614,14 @@
     if (!queued) return;
     var btn = $("[data-queue-steer]", queued);
     var authBox = $('.sm-view[data-sm-view="auth"] .sm-inputbox', shell);
+    var removeBtn = $("[data-queue-remove]", queued);
+    if (removeBtn) {
+      removeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (queued.dataset.steered === "1") return;
+        queued.remove();
+      });
+    }
     if (btn) {
       btn.addEventListener("click", function () {
         if (queued.dataset.steered === "1" || !authBox) return;
@@ -1521,18 +1685,6 @@
     var st = box.__composer;
     var wrap = st.chips;
     wrap.innerHTML = "";
-    if (isTempComposer(box)) {
-      if (tempWs) {
-        wrap.appendChild(chipEl("◈", tempWs, "Workspace context · read-only", "ws", function () {
-          setTempWorkspace("", box);
-        }));
-      } else if (tempFolder) {
-        var seg = tempFolder.split("/").filter(Boolean);
-        wrap.appendChild(chipEl("▸", seg.length ? seg[seg.length - 1] : tempFolder, tempFolder, "folder", function () {
-          setTempFolder("", box);
-        }));
-      }
-    }
     st.files.forEach(function (path) {
       var f = fileMeta(path) || {};
       var kind = f.kind || kindOf(path);
@@ -1628,7 +1780,7 @@
       if (st.usage) {
         st.usage.addEventListener("click", function (e) {
           e.stopPropagation();
-          openUsage(st.usage);
+          openUsage(st.usage, box);
         });
       }
     });
@@ -1673,7 +1825,35 @@
     });
   }
 
-  function openUsage(btn) {
+  function renderUsage(box) {
+    if (!usagePop) return;
+    var body = $(".sm-usage-body", usagePop);
+    if (!body) return;
+    var temp = box && isTempComposer(box);
+    var rows = temp ? [
+      { color: "var(--accent)", label: "System & instructions", tokens: "8k", pct: "6%", width: 6.25 },
+      { color: "var(--blue)", label: "Conversation", tokens: "52k", pct: "41%", width: 40.625 },
+      { color: "var(--success)", label: "Attached files", tokens: "14k", pct: "11%", width: 10.9375 },
+      { color: "var(--warn)", label: "Tool output", tokens: "13k", pct: "10%", width: 10.15625 }
+    ] : [
+      { color: "var(--accent)", label: "Workspace & instructions", tokens: "12k", pct: "9%", width: 9.375 },
+      { color: "var(--blue)", label: "Open files", tokens: "22k", pct: "17%", width: 17.1875 },
+      { color: "var(--success)", label: "Task thread", tokens: "31k", pct: "24%", width: 24.21875 },
+      { color: "var(--warn)", label: "Tool output", tokens: "17k", pct: "13%", width: 13.28125 },
+      { color: "var(--rose)", label: "Attachments", tokens: "5k", pct: "4%", width: 3.90625 }
+    ];
+    var html = '<div class="sm-usage-meterrow"><div class="sm-usage-meter">';
+    rows.forEach(function (r) {
+      html += '<i style="width:' + r.width + '%;background:' + r.color + '"></i>';
+    });
+    html += '</div><span class="sm-usage-meterlabel">87k / 128k</span></div>';
+    rows.forEach(function (r) {
+      html += '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:' + r.color + '"></span><span class="nm">' + r.label + '</span><b>' + r.tokens + '</b><small>' + r.pct + '</small></div>';
+    });
+    body.innerHTML = html;
+  }
+
+  function openUsage(btn, box) {
     buildUsage();
     if (!usagePop || (usageBtn === btn && !usagePop.hidden)) {
       closeUsage();
@@ -1684,6 +1864,7 @@
     closeAttach();
     closeRemote();
     usageBtn = btn;
+    renderUsage(box);
     btn.classList.add("on");
     btn.setAttribute("aria-expanded", "true");
     usagePop.hidden = false;
@@ -1700,7 +1881,7 @@
   }
 
 /* ================= 80-pickers.js ================= */
-/* 80-pickers — add menu, Upload, Remote chooser, model and effort popovers */
+/* 80-pickers — add menu, Upload, Remote chooser, workspace context, model and effort popovers */
 
   function buildPickers() {
     if (attachPop) return;
@@ -1747,7 +1928,6 @@
       '<div class="sm-remote-h"><div><b>Remote files</b><span class="sm-remote-sub" id="sm-remote-sub"></span></div>' +
       '<button class="sm-pop-x" id="sm-remote-x" type="button" aria-label="Close">×</button></div>' +
       '<div class="sm-remote-body">' +
-      '<div class="sm-remote-ctx" id="sm-remote-ctx"><div class="sm-pop-label">Workspace</div><div class="sm-attach-ws" id="sm-remote-ws"></div></div>' +
       '<div class="sm-exp-loc sm-remote-pathbar"><button class="sm-exp-nav" id="sm-remote-up" type="button" aria-label="Up one folder" title="Up one folder">←</button>' +
       '<div class="sm-exp-path" id="sm-remote-path" title="/home/manuel/Downloads/random_projects/codingPlatform">/home/manuel/Downloads/random_projects/codingPlatform</div>' +
       '<button class="sm-exp-nav" id="sm-remote-refresh" type="button" aria-label="Refresh folder" title="Refresh">⟳</button></div>' +
@@ -1891,7 +2071,7 @@
     activeComposer = box;
     clearTimeout(remoteClickTimer);
     var tempBox = isTempComposer(box);
-    remoteWsId = tempBox ? (tempWs || "") : (currentView === "new" ? lastWorkspace : (currentWs || lastWorkspace || ""));
+    remoteWsId = tempBox ? "" : (currentView === "new" ? lastWorkspace : (currentWs || lastWorkspace || ""));
     remoteDir = [];
     remoteOpenDirs = {};
     remoteSearch = "";
@@ -2020,21 +2200,7 @@
     if (!activeComposer || !remotePop) return;
     var temp = isTempComposer(activeComposer);
     var sub = $("#sm-remote-sub", remotePop);
-    if (sub) sub.textContent = temp ? "optional context · read-only" : ((currentWs || lastWorkspace) + " · read-only");
-    show($("#sm-remote-ctx", remotePop), temp);
-    if (temp) {
-      var wsWrap = $("#sm-remote-ws", remotePop);
-      wsWrap.innerHTML = "";
-      var choices = [{ id: "", label: "No context" }].concat(Object.keys(WS).map(function (id) { return { id: id, label: id }; }));
-      choices.forEach(function (c) {
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "sm-wschoice" + ((tempWs || "") === c.id ? " on" : "");
-        b.textContent = c.label;
-        b.addEventListener("click", function () { setTempWorkspace(c.id, activeComposer); });
-        wsWrap.appendChild(b);
-      });
-    }
+    if (sub) sub.textContent = temp ? "remote machine · read-only" : ((currentWs || lastWorkspace) + " · read-only");
     renderRemotePath();
     renderRemoteFiles();
   }
