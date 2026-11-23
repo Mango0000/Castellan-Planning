@@ -1460,23 +1460,47 @@
     $$(".sm-views .sm-inputbox, .sm-views .sm-bigta", shell).forEach(function (box) {
       if (box.__composer) return;
       var st = composerState(box);
-      var tools = document.createElement("div");
-      tools.className = "sm-compose-tools";
-      tools.innerHTML =
-        '<button class="sm-plusbtn" type="button" aria-label="Add context" title="Add files or context" aria-expanded="false">＋</button>' +
-        '<span class="sm-tools-sp"></span>' +
+      var isInput = box.classList.contains("sm-inputbox");
+      var plusHTML = '<button class="sm-plusbtn" type="button" aria-label="Add context" title="Add files or context" aria-expanded="false">＋</button>';
+      var selectorsHTML =
         '<button class="sm-modelbtn" type="button"><span class="sm-mlabel"></span><i>▾</i></button>' +
-        '<button class="sm-effortbtn" type="button"><span class="sm-elabel"></span><i>▾</i></button>';
-      box.insertBefore(tools, box.firstChild);
+        '<button class="sm-effortbtn" type="button"><span class="sm-elabel"></span><i>▾</i></button>' +
+        '<button class="sm-ctxusage" type="button" aria-label="Context usage: 68%" aria-haspopup="dialog" aria-expanded="false" title="Context usage · 68%"><span class="ring" style="--pct:68%"></span><span class="pct">68%</span></button>';
+      var tools = document.createElement("div");
+      tools.className = "sm-compose-tools sm-compose-toolbar";
       var chips = document.createElement("div");
       chips.className = "sm-compose-files";
       chips.hidden = true;
-      box.insertBefore(chips, tools.nextSibling);
+
+      if (isInput) {
+        var ph = $(".ph", box);
+        var send = document.createElement("span");
+        send.className = "send";
+        send.textContent = "↑";
+        var row = document.createElement("div");
+        row.className = "sm-compose-row";
+        row.innerHTML = plusHTML;
+        var rowPlus = $(".sm-plusbtn", row);
+        if (ph) row.appendChild(ph);
+        row.appendChild(send);
+        box.appendChild(row);
+        box.insertBefore(chips, row);
+        tools.innerHTML = selectorsHTML;
+        if (box.parentNode) box.parentNode.insertBefore(tools, box.nextSibling);
+        st.plus = rowPlus;
+      } else {
+        tools.innerHTML = plusHTML + selectorsHTML;
+        if (box.parentNode) {
+          box.parentNode.insertBefore(chips, box.nextSibling);
+          box.parentNode.insertBefore(tools, chips.nextSibling);
+        }
+        st.plus = $(".sm-plusbtn", tools);
+      }
       st.tools = tools;
       st.chips = chips;
-      st.plus = $(".sm-plusbtn", tools);
       st.modelBtn = $(".sm-modelbtn", tools);
       st.effortBtn = $(".sm-effortbtn", tools);
+      st.usage = $(".sm-ctxusage", tools);
       updateComposerButtons(box);
       renderComposerChips(box);
 
@@ -1492,8 +1516,77 @@
         e.stopPropagation();
         openSelector(box, st.effortBtn, "effort");
       });
+      if (st.usage) {
+        st.usage.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openUsage(st.usage);
+        });
+      }
     });
     buildPickers();
+  }
+
+  var usagePop = null;
+  var usageBtn = null;
+
+  function buildUsage() {
+    if (usagePop) return;
+    usagePop = document.createElement("div");
+    usagePop.className = "sm-pop sm-usage-pop";
+    usagePop.id = "sm-usage-pop";
+    usagePop.setAttribute("role", "dialog");
+    usagePop.setAttribute("aria-label", "Context usage");
+    usagePop.hidden = true;
+    usagePop.innerHTML =
+      '<div class="sm-pop-h"><div><b>Context</b><span class="sm-pop-sub">87k / 128k</span></div>' +
+      '<button class="sm-pop-x" id="sm-usage-close" type="button" aria-label="Close context usage">×</button></div>' +
+      '<div class="sm-usage-body">' +
+      '<div class="sm-usage-meter"><i style="width:68%"></i></div>' +
+      '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--accent)"></span><span class="nm">Workspace &amp; instructions</span><b>12k</b><small>9%</small></div>' +
+      '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--blue)"></span><span class="nm">Open files</span><b>22k</b><small>17%</small></div>' +
+      '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--success)"></span><span class="nm">Task thread</span><b>31k</b><small>24%</small></div>' +
+      '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--warn)"></span><span class="nm">Tool output</span><b>17k</b><small>13%</small></div>' +
+      '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--rose)"></span><span class="nm">Attachments</span><b>5k</b><small>4%</small></div>' +
+      '<div class="sm-usage-total"><span>Used</span><b>87k</b><small>68%</small></div>' +
+      '<div class="sm-usage-free"><span>Free</span><b>41k</b><small>32%</small></div>' +
+      '</div>';
+    shell.appendChild(usagePop);
+    var close = $("#sm-usage-close", usagePop);
+    if (close) close.addEventListener("click", closeUsage);
+    usagePop.addEventListener("click", function (e) { e.stopPropagation(); });
+    addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeUsage();
+    });
+    document.addEventListener("click", function (e) {
+      if (!usagePop || usagePop.hidden) return;
+      if (usagePop.contains(e.target) || (usageBtn && usageBtn.contains(e.target))) return;
+      closeUsage();
+    });
+  }
+
+  function openUsage(btn) {
+    buildUsage();
+    if (!usagePop || (usageBtn === btn && !usagePop.hidden)) {
+      closeUsage();
+      return;
+    }
+    closeUsage();
+    usageBtn = btn;
+    btn.classList.add("on");
+    btn.setAttribute("aria-expanded", "true");
+    usagePop.hidden = false;
+    positionPop(usagePop, btn, true);
+    var close = $("#sm-usage-close", usagePop);
+    if (close) setTimeout(function () { close.focus(); }, 0);
+  }
+
+  function closeUsage() {
+    if (usageBtn) {
+      usageBtn.classList.remove("on");
+      usageBtn.setAttribute("aria-expanded", "false");
+    }
+    if (usagePop) usagePop.hidden = true;
+    usageBtn = null;
   }
 
 /* ================= 80-pickers.js ================= */
@@ -1507,14 +1600,12 @@
     attachPop.id = "sm-attach-pop";
     attachPop.hidden = true;
     attachPop.innerHTML =
-      '<div class="sm-pop-h"><b>Add files</b><button class="sm-pop-x" id="sm-attach-x" type="button" aria-label="Close">×</button></div>' +
       '<div class="sm-add-menu">' +
       '<button class="sm-add-item" id="sm-add-upload" type="button"><span class="ico">⇪</span><span class="sm-add-copy"><b>Upload</b><small>From this device</small></span></button>' +
       '<button class="sm-add-item" id="sm-add-remote" type="button"><span class="ico">▤</span><span class="sm-add-copy"><b>Remote</b><small>From the remote machine</small></span></button>' +
       '</div>';
     shell.appendChild(attachPop);
     attachPop.addEventListener("click", function (e) { e.stopPropagation(); });
-    $("#sm-attach-x", attachPop).addEventListener("click", closeAttach);
     $("#sm-add-upload", attachPop).addEventListener("click", function () {
       closeAttach();
       if (localInput) localInput.click();
@@ -1598,7 +1689,7 @@
     });
   }
 
-  function positionPop(pop, anchor) {
+  function positionPop(pop, anchor, forceAbove) {
     if (!pop || !anchor) return;
     pop.hidden = false;
     var rawScale = getComputedStyle(document.documentElement).getPropertyValue("--ui-scale");
@@ -1611,7 +1702,7 @@
     var vh = innerHeight;
     var left = Math.max(8, Math.min(r.left, vw - w - 8));
     pop.style.left = (left / scale) + "px";
-    if (r.top > h + 14) {
+    if (forceAbove || r.top > h + 14) {
       pop.style.top = "auto";
       pop.style.bottom = ((vh - r.top + 7) / scale) + "px";
     } else {

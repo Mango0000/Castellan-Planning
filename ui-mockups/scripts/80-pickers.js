@@ -8,14 +8,12 @@
     attachPop.id = "sm-attach-pop";
     attachPop.hidden = true;
     attachPop.innerHTML =
-      '<div class="sm-pop-h"><b>Add files</b><button class="sm-pop-x" id="sm-attach-x" type="button" aria-label="Close">×</button></div>' +
       '<div class="sm-add-menu">' +
       '<button class="sm-add-item" id="sm-add-upload" type="button"><span class="ico">⇪</span><span class="sm-add-copy"><b>Upload</b><small>From this device</small></span></button>' +
       '<button class="sm-add-item" id="sm-add-remote" type="button"><span class="ico">▤</span><span class="sm-add-copy"><b>Remote</b><small>From the remote machine</small></span></button>' +
       '</div>';
     shell.appendChild(attachPop);
     attachPop.addEventListener("click", function (e) { e.stopPropagation(); });
-    $("#sm-attach-x", attachPop).addEventListener("click", closeAttach);
     $("#sm-add-upload", attachPop).addEventListener("click", function () {
       closeAttach();
       if (localInput) localInput.click();
@@ -99,7 +97,7 @@
     });
   }
 
-  function positionPop(pop, anchor) {
+  function positionPop(pop, anchor, forceAbove) {
     if (!pop || !anchor) return;
     pop.hidden = false;
     var rawScale = getComputedStyle(document.documentElement).getPropertyValue("--ui-scale");
@@ -112,7 +110,7 @@
     var vh = innerHeight;
     var left = Math.max(8, Math.min(r.left, vw - w - 8));
     pop.style.left = (left / scale) + "px";
-    if (r.top > h + 14) {
+    if (forceAbove || r.top > h + 14) {
       pop.style.top = "auto";
       pop.style.bottom = ((vh - r.top + 7) / scale) + "px";
     } else {

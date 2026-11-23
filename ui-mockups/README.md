@@ -81,11 +81,13 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 
 Every chat input has the same controls:
 
+- The input component is one row: **add ＋**, the text input and **send ↑**. Model, effort and context usage sit in a separate toolbar completely outside the bordered input.
 - **Model** picker — GPT-5.3 Codex, GPT-5.2 Codex, GPT-5.1 Codex Max, GPT-5.1 Codex Mini, GPT-5.1 and o3.
-- **Reasoning effort** picker — only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
+- **Reasoning effort** picker — next to the model selector; only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
+- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with the breakdown: workspace/instructions, open files, task thread, tool output, attachments, used and free tokens.
 - **＋ context** — opens a two-choice menu: **Upload** (pick one or more local files from this device) or **Remote** (open a searchable file chooser for the remote machine).
 - **Remote** opens a file browser at the workspace root with the same path bar and expandable tree as the Context Explorer. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Task/new-task composers use the fixed workspace; temporary chats can switch workspace in the same dialog.
-- Local uploads and remote files appear as removable chips above the input. Remote selections are staged until **Attach**; Cancel discards them. Model, effort and attachments are per composer.
+- Local uploads and remote files appear as removable chips above the bottom toolbar. Remote selections are staged until **Attach**; Cancel discards them. Model, effort and attachments are per composer.
 
 The model list is demo data in `models.js`. The real app should hydrate it from app-server `model/list`.
 
