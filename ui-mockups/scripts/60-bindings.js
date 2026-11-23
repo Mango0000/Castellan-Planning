@@ -229,6 +229,16 @@
     b.addEventListener("click", function () { openContextTab(b.dataset.ctxOpen); });
   });
 
+  $$("[data-open-diff]", shell).forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (!ctxAvailable) {
+        ctxAvailable = true;
+        if (currentWs) syncContext(currentWs);
+      }
+      openContextTab("diff");
+    });
+  });
+
   var ctxClose = $("#sm-ctx-close", shell);
   if (ctxClose) {
     ctxClose.addEventListener("click", function () {

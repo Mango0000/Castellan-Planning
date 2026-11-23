@@ -15,7 +15,7 @@
     if (!ARCHIVED.length) {
       var empty = document.createElement("div");
       empty.className = "sm-archive-empty";
-      empty.innerHTML = '<span class="ic">⇩</span><b>Nothing archived yet</b><p>Use the archive button in a task or temporary chat. Archived work disappears from the rail and can be restored here.</p>';
+      empty.innerHTML = '<span class="ic"><svg class="trash-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.3 3.1h7.4M4.4 3.1V2.1h3.2v1M3.3 3.1l.5 7.3h4.4l.5-7.3M5 5.2v3.1M7 5.2v3.1"/></svg></span><b>Nothing archived yet</b><p>Use the archive button in a task or temporary chat. Archived work disappears from the rail and can be restored here.</p>';
       list.appendChild(empty);
       return;
     }

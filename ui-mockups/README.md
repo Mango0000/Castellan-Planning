@@ -113,6 +113,8 @@ Only one composer popover (mode, model, effort, context usage or add) is open at
 
 ## Right rail: Explorer + file tabs
 
+- **Changes** in a task header opens the Diff tab in the right rail, opening the rail if it was closed.
+
 - Starts with an **Explorer** tab. The path bar sits directly under the tabs, e.g. `/home/manuel/Downloads/random_projects/codingPlatform`.
 - `components/` and `public/` start expanded; every other folder expands on click. Refresh re-reads the tree without collapsing it.
 - Folders are a tree: clicking one expands or collapses it in place, with the path bar staying at the workspace root. Files open in **new context tabs**. The Explorer itself never shows file contents.
@@ -124,7 +126,7 @@ Only one composer popover (mode, model, effort, context usage or add) is open at
 
 ## Archive
 
-- Each task and temporary-chat row in the left rail has a small **archive `⇩`** button next to it.
+- Each task and temporary-chat row in the left rail has a small **trash-can archive** button next to it.
 - Clicking archive opens a centered confirmation dialog over an unfocused, blurred workspace. **Cancel** leaves it alone; **Archive** hides the item from the rail and opens the **Archive** view.
 - The rail has a muted **Archive** link pinned to the bottom, just above the user footer, with the count inline. No section header and no prominent button treatment.
 - The Archive view also has **Delete all**, which is only shown when there is archived work. It opens the same full-window blurred confirmation and permanently clears the archive.
