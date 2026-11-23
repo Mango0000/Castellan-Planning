@@ -1601,19 +1601,22 @@
   function positionPop(pop, anchor) {
     if (!pop || !anchor) return;
     pop.hidden = false;
+    var rawScale = getComputedStyle(document.documentElement).getPropertyValue("--ui-scale");
+    var scale = parseFloat(rawScale);
+    if (isNaN(scale) || scale <= 0) scale = 1;
     var r = anchor.getBoundingClientRect();
-    var w = pop.offsetWidth;
-    var h = pop.offsetHeight;
+    var w = pop.offsetWidth * scale;
+    var h = pop.offsetHeight * scale;
     var vw = innerWidth;
     var vh = innerHeight;
     var left = Math.max(8, Math.min(r.left, vw - w - 8));
-    pop.style.left = left + "px";
+    pop.style.left = (left / scale) + "px";
     if (r.top > h + 14) {
       pop.style.top = "auto";
-      pop.style.bottom = (vh - r.top + 7) + "px";
+      pop.style.bottom = ((vh - r.top + 7) / scale) + "px";
     } else {
       pop.style.bottom = "auto";
-      pop.style.top = (Math.min(r.bottom + 7, vh - h - 8)) + "px";
+      pop.style.top = (Math.min(r.bottom + 7, vh - h - 8) / scale) + "px";
     }
   }
 

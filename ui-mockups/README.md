@@ -123,7 +123,8 @@ The model list is demo data in `models.js`. The real app should hydrate it from 
 
 ## Sizes
 
-- The app layout is tuned around a **920 px** frame, compact below 900 px, and usable down to **800 px**. `app.html` itself now fills the browser viewport; the blueprint embeds it in a 592 px frame.
+- The app layout is tuned around a **920 px** frame, compact below 900 px, and usable down to **800 px**. `app.html` itself fills the browser viewport; the blueprint embeds it in a 592 px frame.
+- On full-screen large displays the UI scales up for readability: **1.2× at 1440 px**, **1.35× at 1800 px**, **1.5× at 2200 px**. Popovers and dialogs scale with it so labels stay readable on 2K screens.
 - `app.html` fills the viewport; the browser-wrapped `console-shell.html` remains **632 px** tall. The blueprint embeds `app.html` in a 592 px frame with `min-width: 800px`; its wrapper scrolls horizontally below that.
 
 ## Theme handshake
