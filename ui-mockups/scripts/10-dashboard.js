@@ -262,6 +262,7 @@
     var edit = $("#g-dash-edit", shell);
     function setGlobalEditing(on) {
       if (globalView) globalView.classList.toggle("editing", on);
+      if (bottom) bottom.hidden = on;
       if (edit) {
         edit.textContent = on ? "Save" : "Edit";
         edit.classList.toggle("primary", on);

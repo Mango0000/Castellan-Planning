@@ -82,8 +82,8 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 - A **Dashboard** button above New task opens the all-workspaces view. Dashboard, New task and Temporary chat share the same base style; the active view uses the soft accent background and border.
 - It summarizes workspaces, active tasks, items needing attention and running dev servers, with one card per workspace.
 - Each card opens that workspace's dashboard.
-- The AI prompt is docked at the bottom, like the plan composer, and has its own **model** and **reasoning-effort** selectors. A full-width **Hide AI composer** bar collapses it to **Show AI composer**; **Edit with AI** in the header shows and focuses it again.
-- **Edit** manually removes workspace cards with the card **×** controls, then becomes **Save** at the top right. While editing manually the **Edit with AI** header button is hidden. Applying an AI prompt or suggestion adds an AI card and updates the “Customized by Codex” timestamp.
+- The AI prompt is docked at the bottom and uses the same compact input-box style as the temporary composer, with **model** and **reasoning-effort** selectors just outside it. Its suggestion chips stay inside the bottom AI composer, above the text box but never inside it. A full-width **Hide AI composer** bar collapses it to **Show AI composer**; **Edit with AI** in the header shows and focuses it again.
+- **Edit** manually removes workspace cards with the card **×** controls, then becomes **Save** at the top right. While editing manually the **Edit with AI** header button and the bottom AI composer are hidden. Applying an AI prompt or suggestion adds an AI card and updates the “Customized by Codex” timestamp.
 
 ## Task tabs and plan
 
@@ -96,11 +96,11 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 
 Every chat input has the same controls:
 
-- The input component is one row: **add ＋**, the text input and **send ↑**. Mode, model, effort and context usage sit in a separate toolbar completely outside the bordered input. The new-task text box keeps the same ＋ and ↑ inside the box, with the selector toolbar underneath.
+- The input component is one row: **add ＋**, a real text input and a real **send ↑** button. Send has no submit behavior in this mock. Mode, model, effort and context usage sit in a separate toolbar completely outside the bordered input. The new-task text box keeps the same ＋ and ↑ inside the box, with the selector toolbar underneath.
 - **Mode** picker — left of the model on task composers: **Plan**, **Edit** and **Review**. Temporary chats have no mode selector.
 - **Model** picker — GPT-5.3 Codex, GPT-5.2 Codex, GPT-5.1 Codex Max, GPT-5.1 Codex Mini, GPT-5.1 and o3.
 - **Reasoning effort** picker — next to the model selector; only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
-- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with a segmented meter marked **87k / 128k**. Task composers break down workspace/instructions, open files, task thread, tool output and attachments; temporary chats use chat-oriented categories.
+- **Context usage** — task composers show the 68% ring and its drop-up with a segmented **87k / 128k** meter. Temporary chats have no context usage control.
 - **＋ context** — opens **Upload** and **Remote**. Temporary chats are workspace-less, so there is no Workspace option and no workspace chooser inside Remote.
 - **Remote** opens a large file browser with the same path bar and expandable tree as the Context Explorer; it scales up with the rest of the UI on large displays. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Temporary chats use it only to pick files.
 - Local uploads and remote files appear as removable chips above the bottom toolbar. Remote selections are staged until **Attach**; Cancel discards them. Mode, model, effort and attachments are per composer.
@@ -109,13 +109,13 @@ Only one composer popover (mode, model, effort, context usage or add) is open at
 
 ## Queue steering
 
-- The task view shows the queued task in the floating dock above the composer. The × in the **Queued** separator removes it from the queue; once a task is steered, removal is hidden.
+- The task view shows multiple queued tasks in the floating dock above the composer. Each row has its own **Steer current run** and **×** remove control; counts and the queue note update, and steering adds an event to the chat.
 - **Steer current run** adds the queued task to the running turn without starting a second agent. It is enabled only when the selected auth-composer model advertises live steering (`steer` in `models.js`); unsupported models disable it and explain why.
 - Steering switches the queue card to **Steering**, updates its status and note, and posts an inline steering event in the chat. The approval card remains pending.
 
 ## Temporary chat
 
-- A temporary chat is a workspace-less, ChatGPT-style chat: no workspace or folder context, no context rail, and no workspace chooser in Remote.
+- A temporary chat is a workspace-less, ChatGPT-style chat: no workspace or folder context, no context rail, and no workspace chooser in Remote. Its suggestion chips sit directly above the composer.
 - Use **＋ → Upload** for local files or **＋ → Remote** for files on the remote machine. Selected files become chips; they do not scope the chat to a workspace.
 - No branch, no commit, read-only, 7-day expiry, or promote with **Keep as task**.
 

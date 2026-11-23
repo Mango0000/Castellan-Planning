@@ -504,6 +504,7 @@
     var edit = $("#g-dash-edit", shell);
     function setGlobalEditing(on) {
       if (globalView) globalView.classList.toggle("editing", on);
+      if (bottom) bottom.hidden = on;
       if (edit) {
         edit.textContent = on ? "Save" : "Edit";
         edit.classList.toggle("primary", on);
@@ -1783,34 +1784,31 @@
   function syncQueueSteer(box) {
     var queued = $(".sm-queued", shell);
     if (!queued) return;
-    var btn = $("[data-queue-steer]", queued);
+    var buttons = $$("[data-queue-steer]", queued);
+    if (!buttons.length) return;
     var support = $(".sm-queue-support", queued);
-    if (!btn) return;
-    if (queued.dataset.steered === "1") {
-      btn.disabled = true;
-      btn.textContent = "Steering";
-      btn.title = "This queued task is already steering the current run";
-      if (support) support.textContent = "Added to the running turn";
-      return;
-    }
     var st = composerState(box);
     var m = modelById(st.model);
     var supported = !!m.steer;
-    btn.disabled = !supported;
-    btn.textContent = "Steer current run";
-    btn.title = supported ? "Steer the current run toward this queued task" : m.label + " does not support live steering";
+    buttons.forEach(function (btn) {
+      btn.disabled = !supported;
+      btn.textContent = "Steer current run";
+      btn.title = supported ? "Steer the current run toward this queued task" : m.label + " does not support live steering";
+    });
     if (support) {
       support.textContent = supported ? m.short + " supports live steering" : m.short + " cannot steer a running run";
       support.title = support.textContent;
     }
   }
 
-  function addSteerEvent() {
+  function addSteerEvent(name) {
     var chat = $('.sm-view[data-sm-view="auth"] .sm-chat', shell);
     if (!chat) return;
     var ev = document.createElement("div");
     ev.className = "sm-steer-event";
-    ev.innerHTML = '<span class="ic">↳</span><span><b>Steering current run</b> — <code>Add password reset flow</code> was added to this turn. No second agent was started.</span>';
+    ev.innerHTML = '<span class="ic">↳</span><span><b>Steering current run</b> — <code></code> was added to this turn. No second agent was started.</span>';
+    var code = ev.querySelector("code");
+    if (code) code.textContent = name;
     chat.appendChild(ev);
     chat.scrollTop = chat.scrollHeight;
   }
@@ -1818,39 +1816,47 @@
   function initQueueSteer() {
     var queued = $(".sm-queued", shell);
     if (!queued) return;
-    var btn = $("[data-queue-steer]", queued);
     var authBox = $('.sm-view[data-sm-view="auth"] .sm-inputbox', shell);
-    var removeBtn = $("[data-queue-remove]", queued);
-    if (removeBtn) {
-      removeBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        if (queued.dataset.steered === "1") return;
+
+    function updateQueue() {
+      var items = $$("[data-queue-item]", queued);
+      var count = items.length;
+      var countEl = $("[data-queue-count]", queued);
+      if (countEl) countEl.textContent = count === 1 ? "1 task" : count + " tasks";
+      var note = $("[data-queue-note]", queued);
+      if (note) note.innerHTML = count === 1
+        ? "One agent at a time. 1 task is queued for <code>acme-web</code>."
+        : "One agent at a time. " + count + " tasks are queued for <code>acme-web</code>.";
+      if (!count) {
         queued.remove();
-      });
+        return;
+      }
+      syncQueueSteer(authBox);
     }
-    if (btn) {
-      btn.addEventListener("click", function () {
-        if (queued.dataset.steered === "1" || !authBox) return;
-        var m = modelById(composerState(authBox).model);
-        if (!m.steer) return;
-        queued.dataset.steered = "1";
-        queued.classList.add("sm-steered");
-        var sep = $(".sm-queued-sep span", queued);
-        if (sep) sep.textContent = "Steering";
-        var pill = $(".pill", queued);
-        if (pill) {
-          pill.className = "pill run";
-          pill.textContent = "steering";
-        }
-        var small = $(".sm-queued-copy small", queued);
-        if (small) small.textContent = "acme-web · added to current run";
-        var note = $(".sm-queued-note", queued);
-        if (note) note.innerHTML = "Folded into the running turn. The agent will pick this up after the current step.";
-        btn.textContent = "Steering";
-        syncQueueSteer(authBox);
-        addSteerEvent();
-      });
-    }
+
+    $$("[data-queue-item]", queued).forEach(function (item) {
+      var removeBtn = $("[data-queue-remove]", item);
+      if (removeBtn) {
+        removeBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          item.remove();
+          updateQueue();
+        });
+      }
+      var steerBtn = $("[data-queue-steer]", item);
+      if (steerBtn) {
+        steerBtn.addEventListener("click", function () {
+          if (!authBox) return;
+          var m = modelById(composerState(authBox).model);
+          if (!m.steer) return;
+          var nameEl = $(".sm-queued-copy b", item);
+          var name = nameEl ? nameEl.textContent : "Queued task";
+          item.remove();
+          addSteerEvent(name);
+          updateQueue();
+        });
+      }
+    });
     if (authBox) syncQueueSteer(authBox);
   }
 
@@ -1921,11 +1927,12 @@
       var st = composerState(box);
       var isInput = box.classList.contains("sm-inputbox");
       var plusHTML = '<button class="sm-plusbtn" type="button" aria-label="Add context" title="Add files or context" aria-expanded="false">＋</button>';
+      var isTemp = isTempComposer(box);
       var selectorsHTML =
-        (isTempComposer(box) ? "" : '<button class="sm-modebtn" type="button"><span class="sm-modelabel"></span><i>▾</i></button>') +
+        (isTemp ? "" : '<button class="sm-modebtn" type="button"><span class="sm-modelabel"></span><i>▾</i></button>') +
         '<button class="sm-modelbtn" type="button"><span class="sm-mlabel"></span><i>▾</i></button>' +
         '<button class="sm-effortbtn" type="button"><span class="sm-elabel"></span><i>▾</i></button>' +
-        '<button class="sm-ctxusage" type="button" aria-label="Context usage: 68%" aria-haspopup="dialog" aria-expanded="false" title="Context usage · 68%"><span class="ring" style="--pct:68%"></span><span class="pct">68%</span></button>';
+        (isTemp ? "" : '<button class="sm-ctxusage" type="button" aria-label="Context usage: 68%" aria-haspopup="dialog" aria-expanded="false" title="Context usage · 68%"><span class="ring" style="--pct:68%"></span><span class="pct">68%</span></button>');
       var tools = document.createElement("div");
       tools.className = "sm-compose-tools sm-compose-toolbar";
       var chips = document.createElement("div");
@@ -1933,10 +1940,13 @@
       chips.hidden = true;
 
       if (isInput) {
-        var ph = $(".ph", box);
-        var send = document.createElement("span");
+        var ph = $(".ph, .sm-compose-input", box);
+        var send = document.createElement("button");
+        send.type = "button";
         send.className = "send";
         send.textContent = "↑";
+        send.setAttribute("aria-label", "Send");
+        send.title = "Send";
         var row = document.createElement("div");
         row.className = "sm-compose-row";
         row.innerHTML = plusHTML;

@@ -169,13 +169,23 @@ margin-top:4px
 display:flex;align-items:center;gap:5px;min-height:22px
 }
 
-.sm-compose-row .ph {
+.sm-compose-row .ph,
+.sm-compose-row .sm-compose-input {
 flex:1;min-width:0;min-height:0;line-height:1.35
 }
 
+.sm-compose-row .sm-compose-input {
+height:18px;border:0;outline:none;background:transparent;color:var(--ink2);
+font-family:var(--font-sans);font-size:8.5px;padding:0
+}
+
+.sm-compose-row .sm-compose-input::placeholder {
+color:var(--faint)
+}
+
 .sm-compose-row .send {
-width:16px;height:16px;flex:none;border-radius:4px;background:var(--accent);color:var(--on-accent);
-display:grid;place-items:center;font-size:8px
+width:16px;height:16px;flex:none;border:0;border-radius:4px;background:var(--accent);color:var(--on-accent);
+display:grid;place-items:center;font-size:8px;padding:0;font-family:var(--font-sans);cursor:pointer
 }
 
 .sm-compose-toolbar {

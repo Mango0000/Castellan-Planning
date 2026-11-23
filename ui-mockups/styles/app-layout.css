@@ -72,8 +72,21 @@ background:var(--surface2);color:var(--ink)
 display:none
 }
 
-.sm-queued-task {
-display:flex;align-items:center;gap:6px;padding:2px 0
+.sm-queued-task,
+.sm-queue-item {
+display:flex;align-items:center;gap:5px;padding:3px 0;min-width:0
+}
+
+.sm-queue-item + .sm-queue-item {
+border-top:1px solid var(--line)
+}
+
+.sm-queue-item .sm-queue-steer {
+margin-left:0
+}
+
+.sm-queue-count {
+margin-left:auto;font-family:var(--font-mono);font-size:5.7px;color:var(--faint);white-space:nowrap
 }
 
 .sm-queued .sm-dot.wait {

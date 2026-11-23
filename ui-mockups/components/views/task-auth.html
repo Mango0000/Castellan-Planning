@@ -88,17 +88,25 @@
                 </button>
               <div class="sm-approval-dock">
                 <div class="sm-queued">
-                  <div class="sm-queued-sep"><span>Queued</span><span class="sm-queued-line"></span><button class="sm-queue-remove" type="button" data-queue-remove aria-label="Remove queued task" title="Remove queued task">×</button></div>
-                  <div class="sm-queued-task">
+                  <div class="sm-queued-sep"><span>Queued</span><span class="sm-queued-line"></span><span class="sm-queue-count" data-queue-count>2 tasks</span></div>
+                  <div class="sm-queue-item" data-queue-item>
                     <span class="sm-dot wait"></span>
                     <span class="sm-queued-copy"><b>Add password reset flow</b><small>acme-web · starts after auth-flow</small></span>
                     <span class="pill wait">waiting</span>
                     <button class="sm-queue-steer" type="button" data-queue-steer disabled title="Live steering support is checked against the selected model">Steer current run</button>
+                    <button class="sm-queue-remove" type="button" data-queue-remove aria-label="Remove Add password reset flow from queue" title="Remove from queue">×</button>
+                  </div>
+                  <div class="sm-queue-item" data-queue-item>
+                    <span class="sm-dot wait"></span>
+                    <span class="sm-queued-copy"><b>Add email verification</b><small>acme-web · after password reset</small></span>
+                    <span class="pill wait">waiting</span>
+                    <button class="sm-queue-steer" type="button" data-queue-steer disabled title="Live steering support is checked against the selected model">Steer current run</button>
+                    <button class="sm-queue-remove" type="button" data-queue-remove aria-label="Remove Add email verification from queue" title="Remove from queue">×</button>
                   </div>
                   <div class="sm-queued-actions">
                     <span class="sm-queue-support">Checking live steering support…</span>
                   </div>
-                  <div class="sm-queued-note">One agent at a time. One more task is queued for <code>acme-web</code>.</div>
+                  <div class="sm-queued-note" data-queue-note>One agent at a time. 2 tasks are queued for <code>acme-web</code>.</div>
                 </div>
                 <div class="sm-approve">
                   <div class="ah">Approval needed · command</div>
@@ -108,7 +116,7 @@
               </div>
               <div class="sm-composer">
                 <div class="sm-inputbox">
-                  <span class="ph">Steer the running turn…</span>
+                  <input class="sm-compose-input" type="text" autocomplete="off" placeholder="Steer the running turn…">
                 </div>
               </div>
               </div>
