@@ -231,6 +231,10 @@ margin-left:auto
 flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;padding:44px 26px 18px
 }
 
+.sm-new-composer {
+display:flex;flex-direction:column;flex:none
+}
+
 .sm-empty h4 {
 font-size:15px;margin:0;letter-spacing:-.01em
 }
@@ -240,7 +244,16 @@ font-size:9.5px;line-height:1.55;color:var(--muted);margin:0;max-width:380px
 }
 
 .sm-bigta {
-border:1px solid var(--line2);border-radius:8px;background:var(--surface);padding:9px 10px;font-size:9px;color:var(--faint);min-height:58px
+border:1px solid var(--line2);border-radius:8px;background:var(--surface);padding:9px 10px;font-size:9px;color:var(--faint);min-height:58px;
+display:flex;flex-direction:column
+}
+
+.sm-bigta-row {
+margin-top:6px
+}
+
+.sm-bigta-sp {
+flex:1
 }
 
 .sm-empty-foot {

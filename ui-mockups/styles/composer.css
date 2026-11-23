@@ -29,20 +29,16 @@ background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent
 flex:1;min-width:2px
 }
 
-.sm-modelbtn,.sm-effortbtn {
-height:17px;display:inline-flex;align-items:center;gap:3px;border:1px solid transparent;border-radius:3px;
-  background:none;color:var(--muted);font-family:var(--font-mono);font-size:6.1px;line-height:1;padding:0 3px;cursor:pointer;white-space:nowrap
+.sm-modebtn,.sm-modelbtn,.sm-effortbtn {
+height:17px;display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:3px;
+  background:var(--surface2);color:var(--muted);font-family:var(--font-mono);font-size:6.1px;line-height:1;padding:0 3px;cursor:pointer;white-space:nowrap
 }
 
-.sm-modelbtn {
-border-color:var(--line);background:var(--surface2)
-}
-
-.sm-modelbtn:hover,.sm-effortbtn:hover,.sm-modelbtn.on,.sm-effortbtn.on {
+.sm-modebtn:hover,.sm-modelbtn:hover,.sm-effortbtn:hover,.sm-modebtn.on,.sm-modelbtn.on,.sm-effortbtn.on {
 background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)
 }
 
-.sm-modelbtn i,.sm-effortbtn i {
+.sm-modebtn i,.sm-modelbtn i,.sm-effortbtn i {
 font-style:normal;font-size:5.5px;color:var(--faint)
 }
 
@@ -119,12 +115,20 @@ width:252px
 padding:7px 8px 8px
 }
 
+.sm-usage-meterrow {
+display:flex;align-items:center;gap:6px;margin:1px 0 7px
+}
+
 .sm-usage-meter {
-height:4px;border-radius:99px;background:var(--line);overflow:hidden;margin:1px 0 6px
+flex:1;height:4px;border-radius:99px;background:var(--line);overflow:hidden;display:flex
 }
 
 .sm-usage-meter i {
-display:block;height:100%;width:68%;border-radius:99px;background:var(--accent)
+display:block;height:100%;flex:none
+}
+
+.sm-usage-meterlabel {
+font-family:var(--font-mono);font-size:6px;color:var(--faint);white-space:nowrap
 }
 
 .sm-usage-row {
@@ -150,19 +154,6 @@ font-family:var(--font-mono);font-size:6px;color:var(--ink);font-weight:500
 
 .sm-usage-row small {
 width:24px;text-align:right;font-family:var(--font-mono);font-size:6px;color:var(--faint)
-}
-
-.sm-usage-total,.sm-usage-free {
-display:flex;align-items:center;gap:5px;padding-top:5px;margin-top:1px;border-top:1px solid var(--line);
-font-family:var(--font-mono);font-size:6.2px;color:var(--faint)
-}
-
-.sm-usage-total b,.sm-usage-free b {
-margin-left:auto;font-size:6.4px;color:var(--ink);font-weight:500
-}
-
-.sm-usage-total small,.sm-usage-free small {
-width:24px;text-align:right;font-size:6px;color:var(--faint)
 }
 
 .sm-bigta .sm-compose-tools {

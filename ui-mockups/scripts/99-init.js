@@ -3,6 +3,7 @@
   /* ------------------------------------------------------------- initialize */
 
   enhanceComposers();
+  initQueueSteer();
   buildArchiveConfirm();
   renderArchive();
   renderCtxTabs();

@@ -4,6 +4,11 @@
 
   var MODELS = window.CODEX_MODELS || [];
   var EFFORTS = window.CODEX_EFFORTS || {};
+  var MODES = [
+    { id: "plan", short: "Plan", label: "Plan mode", note: "Think and propose before changing files" },
+    { id: "edit", short: "Edit", label: "Edit mode", note: "Make changes directly in the workspace" },
+    { id: "review", short: "Review", label: "Review mode", note: "Read-only inspection and feedback" }
+  ];
   var MODEL_FALLBACK = {
     id: "gpt-5.3-codex", short: "5.3 Codex", label: "GPT-5.3 Codex",
     note: "Codex model", efforts: ["low", "medium", "high"], defaultEffort: "high"
@@ -18,10 +23,16 @@
     return EFFORTS[id] || { label: id || "High", short: id || "High", note: "" };
   }
 
+  function modeById(id) {
+    for (var i = 0; i < MODES.length; i++) if (MODES[i].id === id) return MODES[i];
+    return MODES[1];
+  }
+
   function composerState(box) {
     if (!box.__composer) {
       var first = modelById("");
       box.__composer = {
+        mode: "edit",
         model: first.id,
         effort: first.defaultEffort || "high",
         files: [],
@@ -46,10 +57,82 @@
     if (!st || !st.modelBtn) return;
     var m = modelById(st.model);
     var e = effortById(st.effort);
+    if (st.modeBtn) {
+      var mode = modeById(st.mode);
+      st.modeBtn.querySelector(".sm-modelabel").textContent = mode.short;
+      st.modeBtn.title = "Mode: " + mode.label;
+    }
     st.modelBtn.querySelector(".sm-mlabel").textContent = m.short;
     st.modelBtn.title = "Model: " + m.label;
     st.effortBtn.querySelector(".sm-elabel").textContent = e.short;
     st.effortBtn.title = "Reasoning effort: " + e.label;
+    if (box.closest && box.closest('.sm-view[data-sm-view="auth"]')) syncQueueSteer(box);
+  }
+
+  function syncQueueSteer(box) {
+    var queued = $(".sm-queued", shell);
+    if (!queued) return;
+    var btn = $("[data-queue-steer]", queued);
+    var support = $(".sm-queue-support", queued);
+    if (!btn) return;
+    if (queued.dataset.steered === "1") {
+      btn.disabled = true;
+      btn.textContent = "Steering";
+      btn.title = "This queued task is already steering the current run";
+      if (support) support.textContent = "Added to the running turn";
+      return;
+    }
+    var st = composerState(box);
+    var m = modelById(st.model);
+    var supported = !!m.steer;
+    btn.disabled = !supported;
+    btn.textContent = "Steer current run";
+    btn.title = supported ? "Steer the current run toward this queued task" : m.label + " does not support live steering";
+    if (support) {
+      support.textContent = supported ? m.short + " supports live steering" : m.short + " cannot steer a running run";
+      support.title = support.textContent;
+    }
+  }
+
+  function addSteerEvent() {
+    var chat = $('.sm-view[data-sm-view="auth"] .sm-chat', shell);
+    if (!chat) return;
+    var ev = document.createElement("div");
+    ev.className = "sm-steer-event";
+    ev.innerHTML = '<span class="ic">↳</span><span><b>Steering current run</b> — <code>Add password reset flow</code> was added to this turn. No second agent was started.</span>';
+    chat.appendChild(ev);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function initQueueSteer() {
+    var queued = $(".sm-queued", shell);
+    if (!queued) return;
+    var btn = $("[data-queue-steer]", queued);
+    var authBox = $('.sm-view[data-sm-view="auth"] .sm-inputbox', shell);
+    if (btn) {
+      btn.addEventListener("click", function () {
+        if (queued.dataset.steered === "1" || !authBox) return;
+        var m = modelById(composerState(authBox).model);
+        if (!m.steer) return;
+        queued.dataset.steered = "1";
+        queued.classList.add("sm-steered");
+        var sep = $(".sm-queued-sep span", queued);
+        if (sep) sep.textContent = "Steering";
+        var pill = $(".pill", queued);
+        if (pill) {
+          pill.className = "pill run";
+          pill.textContent = "steering";
+        }
+        var small = $(".sm-queued-copy small", queued);
+        if (small) small.textContent = "acme-web · added to current run";
+        var note = $(".sm-queued-note", queued);
+        if (note) note.innerHTML = "Folded into the running turn. The agent will pick this up after the current step.";
+        btn.textContent = "Steering";
+        syncQueueSteer(authBox);
+        addSteerEvent();
+      });
+    }
+    if (authBox) syncQueueSteer(authBox);
   }
 
   function chipEl(icon, label, title, cls, onRemove) {
@@ -132,6 +215,7 @@
       var isInput = box.classList.contains("sm-inputbox");
       var plusHTML = '<button class="sm-plusbtn" type="button" aria-label="Add context" title="Add files or context" aria-expanded="false">＋</button>';
       var selectorsHTML =
+        '<button class="sm-modebtn" type="button"><span class="sm-modelabel"></span><i>▾</i></button>' +
         '<button class="sm-modelbtn" type="button"><span class="sm-mlabel"></span><i>▾</i></button>' +
         '<button class="sm-effortbtn" type="button"><span class="sm-elabel"></span><i>▾</i></button>' +
         '<button class="sm-ctxusage" type="button" aria-label="Context usage: 68%" aria-haspopup="dialog" aria-expanded="false" title="Context usage · 68%"><span class="ring" style="--pct:68%"></span><span class="pct">68%</span></button>';
@@ -158,15 +242,18 @@
         if (box.parentNode) box.parentNode.insertBefore(tools, box.nextSibling);
         st.plus = rowPlus;
       } else {
-        tools.innerHTML = plusHTML + selectorsHTML;
-        if (box.parentNode) {
-          box.parentNode.insertBefore(chips, box.nextSibling);
-          box.parentNode.insertBefore(tools, chips.nextSibling);
-        }
-        st.plus = $(".sm-plusbtn", tools);
+        var bigRow = document.createElement("div");
+        bigRow.className = "sm-compose-row sm-bigta-row";
+        bigRow.innerHTML = plusHTML + '<span class="sm-bigta-sp"></span><span class="send">↑</span>';
+        box.appendChild(bigRow);
+        box.insertBefore(chips, bigRow);
+        tools.innerHTML = selectorsHTML;
+        if (box.parentNode) box.parentNode.insertBefore(tools, box.nextSibling);
+        st.plus = $(".sm-plusbtn", bigRow);
       }
       st.tools = tools;
       st.chips = chips;
+      st.modeBtn = $(".sm-modebtn", tools);
       st.modelBtn = $(".sm-modelbtn", tools);
       st.effortBtn = $(".sm-effortbtn", tools);
       st.usage = $(".sm-ctxusage", tools);
@@ -176,6 +263,10 @@
       st.plus.addEventListener("click", function (e) {
         e.stopPropagation();
         openAttach(box, st.plus);
+      });
+      st.modeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openSelector(box, st.modeBtn, "mode");
       });
       st.modelBtn.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -207,21 +298,21 @@
     usagePop.setAttribute("aria-label", "Context usage");
     usagePop.hidden = true;
     usagePop.innerHTML =
-      '<div class="sm-pop-h"><div><b>Context</b><span class="sm-pop-sub">87k / 128k</span></div>' +
-      '<button class="sm-pop-x" id="sm-usage-close" type="button" aria-label="Close context usage">×</button></div>' +
       '<div class="sm-usage-body">' +
-      '<div class="sm-usage-meter"><i style="width:68%"></i></div>' +
+      '<div class="sm-usage-meterrow"><div class="sm-usage-meter">' +
+      '<i style="width:9.375%;background:var(--accent)"></i>' +
+      '<i style="width:17.1875%;background:var(--blue)"></i>' +
+      '<i style="width:24.21875%;background:var(--success)"></i>' +
+      '<i style="width:13.28125%;background:var(--warn)"></i>' +
+      '<i style="width:3.90625%;background:var(--rose)"></i>' +
+      '</div><span class="sm-usage-meterlabel">87k / 128k</span></div>' +
       '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--accent)"></span><span class="nm">Workspace &amp; instructions</span><b>12k</b><small>9%</small></div>' +
       '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--blue)"></span><span class="nm">Open files</span><b>22k</b><small>17%</small></div>' +
       '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--success)"></span><span class="nm">Task thread</span><b>31k</b><small>24%</small></div>' +
       '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--warn)"></span><span class="nm">Tool output</span><b>17k</b><small>13%</small></div>' +
       '<div class="sm-usage-row"><span class="sm-usage-dot" style="background:var(--rose)"></span><span class="nm">Attachments</span><b>5k</b><small>4%</small></div>' +
-      '<div class="sm-usage-total"><span>Used</span><b>87k</b><small>68%</small></div>' +
-      '<div class="sm-usage-free"><span>Free</span><b>41k</b><small>32%</small></div>' +
       '</div>';
     shell.appendChild(usagePop);
-    var close = $("#sm-usage-close", usagePop);
-    if (close) close.addEventListener("click", closeUsage);
     usagePop.addEventListener("click", function (e) { e.stopPropagation(); });
     addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeUsage();
@@ -240,13 +331,14 @@
       return;
     }
     closeUsage();
+    closeSelector();
+    closeAttach();
+    closeRemote();
     usageBtn = btn;
     btn.classList.add("on");
     btn.setAttribute("aria-expanded", "true");
     usagePop.hidden = false;
     positionPop(usagePop, btn, true);
-    var close = $("#sm-usage-close", usagePop);
-    if (close) setTimeout(function () { close.focus(); }, 0);
   }
 
   function closeUsage() {

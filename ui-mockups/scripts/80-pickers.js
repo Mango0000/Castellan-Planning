@@ -81,12 +81,10 @@
     selectPop.id = "sm-select-pop";
     selectPop.hidden = true;
     selectPop.innerHTML =
-      '<div class="sm-pop-h"><b id="sm-select-title">Model</b><button class="sm-pop-x" id="sm-select-x" type="button" aria-label="Close">×</button></div>' +
       '<div class="sm-pop-body" id="sm-select-body"></div>' +
       '<div class="sm-pop-f"><span>Applies to this chat only</span></div>';
     shell.appendChild(selectPop);
     selectPop.addEventListener("click", function (e) { e.stopPropagation(); });
-    $("#sm-select-x", selectPop).addEventListener("click", closeSelector);
 
     addEventListener("click", function (e) {
       if (attachPop && !attachPop.hidden && !attachPop.contains(e.target) && e.target !== activeAttachBtn) closeAttach();
@@ -154,6 +152,7 @@
   function openAttach(box, btn) {
     if (!attachPop) return;
     if (!attachPop.hidden && activeComposer === box) { closeAttach(); return; }
+    closeUsage();
     closeSelector();
     closeRemote();
     if (activeAttachBtn && activeAttachBtn !== btn) {
@@ -170,6 +169,7 @@
   function openSelector(box, btn, kind) {
     if (!selectPop) return;
     if (!selectPop.hidden && activeComposer === box && activeSelectKind === kind) { closeSelector(); return; }
+    closeUsage();
     closeAttach();
     closeRemote();
     if (activeSelectBtn && activeSelectBtn !== btn) activeSelectBtn.classList.remove("on");
@@ -183,6 +183,7 @@
 
   function openRemote(box) {
     if (!box || !remotePop) return;
+    closeUsage();
     closeAttach();
     closeSelector();
     activeComposer = box;
@@ -416,12 +417,20 @@
     if (!activeComposer || !selectPop) return;
     var st = composerState(activeComposer);
     var m = modelById(st.model);
-    var title = $("#sm-select-title", selectPop);
     var body = $("#sm-select-body", selectPop);
-    if (title) title.textContent = activeSelectKind === "model" ? "Model" : "Reasoning effort";
     if (body) {
       body.innerHTML = "";
-      if (activeSelectKind === "model") {
+      if (activeSelectKind === "mode") {
+        MODES.forEach(function (item) {
+          var on = item.id === st.mode;
+          var row = document.createElement("button");
+          row.type = "button";
+          row.className = "sm-select-row" + (on ? " on" : "");
+          row.innerHTML = '<span class="sm-sr-main"><b>' + esc(item.short) + '</b><small>' + esc(item.note) + '</small></span><span class="sm-sr-check">' + (on ? "✓" : "") + "</span>";
+          row.addEventListener("click", function () { chooseMode(item.id); });
+          body.appendChild(row);
+        });
+      } else if (activeSelectKind === "model") {
         MODELS.forEach(function (item) {
           var on = item.id === st.model;
           var row = document.createElement("button");
@@ -445,7 +454,15 @@
       }
     }
     var foot = $(".sm-pop-f span", selectPop);
-    if (foot) foot.textContent = activeSelectKind === "model" ? "Reasoning: " + effortById(st.effort).label : m.label;
+    if (foot) foot.textContent = activeSelectKind === "mode" ? "Applies to this chat only" : activeSelectKind === "model" ? "Reasoning: " + effortById(st.effort).label : m.label;
+  }
+
+  function chooseMode(id) {
+    if (!activeComposer) return;
+    var st = composerState(activeComposer);
+    st.mode = modeById(id).id;
+    updateComposerButtons(activeComposer);
+    closeSelector();
   }
 
   function chooseModel(id) {

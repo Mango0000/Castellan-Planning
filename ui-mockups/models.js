@@ -6,6 +6,7 @@ window.CODEX_MODELS = [
     short: "5.3 Codex",
     label: "GPT-5.3 Codex",
     note: "Latest coding model",
+    steer: true,
     efforts: ["low", "medium", "high", "xhigh"],
     defaultEffort: "high"
   },
@@ -14,6 +15,7 @@ window.CODEX_MODELS = [
     short: "5.2 Codex",
     label: "GPT-5.2 Codex",
     note: "Stable coding model",
+    steer: true,
     efforts: ["low", "medium", "high", "xhigh"],
     defaultEffort: "medium"
   },
@@ -22,6 +24,7 @@ window.CODEX_MODELS = [
     short: "5.1 Max",
     label: "GPT-5.1 Codex Max",
     note: "Long-horizon Codex",
+    steer: true,
     efforts: ["low", "medium", "high", "xhigh"],
     defaultEffort: "high"
   },
@@ -30,6 +33,7 @@ window.CODEX_MODELS = [
     short: "5.1 Mini",
     label: "GPT-5.1 Codex Mini",
     note: "Fast and cheap",
+    steer: false,
     efforts: ["low", "medium", "high"],
     defaultEffort: "low"
   },
@@ -38,6 +42,7 @@ window.CODEX_MODELS = [
     short: "GPT-5.1",
     label: "GPT-5.1",
     note: "General purpose",
+    steer: false,
     efforts: ["none", "low", "medium", "high"],
     defaultEffort: "medium"
   },
@@ -46,6 +51,7 @@ window.CODEX_MODELS = [
     short: "o3",
     label: "o3",
     note: "Deep reasoning",
+    steer: false,
     efforts: ["low", "medium", "high"],
     defaultEffort: "high"
   }

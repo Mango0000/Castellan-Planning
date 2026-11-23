@@ -37,7 +37,7 @@ components/
    └─ archived.html
 ```
 
-The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. Collapsing either side gives the main view the full width: no residual strip or border. A floating Castellan mark appears at the top-left to reopen the left rail; a floating pane control at the top-right reopens the context rail. The Workspaces section has its own chevron and remembers its collapsed state, and each workspace with tasks has a smaller chevron with its own state.
+The browser chrome owns no app controls. The left rail has its own brand/collapse header; the right rail has its tab strip and close button. Both rails run the full height of the app. Collapsing either side gives the main view the full width: no residual strip or border. A floating Castellan mark appears at the top-left to reopen the left rail; a floating pane control at the top-right reopens the context rail. The Workspaces section has its own chevron and remembers its collapsed state, each workspace row has a small ＋ to start a task in that workspace, each workspace with tasks has a smaller chevron with its own state, and the Temporary section has the same chevron behavior with its own persisted state.
 
 ## Styles and behavior
 
@@ -81,15 +81,22 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 
 Every chat input has the same controls:
 
-- The input component is one row: **add ＋**, the text input and **send ↑**. Model, effort and context usage sit in a separate toolbar completely outside the bordered input.
+- The input component is one row: **add ＋**, the text input and **send ↑**. Mode, model, effort and context usage sit in a separate toolbar completely outside the bordered input. The new-task text box keeps the same ＋ and ↑ inside the box, with the selector toolbar underneath.
+- **Mode** picker — left of the model: **Plan**, **Edit** and **Review**, selected per composer.
 - **Model** picker — GPT-5.3 Codex, GPT-5.2 Codex, GPT-5.1 Codex Max, GPT-5.1 Codex Mini, GPT-5.1 and o3.
 - **Reasoning effort** picker — next to the model selector; only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
-- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with the breakdown: workspace/instructions, open files, task thread, tool output, attachments, used and free tokens.
+- **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with a segmented meter marked **87k / 128k** and category rows for workspace/instructions, open files, task thread, tool output and attachments.
 - **＋ context** — opens a two-choice menu: **Upload** (pick one or more local files from this device) or **Remote** (open a searchable file chooser for the remote machine).
-- **Remote** opens a file browser at the workspace root with the same path bar and expandable tree as the Context Explorer. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Task/new-task composers use the fixed workspace; temporary chats can switch workspace in the same dialog.
-- Local uploads and remote files appear as removable chips above the bottom toolbar. Remote selections are staged until **Attach**; Cancel discards them. Model, effort and attachments are per composer.
+- **Remote** opens a large file browser at the workspace root with the same path bar and expandable tree as the Context Explorer; it scales up with the rest of the UI on large displays. A single click expands a folder; double-click **opens** it (the path bar updates and Up returns to the parent). Search, multi-select and an Attach button are included. Task/new-task composers use the fixed workspace; temporary chats can switch workspace in the same dialog.
+- Local uploads and remote files appear as removable chips above the bottom toolbar. Remote selections are staged until **Attach**; Cancel discards them. Mode, model, effort and attachments are per composer.
 
-The model list is demo data in `models.js`. The real app should hydrate it from app-server `model/list`.
+Only one composer popover (mode, model, effort, context usage or add) is open at a time. The model list is demo data in `models.js`; the real app should hydrate it from app-server `model/list`.
+
+## Queue steering
+
+- The task view shows the queued task in the floating dock above the composer.
+- **Steer current run** adds the queued task to the running turn without starting a second agent. It is enabled only when the selected auth-composer model advertises live steering (`steer` in `models.js`); unsupported models disable it and explain why.
+- Steering switches the queue card to **Steering**, updates its status and note, and posts an inline steering event in the chat. The approval card remains pending.
 
 ## Temporary chat
 

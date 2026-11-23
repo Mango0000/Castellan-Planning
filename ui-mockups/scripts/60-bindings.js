@@ -106,6 +106,24 @@
   try { savedWsCollapsed = localStorage.getItem("castellan.workspacesCollapsed"); } catch (e) {}
   if (savedWsCollapsed === "1") setWorkspacesCollapsed(true);
 
+  var tempSec = $("#sm-temp-sec", shell);
+  var tempToggle = $("#sm-temp-toggle", shell);
+  function setTemporaryCollapsed(collapsed) {
+    if (!tempSec || !tempToggle) return;
+    tempSec.classList.toggle("collapsed", collapsed);
+    tempToggle.setAttribute("aria-expanded", String(!collapsed));
+    tempToggle.title = collapsed ? "Expand temporary" : "Collapse temporary";
+    try { localStorage.setItem("castellan.temporaryCollapsed", collapsed ? "1" : "0"); } catch (e) {}
+  }
+  if (tempToggle) {
+    tempToggle.addEventListener("click", function () {
+      setTemporaryCollapsed(!tempSec.classList.contains("collapsed"));
+    });
+  }
+  var savedTempCollapsed = null;
+  try { savedTempCollapsed = localStorage.getItem("castellan.temporaryCollapsed"); } catch (e) {}
+  if (savedTempCollapsed === "1") setTemporaryCollapsed(true);
+
   var wsTaskState = {};
   try { wsTaskState = JSON.parse(localStorage.getItem("castellan.workspaceTaskCollapsed") || "{}") || {}; } catch (e) {}
   function setWorkspaceTasksCollapsed(key, collapsed) {
