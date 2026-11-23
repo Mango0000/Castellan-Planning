@@ -6,7 +6,7 @@ Castellan is a small componentized UI mock for the coding-platform blueprint. No
 
 | File | What it is |
 | --- | --- |
-| `app.html` | **Castellan app UI only** — no browser chrome, no title bar. Full-height rails, explorer, tabs and views. Embedded in the blueprint. |
+| `app.html` | **Castellan app UI only** — full browser viewport for testing the real feel. No browser chrome or page margin. Embedded in the blueprint. |
 | `console-shell.html` | **Castellan in a browser window** — the same UI inside separate browser chrome. |
 
 The two shell pages and `app.js` are **generated**. Edit the markup or the JS source fragments, then run:
@@ -123,8 +123,8 @@ The model list is demo data in `models.js`. The real app should hydrate it from 
 
 ## Sizes
 
-- The app is designed at **920 px** wide, compact below 900 px, and usable down to **800 px**.
-- `app.html` is **592 px** tall; the browser-wrapped page is **632 px** tall. The blueprint embeds `app.html` in a 592 px frame with `min-width: 800px`; its wrapper scrolls horizontally below that.
+- The app layout is tuned around a **920 px** frame, compact below 900 px, and usable down to **800 px**. `app.html` itself now fills the browser viewport; the blueprint embeds it in a 592 px frame.
+- `app.html` fills the viewport; the browser-wrapped `console-shell.html` remains **632 px** tall. The blueprint embeds `app.html` in a 592 px frame with `min-width: 800px`; its wrapper scrolls horizontally below that.
 
 ## Theme handshake
 

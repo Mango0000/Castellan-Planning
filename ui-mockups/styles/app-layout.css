@@ -225,3 +225,20 @@ padding-left:38px
 .shellmock.ctx-collapsed .sm-view .sm-head {
 padding-right:38px
 }
+
+/* app.html is the full-viewport test surface; console-shell stays a windowed preview */
+html.app-full,html.app-full body {
+width:100%;height:100%;margin:0;padding:0;overflow:hidden
+}
+
+html.app-full .stage {
+width:100%;max-width:none;height:100vh;margin:0;padding:0
+}
+
+html.app-full .app {
+height:100vh
+}
+
+html.app-full .shellmock {
+width:100%;height:100vh;min-width:0
+}

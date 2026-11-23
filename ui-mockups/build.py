@@ -67,13 +67,14 @@ def resolve(text, depth=0):
     return INCLUDE.sub(replace, text)
 
 
-def page(title, content, browser=False):
+def page(title, content, browser=False, full=False):
+    class_attr = ' class="app-full"' if full else ''
     links = '<link rel="stylesheet" href="mockup.css">'
     if browser:
         links += '\n<link rel="stylesheet" href="browser.css">'
     links += ''.join(f'\n<link rel="stylesheet" href="styles/{name}">' for name in STYLE_FILES)
     return f"""<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light"{class_attr}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -114,7 +115,7 @@ def main():
     build_js()
     app = resolve((COMPONENTS / "app-shell.html").read_text())
     browser = resolve((COMPONENTS / "browser-window.html").read_text())
-    (ROOT / "app.html").write_text(page("Castellan — app mockup", app))
+    (ROOT / "app.html").write_text(page("Castellan — app mockup", app, full=True))
     (ROOT / "console-shell.html").write_text(page("Castellan — browser preview", browser, browser=True))
     print("built app.html and console-shell.html")
 
