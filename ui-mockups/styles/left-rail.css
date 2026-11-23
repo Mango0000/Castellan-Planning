@@ -36,6 +36,10 @@ display:block
 font-size:11px;font-weight:650;letter-spacing:.01em
 }
 
+.sm-actiongroup {
+display:flex;flex-direction:column;gap:4px;flex:none
+}
+
 .sm-newrow {
 display:grid;gap:4px;margin-bottom:1px
 }
@@ -49,8 +53,12 @@ display:flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:
 border-color:var(--accent-ink)
 }
 
-.sm-new.primary {
-background:var(--accent);border-color:var(--accent-ink);color:var(--on-accent);font-weight:600
+.sm-new.on {
+background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)
+}
+
+.sm-new.on .ic {
+color:var(--accent-ink)
 }
 
 .sm-new .spark {
@@ -555,4 +563,18 @@ background:var(--surface);color:var(--ink2);cursor:pointer
 
 .sm-new-ws-f button.primary {
 background:var(--accent);border-color:var(--accent-ink);color:var(--on-accent)
+}
+
+/* global dashboard entry and pinned rail footer */
+.sm-global-dash .ic {
+width:9px;flex:none;color:var(--faint);font-size:9px;text-align:center
+}
+
+.sm-side-bottom {
+position:sticky;bottom:0;z-index:8;display:flex;flex-direction:column;gap:4px;margin-top:auto;
+padding-top:4px;background:var(--surface2)
+}
+
+.sm-side-bottom .sm-foot {
+margin-top:0
 }

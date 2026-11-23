@@ -3,6 +3,7 @@
   /* ------------------------------------------------------------- initialize */
 
   enhanceComposers();
+  initGlobalDashboard();
   initQueueSteer();
   buildArchiveConfirm();
   renderArchive();

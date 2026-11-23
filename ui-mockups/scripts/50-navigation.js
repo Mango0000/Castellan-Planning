@@ -18,6 +18,7 @@
     }
     else if (name === "temp-new") { ws = null; canCtx = false; }
     else if (name === "temp") { ws = null; canCtx = false; }
+    else if (name === "global") { ws = null; canCtx = false; }
     else if (name === "archived") { ws = null; canCtx = false; }
     else if (name === "new") {
       selectWorkspace(opts.ws || lastWorkspace);
@@ -28,6 +29,7 @@
 
     if (name === "rate") clearRateUnread();
     if (name === "dashboard") renderDashboard(ws);
+    if (name === "global") renderGlobalDashboard();
     if (ws) syncContext(ws);
 
     applyContext();
@@ -44,9 +46,19 @@
     } else if (name === "dashboard") {
       var wrow = $('.sm-side .sm-ws[data-sm-ws="' + ws + '"]', shell);
       if (wrow) wrow.classList.add("on");
-    } else if (name === "temp") {
-      var temp = $('.sm-side .sm-item[data-sm-view="temp"]', shell);
-      if (temp) temp.classList.add("on");
+    } else if (name === "global") {
+      var gbtn = $('.sm-side [data-sm-view="global"]', shell);
+      if (gbtn) gbtn.classList.add("on");
+    } else if (name === "new") {
+      var newBtn = $('.sm-side .sm-new[data-sm-view="new"]', shell);
+      if (newBtn) newBtn.classList.add("on");
+    } else if (name === "temp-new" || name === "temp") {
+      var tempTop = $('.sm-side .sm-new[data-sm-view="temp-new"]', shell);
+      if (tempTop) tempTop.classList.add("on");
+      if (name === "temp") {
+        var temp = $('.sm-side .sm-item[data-sm-view="temp"]', shell);
+        if (temp) temp.classList.add("on");
+      }
     } else if (name === "archived") {
       var archiveRow = $('.sm-side [data-sm-view="archived"]', shell);
       if (archiveRow) archiveRow.classList.add("on");

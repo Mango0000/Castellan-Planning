@@ -10,9 +10,14 @@
             <button class="sm-navbtn" id="sm-nav-toggle" type="button" aria-label="Collapse workspaces rail" aria-pressed="false" title="Collapse workspaces">«</button>
           </div>
 
-          <div class="sm-newrow">
-            <button class="sm-new primary" type="button" data-sm-view="new"><span>+</span> New task</button>
-            <button class="sm-new" type="button" data-sm-view="temp-new"><span class="spark">✦</span> Temporary chat</button>
+          <div class="sm-actiongroup">
+            <button class="sm-new sm-global-dash" type="button" data-sm-view="global" title="Dashboard across all workspaces">
+              <span class="ic">▦</span><span>Dashboard</span>
+            </button>
+            <div class="sm-newrow">
+              <button class="sm-new" type="button" data-sm-view="new"><span>+</span> New task</button>
+              <button class="sm-new" type="button" data-sm-view="temp-new"><span class="spark">✦</span> Temporary chat</button>
+            </div>
           </div>
 
           <div class="sm-sec">
@@ -94,16 +99,18 @@
             </div>
           </div>
 
-          <button class="sm-archive-link" type="button" data-sm-view="archived">
-            <span class="ic"><svg class="trash-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.3 3.1h7.4M4.4 3.1V2.1h3.2v1M3.3 3.1l.5 7.3h4.4l.5-7.3M5 5.2v3.1M7 5.2v3.1"/></svg></span>
-            <span>Archive</span>
-            <span class="count" id="sm-archive-count">0</span>
-          </button>
-
-          <div class="sm-foot">
-            <button class="sm-profile" id="sm-profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sm-profile-pop" title="Open settings">
-              <span class="av">M</span><span class="sm-profile-name">Manuel</span>
+          <div class="sm-side-bottom">
+            <button class="sm-archive-link" type="button" data-sm-view="archived">
+              <span class="ic"><svg class="trash-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.3 3.1h7.4M4.4 3.1V2.1h3.2v1M3.3 3.1l.5 7.3h4.4l.5-7.3M5 5.2v3.1M7 5.2v3.1"/></svg></span>
+              <span>Archive</span>
+              <span class="count" id="sm-archive-count">0</span>
             </button>
-            <span class="live-dot">runner online</span>
+
+            <div class="sm-foot">
+              <button class="sm-profile" id="sm-profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sm-profile-pop" title="Open settings">
+                <span class="av">M</span><span class="sm-profile-name">Manuel</span>
+              </button>
+              <span class="live-dot">runner online</span>
+            </div>
           </div>
         </aside>

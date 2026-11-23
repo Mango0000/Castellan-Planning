@@ -211,7 +211,7 @@
       var isInput = box.classList.contains("sm-inputbox");
       var plusHTML = '<button class="sm-plusbtn" type="button" aria-label="Add context" title="Add files or context" aria-expanded="false">＋</button>';
       var selectorsHTML =
-        '<button class="sm-modebtn" type="button"><span class="sm-modelabel"></span><i>▾</i></button>' +
+        (isTempComposer(box) ? "" : '<button class="sm-modebtn" type="button"><span class="sm-modelabel"></span><i>▾</i></button>') +
         '<button class="sm-modelbtn" type="button"><span class="sm-mlabel"></span><i>▾</i></button>' +
         '<button class="sm-effortbtn" type="button"><span class="sm-elabel"></span><i>▾</i></button>' +
         '<button class="sm-ctxusage" type="button" aria-label="Context usage: 68%" aria-haspopup="dialog" aria-expanded="false" title="Context usage · 68%"><span class="ring" style="--pct:68%"></span><span class="pct">68%</span></button>';
@@ -260,7 +260,7 @@
         e.stopPropagation();
         openAttach(box, st.plus);
       });
-      st.modeBtn.addEventListener("click", function (e) {
+      if (st.modeBtn) st.modeBtn.addEventListener("click", function (e) {
         e.stopPropagation();
         openSelector(box, st.modeBtn, "mode");
       });

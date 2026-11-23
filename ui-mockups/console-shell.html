@@ -65,9 +65,14 @@
             <button class="sm-navbtn" id="sm-nav-toggle" type="button" aria-label="Collapse workspaces rail" aria-pressed="false" title="Collapse workspaces">«</button>
           </div>
 
-          <div class="sm-newrow">
-            <button class="sm-new primary" type="button" data-sm-view="new"><span>+</span> New task</button>
-            <button class="sm-new" type="button" data-sm-view="temp-new"><span class="spark">✦</span> Temporary chat</button>
+          <div class="sm-actiongroup">
+            <button class="sm-new sm-global-dash" type="button" data-sm-view="global" title="Dashboard across all workspaces">
+              <span class="ic">▦</span><span>Dashboard</span>
+            </button>
+            <div class="sm-newrow">
+              <button class="sm-new" type="button" data-sm-view="new"><span>+</span> New task</button>
+              <button class="sm-new" type="button" data-sm-view="temp-new"><span class="spark">✦</span> Temporary chat</button>
+            </div>
           </div>
 
           <div class="sm-sec">
@@ -149,17 +154,19 @@
             </div>
           </div>
 
-          <button class="sm-archive-link" type="button" data-sm-view="archived">
-            <span class="ic"><svg class="trash-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.3 3.1h7.4M4.4 3.1V2.1h3.2v1M3.3 3.1l.5 7.3h4.4l.5-7.3M5 5.2v3.1M7 5.2v3.1"/></svg></span>
-            <span>Archive</span>
-            <span class="count" id="sm-archive-count">0</span>
-          </button>
-
-          <div class="sm-foot">
-            <button class="sm-profile" id="sm-profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sm-profile-pop" title="Open settings">
-              <span class="av">M</span><span class="sm-profile-name">Manuel</span>
+          <div class="sm-side-bottom">
+            <button class="sm-archive-link" type="button" data-sm-view="archived">
+              <span class="ic"><svg class="trash-ico" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.3 3.1h7.4M4.4 3.1V2.1h3.2v1M3.3 3.1l.5 7.3h4.4l.5-7.3M5 5.2v3.1M7 5.2v3.1"/></svg></span>
+              <span>Archive</span>
+              <span class="count" id="sm-archive-count">0</span>
             </button>
-            <span class="live-dot">runner online</span>
+
+            <div class="sm-foot">
+              <button class="sm-profile" id="sm-profile-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sm-profile-pop" title="Open settings">
+                <span class="av">M</span><span class="sm-profile-name">Manuel</span>
+              </button>
+              <span class="live-dot">runner online</span>
+            </div>
           </div>
         </aside>
 
@@ -168,7 +175,62 @@
       <div class="sm-resize sm-resize-left" id="sm-resize-left" role="separator" aria-orientation="vertical" aria-label="Resize workspaces rail" title="Drag to resize"></div>
 
       <div class="sm-views" id="sm-views">
-        <!-- current task -->
+        <!-- global dashboard -->
+            <div class="sm-view" data-sm-view="global" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Dashboard <span>/</span> all workspaces <span class="crumb-sub">global</span></div>
+                <div class="sm-head-r">
+                  <span class="pill" id="g-dash-count">0 workspaces</span>
+                  <button class="mbtn" type="button" id="g-dash-ai-focus" aria-controls="g-dash-ai-bottom" aria-expanded="true">Edit with AI</button>
+                  <button class="mbtn" type="button" id="g-dash-edit" title="Edit dashboard cards">Edit</button>
+                </div>
+              </div>
+              <div class="sm-global-wrap">
+                <section class="sm-global-hero">
+                  <div class="sm-global-title">
+                    <span class="sm-dash-mark">▦</span>
+                    <div><h3>All workspaces</h3><p>One view across every repo, task and dev server.</p></div>
+                  </div>
+                  <span class="sm-custom" id="g-dash-custom"><span class="sm-spark">✦</span> Customized by Codex · 8m ago</span>
+                </section>
+                <div class="sm-global-stats">
+                  <div class="sm-gstat"><span>Workspaces</span><b id="g-stat-ws">0</b><small>across the rail</small></div>
+                  <div class="sm-gstat"><span>Active tasks</span><b id="g-stat-active">0</b><small>being worked on</small></div>
+                  <div class="sm-gstat"><span>Needs attention</span><b id="g-stat-attention">0</b><small>waiting for you</small></div>
+                  <div class="sm-gstat"><span>Dev servers</span><b id="g-stat-servers">0</b><small>running now</small></div>
+                </div>
+                <div class="sm-global-grid" id="g-dash-grid">
+                  <section class="sm-gw-card sm-gw-ai" id="g-dash-ai-card" hidden>
+                    <div class="sm-gw-head"><span class="ic">✦</span><b>AI dashboard update</b><span class="pill done">applied</span></div>
+                    <p class="sm-gw-ai-text" id="g-dash-ai-text"></p>
+                    <div class="sm-gw-meta">Codex · just now</div>
+                  </section>
+                </div>
+              </div>
+              <div class="sm-global-bottom" id="g-dash-ai-bottom">
+                <button class="sm-global-ai-toggle" id="g-dash-hide" type="button" aria-expanded="true" aria-controls="g-dash-ai-composer">
+                  <span class="chev" aria-hidden="true"></span><span class="lbl">Hide AI composer</span>
+                </button>
+                <div class="sm-global-ai-composer" id="g-dash-ai-composer">
+                <div class="sm-global-ai">
+                  <div class="sm-global-ai-row" id="g-dash-ai-row">
+                    <span class="sm-spark">✦</span>
+                    <input id="g-dash-prompt" type="text" autocomplete="off" placeholder="Ask Codex to change this dashboard…">
+                    <button class="sm-modelbtn" id="g-ai-model" type="button"><span class="sm-mlabel"></span><i>▾</i></button>
+                    <button class="sm-effortbtn" id="g-ai-effort" type="button"><span class="sm-elabel"></span><i>▾</i></button>
+                    <button class="sm-global-send" id="g-dash-send" type="button" aria-label="Apply dashboard change">↑</button>
+                  </div>
+                  <div class="sm-global-suggest">
+                    <button type="button" data-g-prompt="Group workspaces by attention">Group by attention</button>
+                    <button type="button" data-g-prompt="Add deploy status">Add deploy status</button>
+                    <button type="button" data-g-prompt="Show all open diffs">Show open diffs</button>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+<!-- current task -->
             <div class="sm-view" data-sm-view="auth" data-task-tab="chat">
               <div class="sm-head">
                 <div class="sm-crumb">acme-web <span>/</span> task/auth-flow <span class="crumb-sub">thr_8f2a</span></div>

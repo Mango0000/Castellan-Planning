@@ -77,6 +77,14 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 | `app.js` | Generated bundle; never edit directly. |
 | `plan.css` / `plan.js` | Blueprint styles and behavior, extracted from the root HTML. |
 
+## Global dashboard
+
+- A **Dashboard** button above New task opens the all-workspaces view. Dashboard, New task and Temporary chat share the same base style; the active view uses the soft accent background and border.
+- It summarizes workspaces, active tasks, items needing attention and running dev servers, with one card per workspace.
+- Each card opens that workspace's dashboard.
+- The AI prompt is docked at the bottom, like the plan composer, and has its own **model** and **reasoning-effort** selectors. A full-width **Hide AI composer** bar collapses it to **Show AI composer**; **Edit with AI** in the header shows and focuses it again.
+- **Edit** manually removes workspace cards with the card **×** controls, then becomes **Save** at the top right. While editing manually the **Edit with AI** header button is hidden. Applying an AI prompt or suggestion adds an AI card and updates the “Customized by Codex” timestamp.
+
 ## Task tabs and plan
 
 - Task views have **Chat** and **Plan** tabs beneath the task header.
@@ -89,7 +97,7 @@ The browser chrome owns no app controls. The left rail has its own brand/collaps
 Every chat input has the same controls:
 
 - The input component is one row: **add ＋**, the text input and **send ↑**. Mode, model, effort and context usage sit in a separate toolbar completely outside the bordered input. The new-task text box keeps the same ＋ and ↑ inside the box, with the selector toolbar underneath.
-- **Mode** picker — left of the model: **Plan**, **Edit** and **Review**, selected per composer.
+- **Mode** picker — left of the model on task composers: **Plan**, **Edit** and **Review**. Temporary chats have no mode selector.
 - **Model** picker — GPT-5.3 Codex, GPT-5.2 Codex, GPT-5.1 Codex Max, GPT-5.1 Codex Mini, GPT-5.1 and o3.
 - **Reasoning effort** picker — next to the model selector; only the efforts the selected model supports (`none`, `low`, `medium`, `high`, `xhigh`). Changing models clamps an unsupported effort to that model's default.
 - **Context usage** — the ring next to the selectors shows 68% and opens a drop-up with a segmented meter marked **87k / 128k**. Task composers break down workspace/instructions, open files, task thread, tool output and attachments; temporary chats use chat-oriented categories.

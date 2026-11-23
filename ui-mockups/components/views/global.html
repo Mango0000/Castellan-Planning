@@ -1,0 +1,54 @@
+<!-- global dashboard -->
+            <div class="sm-view" data-sm-view="global" hidden>
+              <div class="sm-head">
+                <div class="sm-crumb">Dashboard <span>/</span> all workspaces <span class="crumb-sub">global</span></div>
+                <div class="sm-head-r">
+                  <span class="pill" id="g-dash-count">0 workspaces</span>
+                  <button class="mbtn" type="button" id="g-dash-ai-focus" aria-controls="g-dash-ai-bottom" aria-expanded="true">Edit with AI</button>
+                  <button class="mbtn" type="button" id="g-dash-edit" title="Edit dashboard cards">Edit</button>
+                </div>
+              </div>
+              <div class="sm-global-wrap">
+                <section class="sm-global-hero">
+                  <div class="sm-global-title">
+                    <span class="sm-dash-mark">▦</span>
+                    <div><h3>All workspaces</h3><p>One view across every repo, task and dev server.</p></div>
+                  </div>
+                  <span class="sm-custom" id="g-dash-custom"><span class="sm-spark">✦</span> Customized by Codex · 8m ago</span>
+                </section>
+                <div class="sm-global-stats">
+                  <div class="sm-gstat"><span>Workspaces</span><b id="g-stat-ws">0</b><small>across the rail</small></div>
+                  <div class="sm-gstat"><span>Active tasks</span><b id="g-stat-active">0</b><small>being worked on</small></div>
+                  <div class="sm-gstat"><span>Needs attention</span><b id="g-stat-attention">0</b><small>waiting for you</small></div>
+                  <div class="sm-gstat"><span>Dev servers</span><b id="g-stat-servers">0</b><small>running now</small></div>
+                </div>
+                <div class="sm-global-grid" id="g-dash-grid">
+                  <section class="sm-gw-card sm-gw-ai" id="g-dash-ai-card" hidden>
+                    <div class="sm-gw-head"><span class="ic">✦</span><b>AI dashboard update</b><span class="pill done">applied</span></div>
+                    <p class="sm-gw-ai-text" id="g-dash-ai-text"></p>
+                    <div class="sm-gw-meta">Codex · just now</div>
+                  </section>
+                </div>
+              </div>
+              <div class="sm-global-bottom" id="g-dash-ai-bottom">
+                <button class="sm-global-ai-toggle" id="g-dash-hide" type="button" aria-expanded="true" aria-controls="g-dash-ai-composer">
+                  <span class="chev" aria-hidden="true"></span><span class="lbl">Hide AI composer</span>
+                </button>
+                <div class="sm-global-ai-composer" id="g-dash-ai-composer">
+                <div class="sm-global-ai">
+                  <div class="sm-global-ai-row" id="g-dash-ai-row">
+                    <span class="sm-spark">✦</span>
+                    <input id="g-dash-prompt" type="text" autocomplete="off" placeholder="Ask Codex to change this dashboard…">
+                    <button class="sm-modelbtn" id="g-ai-model" type="button"><span class="sm-mlabel"></span><i>▾</i></button>
+                    <button class="sm-effortbtn" id="g-ai-effort" type="button"><span class="sm-elabel"></span><i>▾</i></button>
+                    <button class="sm-global-send" id="g-dash-send" type="button" aria-label="Apply dashboard change">↑</button>
+                  </div>
+                  <div class="sm-global-suggest">
+                    <button type="button" data-g-prompt="Group workspaces by attention">Group by attention</button>
+                    <button type="button" data-g-prompt="Add deploy status">Add deploy status</button>
+                    <button type="button" data-g-prompt="Show all open diffs">Show open diffs</button>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
